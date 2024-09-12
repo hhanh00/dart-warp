@@ -19,19 +19,19 @@ class NativeLibrary {
           lookup)
       : _lookup = lookup;
 
-  CResult_u8 c_init_coin(
+  CResult_u8 c_reset_tables(
     int coin,
   ) {
-    return _c_init_coin(
+    return _c_reset_tables(
       coin,
     );
   }
 
-  late final _c_init_coinPtr =
+  late final _c_reset_tablesPtr =
       _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8)>>(
-          'c_init_coin');
-  late final _c_init_coin =
-      _c_init_coinPtr.asFunction<CResult_u8 Function(int)>();
+          'c_reset_tables');
+  late final _c_reset_tables =
+      _c_reset_tablesPtr.asFunction<CResult_u8 Function(int)>();
 
   CResult______u8 c_list_accounts(
     int coin,
@@ -89,7 +89,7 @@ class NativeLibrary {
     int coin,
     int account,
     ffi.Pointer<ffi.Char> name,
-    ffi.Pointer<ffi.Uint8> value,
+    CParam value,
   ) {
     return _c_set_account_property(
       coin,
@@ -102,10 +102,65 @@ class NativeLibrary {
   late final _c_set_account_propertyPtr = _lookup<
       ffi.NativeFunction<
           CResult_u8 Function(ffi.Uint8, ffi.Uint32, ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Uint8>)>>('c_set_account_property');
+              CParam)>>('c_set_account_property');
   late final _c_set_account_property = _c_set_account_propertyPtr.asFunction<
-      CResult_u8 Function(
-          int, int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Uint8>)>();
+      CResult_u8 Function(int, int, ffi.Pointer<ffi.Char>, CParam)>();
+
+  CResult_u32 c_create_new_account(
+    int coin,
+    ffi.Pointer<ffi.Char> name,
+    ffi.Pointer<ffi.Char> key,
+    int acc_index,
+    int birth,
+  ) {
+    return _c_create_new_account(
+      coin,
+      name,
+      key,
+      acc_index,
+      birth,
+    );
+  }
+
+  late final _c_create_new_accountPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u32 Function(
+              ffi.Uint8,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Uint32,
+              ffi.Uint32)>>('c_create_new_account');
+  late final _c_create_new_account = _c_create_new_accountPtr.asFunction<
+      CResult_u32 Function(
+          int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int, int)>();
+
+  CResult_u32 c_get_sync_height(
+    int coin,
+  ) {
+    return _c_get_sync_height(
+      coin,
+    );
+  }
+
+  late final _c_get_sync_heightPtr =
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
+          'c_get_sync_height');
+  late final _c_get_sync_height =
+      _c_get_sync_heightPtr.asFunction<CResult_u32 Function(int)>();
+
+  CResult_u32 c_get_last_height(
+    int coin,
+  ) {
+    return _c_get_last_height(
+      coin,
+    );
+  }
+
+  late final _c_get_last_heightPtr =
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
+          'c_get_last_height');
+  late final _c_get_last_height =
+      _c_get_last_heightPtr.asFunction<CResult_u32 Function(int)>();
 
   void c_setup() {
     return _c_setup();
@@ -115,24 +170,96 @@ class NativeLibrary {
       _lookup<ffi.NativeFunction<ffi.Void Function()>>('c_setup');
   late final _c_setup = _c_setupPtr.asFunction<void Function()>();
 
-  CResult_u8 c_test(
+  CResult_u8 c_reset_chain(
     int coin,
-    int account,
-    ffi.Pointer<ffi.Char> s,
+    int height,
   ) {
-    return _c_test(
+    return _c_reset_chain(
       coin,
-      account,
-      s,
+      height,
     );
   }
 
-  late final _c_testPtr = _lookup<
+  late final _c_reset_chainPtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_reset_chain');
+  late final _c_reset_chain =
+      _c_reset_chainPtr.asFunction<CResult_u8 Function(int, int)>();
+
+  CResult______u8 c_pay(
+    int coin,
+    int account,
+    CParam recipients,
+    int src_pools,
+    int fee_paid_by_sender,
+    int confirmations,
+  ) {
+    return _c_pay(
+      coin,
+      account,
+      recipients,
+      src_pools,
+      fee_paid_by_sender,
+      confirmations,
+    );
+  }
+
+  late final _c_payPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Pointer<ffi.Char>)>>('c_test');
-  late final _c_test = _c_testPtr
-      .asFunction<CResult_u8 Function(int, int, ffi.Pointer<ffi.Char>)>();
+          CResult______u8 Function(ffi.Uint8, ffi.Uint32, CParam, ffi.Uint8,
+              bool, ffi.Uint32)>>('c_pay');
+  late final _c_pay = _c_payPtr
+      .asFunction<CResult______u8 Function(int, int, CParam, int, int, int)>();
+
+  CResult______u8 c_sign(
+    int coin,
+    CParam summary,
+    int expiration_height,
+  ) {
+    return _c_sign(
+      coin,
+      summary,
+      expiration_height,
+    );
+  }
+
+  late final _c_signPtr = _lookup<
+      ffi.NativeFunction<
+          CResult______u8 Function(ffi.Uint8, CParam, ffi.Uint32)>>('c_sign');
+  late final _c_sign =
+      _c_signPtr.asFunction<CResult______u8 Function(int, CParam, int)>();
+
+  CResult_____c_char c_tx_broadcast(
+    int coin,
+    CParam txbytes,
+  ) {
+    return _c_tx_broadcast(
+      coin,
+      txbytes,
+    );
+  }
+
+  late final _c_tx_broadcastPtr = _lookup<
+          ffi.NativeFunction<CResult_____c_char Function(ffi.Uint8, CParam)>>(
+      'c_tx_broadcast');
+  late final _c_tx_broadcast =
+      _c_tx_broadcastPtr.asFunction<CResult_____c_char Function(int, CParam)>();
+
+  CResult_u8 warp_synchronize(
+    int coin,
+    int end_height,
+  ) {
+    return _warp_synchronize(
+      coin,
+      end_height,
+    );
+  }
+
+  late final _warp_synchronizePtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+          'warp_synchronize');
+  late final _warp_synchronize =
+      _warp_synchronizePtr.asFunction<CResult_u8 Function(int, int)>();
 }
 
 final class CResult_u8 extends ffi.Struct {
@@ -153,3 +280,31 @@ final class CResult______u8 extends ffi.Struct {
   @ffi.Uint32()
   external int len;
 }
+
+final class CParam extends ffi.Struct {
+  external ffi.Pointer<ffi.Uint8> value;
+
+  @ffi.Uint32()
+  external int len;
+}
+
+final class CResult_u32 extends ffi.Struct {
+  @ffi.Uint32()
+  external int value;
+
+  external ffi.Pointer<ffi.Char> error;
+
+  @ffi.Uint32()
+  external int len;
+}
+
+final class CResult_____c_char extends ffi.Struct {
+  external ffi.Pointer<ffi.Char> value;
+
+  external ffi.Pointer<ffi.Char> error;
+
+  @ffi.Uint32()
+  external int len;
+}
+
+typedef bool = ffi.Char;

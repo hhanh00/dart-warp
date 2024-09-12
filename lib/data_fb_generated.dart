@@ -2025,6 +2025,108 @@ class PaymentRequestObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class PaymentRequests {
+  PaymentRequests._(this._bc, this._bcOffset);
+  factory PaymentRequests(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PaymentRequests> reader = _PaymentRequestsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<PaymentRequest>? get payments => const fb.ListReader<PaymentRequest>(PaymentRequest.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'PaymentRequests{payments: ${payments}}';
+  }
+
+  PaymentRequestsT unpack() => PaymentRequestsT(
+      payments: payments?.map((e) => e.unpack()).toList());
+
+  static int pack(fb.Builder fbBuilder, PaymentRequestsT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class PaymentRequestsT implements fb.Packable {
+  List<PaymentRequestT>? payments;
+
+  PaymentRequestsT({
+      this.payments});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    final int? paymentsOffset = payments == null ? null
+        : fbBuilder.writeList(payments!.map((b) => b.pack(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, paymentsOffset);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'PaymentRequestsT{payments: ${payments}}';
+  }
+}
+
+class _PaymentRequestsReader extends fb.TableReader<PaymentRequests> {
+  const _PaymentRequestsReader();
+
+  @override
+  PaymentRequests createObject(fb.BufferContext bc, int offset) => 
+    PaymentRequests._(bc, offset);
+}
+
+class PaymentRequestsBuilder {
+  PaymentRequestsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addPaymentsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PaymentRequestsObjectBuilder extends fb.ObjectBuilder {
+  final List<PaymentRequestObjectBuilder>? _payments;
+
+  PaymentRequestsObjectBuilder({
+    List<PaymentRequestObjectBuilder>? payments,
+  })
+      : _payments = payments;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? paymentsOffset = _payments == null ? null
+        : fbBuilder.writeList(_payments!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, paymentsOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 class AccountName {
   AccountName._(this._bc, this._bcOffset);
   factory AccountName(List<int> bytes) {

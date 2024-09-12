@@ -96,6 +96,117 @@ class Warp {
     calloc.free(txBytesParam);
     return unwrapResultString(r);
   }
+
+  static Uint8List getAccountProperty(int coin, int account, String name) {
+    return unwrapResultBytes(warpLib.c_get_account_property(coin, account, toNative(name)));
+  }
+
+  static void setAccountProperty(int coin, int account, String name, Uint8List value) {
+    unwrapResultU8(warpLib.c_set_account_property(coin, account, toNative(name), toParamBytes(value).ref));
+  }
+
+  static void editAccountName(int coin, int account, String name) {
+    unwrapResultU8(warpLib.c_edit_account_name(coin, account, toNative(name)));
+  }
+
+  static void editAccountBirthHeight(int coin, int account, int height) {
+    unwrapResultU8(warpLib.c_edit_account_birth(coin, account, height));
+  }
+
+  static void deleteAccount(int coin, int account) {
+    unwrapResultU8(warpLib.c_delete_account(coin, account));
+  }
+
+  static List<fb.ContactCardT> listContacts(int coin) {
+    final bc = toBC(warpLib.c_list_contact_cards(coin));
+    final reader = ListReader<fb.ContactCard>(fb.ContactCard.reader);
+    final list = reader.read(bc, 0);
+    return list.map((e) => e.unpack()).toList();
+  }
+
+  static fb.ContactCardT getContact(int coin, int id) {
+    final bc = toBC(warpLib.c_get_contact_card(coin, id));
+    return fb.ContactCard.reader.read(bc, 0).unpack();
+  }
+
+  static void editContactName(int coin, int id, String name) {
+    unwrapResultU8(warpLib.c_edit_contact_name(coin, id, toNative(name)));
+  }
+
+  static void editContactAddress(int coin, int id, String address) {
+    unwrapResultU8(warpLib.c_edit_contact_address(coin, id, toNative(address)));
+  }
+
+  static void deleteContact(int coin, int id) {
+    unwrapResultU8(warpLib.c_delete_contact(coin, id));
+  }
+
+  static fb.TransactionSummaryT saveContacts(int coin, int account, int height, int confirmations) {
+    final bc = toBC(warpLib.c_save_contacts(coin, account, height, confirmations));
+    return fb.TransactionSummary.reader.read(bc, 0).unpack();
+  }
+
+  static int getActivationDate(int coin) {
+    return unwrapResultU32(warpLib.c_get_activation_date(coin));
+  }
+
+  static int getHeightByTime(int coin, int time) {
+    return unwrapResultU32(warpLib.c_get_height_by_time(coin, time));
+  }
+
+  static fb.ShieldedMessageT prevMessage(int coin, int account, int height) {
+    return unwrapMessage(warpLib.c_prev_message(coin, account, height));
+  }
+
+  static fb.ShieldedMessageT nextMessage(int coin, int account, int height) {
+    return unwrapMessage(warpLib.c_next_message(coin, account, height));
+  }
+
+  static fb.ShieldedMessageT prevMessageThread(int coin, int account, int height, String subject) {
+    return unwrapMessage(warpLib.c_prev_message_thread(coin, account, height, toNative(subject)));
+  }
+
+  static fb.ShieldedMessageT nextMessageThread(int coin, int account, int height, String subject) {
+    return unwrapMessage(warpLib.c_prev_message_thread(coin, account, height, toNative(subject)));
+  }
+
+  static List<fb.ShieldedMessageT> listMessages(int coin, int account) {
+    final bc = toBC(warpLib.c_list_messages(coin, account));
+    final reader = ListReader<fb.ShieldedMessage>(fb.ShieldedMessage.reader);
+    final list = reader.read(bc, 0);
+    return list.map((e) => e.unpack()).toList();
+  }
+
+  static void markMessageRead(int coin, int id, bool reverse) {
+    unwrapResultU8(warpLib.c_mark_read(coin, id, reverse ? 1 : 0));
+  }
+
+  static void markAllMessagesRead(int coin, int account, bool reverse) {
+    unwrapResultU8(warpLib.c_mark_all_read(coin, account, reverse ? 1 : 0));
+  }
+
+  // database encryption
+  // qr
+  // seed
+  // backup
+  // address
+  // diversified address
+  // sweep
+  // tx details
+  // decode address/ua
+  // list txs
+  // list notes
+  // payment uri
+
+  static fb.TransactionInfoExtendedT fetchTxDetails(int coin, int account, int id) {
+    final bc = toBC(warpLib.c_fetch_tx_details(coin, account, id));
+    return fb.TransactionInfoExtended.reader.read(bc, 0).unpack();
+  }
+}
+
+fb.ShieldedMessageT unwrapMessage(CResult______u8 m) {
+  final bc = toBC(m);
+  return fb.ShieldedMessage.reader.read(bc, 0).unpack();
 }
 
 BufferContext toBC(CResult______u8 r) {

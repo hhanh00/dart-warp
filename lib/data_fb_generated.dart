@@ -3206,3 +3206,131 @@ class PacketsObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class Checkpoint {
+  Checkpoint._(this._bc, this._bcOffset);
+  factory Checkpoint(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Checkpoint> reader = _CheckpointReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get height => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  List<int>? get hash => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
+  int get timestamp => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+
+  @override
+  String toString() {
+    return 'Checkpoint{height: ${height}, hash: ${hash}, timestamp: ${timestamp}}';
+  }
+
+  CheckpointT unpack() => CheckpointT(
+      height: height,
+      hash: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
+      timestamp: timestamp);
+
+  static int pack(fb.Builder fbBuilder, CheckpointT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class CheckpointT implements fb.Packable {
+  int height;
+  List<int>? hash;
+  int timestamp;
+
+  CheckpointT({
+      this.height = 0,
+      this.hash,
+      this.timestamp = 0});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    final int? hashOffset = hash == null ? null
+        : fbBuilder.writeListUint8(hash!);
+    fbBuilder.startTable(3);
+    fbBuilder.addUint32(0, height);
+    fbBuilder.addOffset(1, hashOffset);
+    fbBuilder.addUint32(2, timestamp);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'CheckpointT{height: ${height}, hash: ${hash}, timestamp: ${timestamp}}';
+  }
+}
+
+class _CheckpointReader extends fb.TableReader<Checkpoint> {
+  const _CheckpointReader();
+
+  @override
+  Checkpoint createObject(fb.BufferContext bc, int offset) => 
+    Checkpoint._(bc, offset);
+}
+
+class CheckpointBuilder {
+  CheckpointBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addHeight(int? height) {
+    fbBuilder.addUint32(0, height);
+    return fbBuilder.offset;
+  }
+  int addHashOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addTimestamp(int? timestamp) {
+    fbBuilder.addUint32(2, timestamp);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CheckpointObjectBuilder extends fb.ObjectBuilder {
+  final int? _height;
+  final List<int>? _hash;
+  final int? _timestamp;
+
+  CheckpointObjectBuilder({
+    int? height,
+    List<int>? hash,
+    int? timestamp,
+  })
+      : _height = height,
+        _hash = hash,
+        _timestamp = timestamp;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? hashOffset = _hash == null ? null
+        : fbBuilder.writeListUint8(_hash!);
+    fbBuilder.startTable(3);
+    fbBuilder.addUint32(0, _height);
+    fbBuilder.addOffset(1, hashOffset);
+    fbBuilder.addUint32(2, _timestamp);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}

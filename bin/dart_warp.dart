@@ -5,7 +5,7 @@ import 'package:dart_warp/warp.dart';
 void main(List<String> arguments) async {
   const zcash = 0;
   print("Started");
-  Warp.setup();
+  warp.setup();
   print("Initialized");
 
   // Warp.createTables(0);
@@ -14,17 +14,17 @@ void main(List<String> arguments) async {
   // Warp.resetChain(0, 0);
 
   print("List accounts");
-  final accounts = Warp.listAccounts(zcash);
+  final accounts = await warp.listAccounts(zcash);
   for (var a in accounts) {
     print(a);
   }
 
-  final balance = Warp.getBalance(zcash, 1, 0);
+  final balance = await warp.getBalance(zcash, 1, 0);
   print(balance);
 
-  while (Warp.getBCHeight(zcash) > Warp.getSyncHeight(zcash)) {
-    print("${Warp.getBCHeight(zcash)} ${Warp.getSyncHeight(zcash)}");
-    await Warp.synchronize(zcash, Warp.getBCHeight(zcash));
+  while (await warp.getBCHeight(zcash) > await warp.getSyncHeight(zcash)) {
+    print("${await warp.getBCHeight(zcash)} ${await warp.getSyncHeight(zcash)}");
+    await WarpSync.synchronize(zcash, await warp.getBCHeight(zcash));
   }
   print('Synchronization completed');
 
@@ -44,6 +44,6 @@ void main(List<String> arguments) async {
   // final txid = Warp.broadcast(zcash, txBytes);
   // print(txid);
 
-  final txd = Warp.fetchTxDetails(zcash, 1, 25);
+  final txd = await warp.fetchTxDetails(zcash, 1, 25);
   print(txd);
 }

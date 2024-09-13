@@ -3334,3 +3334,139 @@ class CheckpointObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class AppConfig {
+  AppConfig._(this._bc, this._bcOffset);
+  factory AppConfig(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<AppConfig> reader = _AppConfigReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get url => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get warp => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get db => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+
+  @override
+  String toString() {
+    return 'AppConfig{url: ${url}, warp: ${warp}, db: ${db}}';
+  }
+
+  AppConfigT unpack() => AppConfigT(
+      url: url,
+      warp: warp,
+      db: db);
+
+  static int pack(fb.Builder fbBuilder, AppConfigT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class AppConfigT implements fb.Packable {
+  String? url;
+  String? warp;
+  String? db;
+
+  AppConfigT({
+      this.url,
+      this.warp,
+      this.db});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    final int? urlOffset = url == null ? null
+        : fbBuilder.writeString(url!);
+    final int? warpOffset = warp == null ? null
+        : fbBuilder.writeString(warp!);
+    final int? dbOffset = db == null ? null
+        : fbBuilder.writeString(db!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, urlOffset);
+    fbBuilder.addOffset(1, warpOffset);
+    fbBuilder.addOffset(2, dbOffset);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'AppConfigT{url: ${url}, warp: ${warp}, db: ${db}}';
+  }
+}
+
+class _AppConfigReader extends fb.TableReader<AppConfig> {
+  const _AppConfigReader();
+
+  @override
+  AppConfig createObject(fb.BufferContext bc, int offset) => 
+    AppConfig._(bc, offset);
+}
+
+class AppConfigBuilder {
+  AppConfigBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addUrlOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addWarpOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addDbOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class AppConfigObjectBuilder extends fb.ObjectBuilder {
+  final String? _url;
+  final String? _warp;
+  final String? _db;
+
+  AppConfigObjectBuilder({
+    String? url,
+    String? warp,
+    String? db,
+  })
+      : _url = url,
+        _warp = warp,
+        _db = db;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? urlOffset = _url == null ? null
+        : fbBuilder.writeString(_url!);
+    final int? warpOffset = _warp == null ? null
+        : fbBuilder.writeString(_warp!);
+    final int? dbOffset = _db == null ? null
+        : fbBuilder.writeString(_db!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, urlOffset);
+    fbBuilder.addOffset(1, warpOffset);
+    fbBuilder.addOffset(2, dbOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}

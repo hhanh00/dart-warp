@@ -1,6 +1,5 @@
-import 'package:cbor/cbor.dart';
-import 'package:dart_warp/data_fb_generated.dart';
-import 'package:dart_warp/warp.dart';
+import 'package:warp/data_fb_generated.dart';
+import 'package:warp/warp.dart';
 
 void main(List<String> arguments) async {
   const zcash = 0;
@@ -28,21 +27,20 @@ void main(List<String> arguments) async {
   }
   print('Synchronization completed');
 
-  // final payments = [PaymentRequestT(
-  //   address: "zs1avauf3r6afmt052aw03wwk874uu3s5cxwdtmcqaawt5jxevr5sevw6avna6wvf233ezu59zgkfm",
-  //   amount: 1000000,
-  //   memoString: "Hello",
-  //   memoBytes: [])];
+  final payments = [PaymentRequestT(
+    address: "zs1avauf3r6afmt052aw03wwk874uu3s5cxwdtmcqaawt5jxevr5sevw6avna6wvf233ezu59zgkfm",
+    amount: 1000000,
+    memoString: "Hello",
+    memoBytes: [])];
 
-  // final req = PaymentRequestsT(payments: payments);
-  // var plan = Warp.pay(zcash, 1, req, 7, true, 1);
-  // // plan.data = []; // discard the tx bytes
-  // // print(plan);
-  // final txBytes = Warp.sign(zcash, plan, Warp.getBCHeight(0) + 50);
-  // print(txBytes.length);
+  final req = PaymentRequestsT(payments: payments);
+  var plan = await warp.pay(zcash, 1, req, 7, true, 1);
+  // plan.data = []; // discard the tx bytes
+  final txBytes = await warp.sign(zcash, plan, await warp.getBCHeight(0) + 50);
+  print(txBytes.length);
 
-  // final txid = Warp.broadcast(zcash, txBytes);
-  // print(txid);
+  final txid = await warp.broadcast(zcash, txBytes);
+  print(txid);
 
   final txd = await warp.fetchTxDetails(zcash, 1, 25);
   print(txd);

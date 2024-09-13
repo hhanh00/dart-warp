@@ -32,6 +32,19 @@ class Warp {
     warpLib.c_setup();
   }
 
+  void configure(int coin, String? db, String? url, String? warp) {
+    final config = fb.AppConfigT(db: db, url: url, warp: warp);
+    final param = toParam(config);
+    unwrapResultU8(warpLib.c_configure(coin, param.ref));
+  }
+
+  Future<void> initProver(Uint8List spend, Uint8List output) async {
+    Isolate.run(() {
+      unwrapResultU8(warpLib.c_init_sapling_prover(
+          0, toParamBytes(spend).ref, toParamBytes(output).ref));
+    });
+  }
+
   Future<void> createTables(int coin) async {
     Isolate.run(() => unwrapResultU8(warpLib.c_reset_tables(coin)));
   }
@@ -325,8 +338,8 @@ class Warp {
         warpLib.c_get_account_diversified_address(coin, account, mask)));
   }
 
-  Future<fb.TransactionSummaryT> sweep(
-      int coin, int account, int confirmations, String destination, int gap) async {
+  Future<fb.TransactionSummaryT> sweep(int coin, int account, int confirmations,
+      String destination, int gap) async {
     return Isolate.run(() {
       final bc = toBC(warpLib.c_prepare_sweep_tx(
           coin, account, confirmations, toNative(destination), gap));
@@ -334,11 +347,11 @@ class Warp {
     });
   }
 
-  Future<fb.TransactionSummaryT> sweepSK(
-      int coin, int account, String secretKey, int confirmations, String destination) async {
+  Future<fb.TransactionSummaryT> sweepSK(int coin, int account,
+      String secretKey, int confirmations, String destination) async {
     return Isolate.run(() {
-      final bc = toBC(warpLib.c_prepare_sweep_tx_by_sk(
-          coin, account, toNative(secretKey), confirmations, toNative(destination)));
+      final bc = toBC(warpLib.c_prepare_sweep_tx_by_sk(coin, account,
+          toNative(secretKey), confirmations, toNative(destination)));
       return fb.TransactionSummary.reader.read(bc, 0).unpack();
     });
   }
@@ -368,7 +381,8 @@ class Warp {
     });
   }
 
-  Future<String> makePaymentURI(int coin, List<fb.PaymentRequestT> recipients) async {
+  Future<String> makePaymentURI(
+      int coin, List<fb.PaymentRequestT> recipients) async {
     return Isolate.run(() {
       final payments = toParam(fb.PaymentRequestsT(payments: recipients));
       return unwrapResultString(warpLib.c_make_payment_uri(coin, payments.ref));

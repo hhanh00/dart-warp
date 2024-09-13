@@ -493,6 +493,24 @@ class NativeLibrary {
   late final _c_get_last_height =
       _c_get_last_heightPtr.asFunction<CResult_u32 Function(int)>();
 
+  CResult_u8 c_init_sapling_prover(
+    int coin,
+    CParam spend,
+    CParam output,
+  ) {
+    return _c_init_sapling_prover(
+      coin,
+      spend,
+      output,
+    );
+  }
+
+  late final _c_init_sapling_proverPtr = _lookup<
+          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, CParam, CParam)>>(
+      'c_init_sapling_prover');
+  late final _c_init_sapling_prover = _c_init_sapling_proverPtr
+      .asFunction<CResult_u8 Function(int, CParam, CParam)>();
+
   CResult_u8 c_retrieve_tx_details(
     int coin,
   ) {
@@ -514,6 +532,22 @@ class NativeLibrary {
   late final _c_setupPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function()>>('c_setup');
   late final _c_setup = _c_setupPtr.asFunction<void Function()>();
+
+  CResult_u8 c_configure(
+    int coin,
+    CParam config,
+  ) {
+    return _c_configure(
+      coin,
+      config,
+    );
+  }
+
+  late final _c_configurePtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, CParam)>>(
+          'c_configure');
+  late final _c_configure =
+      _c_configurePtr.asFunction<CResult_u8 Function(int, CParam)>();
 
   CResult_u8 c_encrypt_db(
     int coin,

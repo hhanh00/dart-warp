@@ -149,6 +149,25 @@ class NativeLibrary {
   late final _c_set_account_property = _c_set_account_propertyPtr.asFunction<
       CResult_u8 Function(int, int, ffi.Pointer<ffi.Char>, CParam)>();
 
+  CResult______u8 c_get_spendings(
+    int coin,
+    int account,
+    int timestamp,
+  ) {
+    return _c_get_spendings(
+      coin,
+      account,
+      timestamp,
+    );
+  }
+
+  late final _c_get_spendingsPtr = _lookup<
+      ffi.NativeFunction<
+          CResult______u8 Function(
+              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_get_spendings');
+  late final _c_get_spendings =
+      _c_get_spendingsPtr.asFunction<CResult______u8 Function(int, int, int)>();
+
   CResult_u32 c_create_new_account(
     int coin,
     ffi.Pointer<ffi.Char> name,
@@ -230,6 +249,40 @@ class NativeLibrary {
           'c_delete_account');
   late final _c_delete_account =
       _c_delete_accountPtr.asFunction<CResult_u8 Function(int, int)>();
+
+  CResult_u8 c_set_backup_reminder(
+    int coin,
+    int account,
+    int saved,
+  ) {
+    return _c_set_backup_reminder(
+      coin,
+      account,
+      saved,
+    );
+  }
+
+  late final _c_set_backup_reminderPtr = _lookup<
+          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, bool)>>(
+      'c_set_backup_reminder');
+  late final _c_set_backup_reminder = _c_set_backup_reminderPtr
+      .asFunction<CResult_u8 Function(int, int, int)>();
+
+  CResult_u32 c_store_contact(
+    int coin,
+    CParam contact,
+  ) {
+    return _c_store_contact(
+      coin,
+      contact,
+    );
+  }
+
+  late final _c_store_contactPtr =
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8, CParam)>>(
+          'c_store_contact');
+  late final _c_store_contact =
+      _c_store_contactPtr.asFunction<CResult_u32 Function(int, CParam)>();
 
   CResult______u8 c_list_contact_cards(
     int coin,
@@ -493,6 +546,22 @@ class NativeLibrary {
   late final _c_get_last_height =
       _c_get_last_heightPtr.asFunction<CResult_u32 Function(int)>();
 
+  CResult_u64 c_ping(
+    int coin,
+    ffi.Pointer<ffi.Char> lwd_url,
+  ) {
+    return _c_ping(
+      coin,
+      lwd_url,
+    );
+  }
+
+  late final _c_pingPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u64 Function(ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_ping');
+  late final _c_ping =
+      _c_pingPtr.asFunction<CResult_u64 Function(int, ffi.Pointer<ffi.Char>)>();
+
   CResult_u8 c_init_sapling_prover(
     int coin,
     CParam spend,
@@ -548,6 +617,42 @@ class NativeLibrary {
           'c_configure');
   late final _c_configure =
       _c_configurePtr.asFunction<CResult_u8 Function(int, CParam)>();
+
+  CResult______u8 c_derive_zip32_keys(
+    int coin,
+    int account,
+    int acc_index,
+  ) {
+    return _c_derive_zip32_keys(
+      coin,
+      account,
+      acc_index,
+    );
+  }
+
+  late final _c_derive_zip32_keysPtr = _lookup<
+      ffi.NativeFunction<
+          CResult______u8 Function(
+              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_derive_zip32_keys');
+  late final _c_derive_zip32_keys = _c_derive_zip32_keysPtr
+      .asFunction<CResult______u8 Function(int, int, int)>();
+
+  CResult_u8 c_check_db_password(
+    int coin,
+    ffi.Pointer<ffi.Char> password,
+  ) {
+    return _c_check_db_password(
+      coin,
+      password,
+    );
+  }
+
+  late final _c_check_db_passwordPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(
+              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_check_db_password');
+  late final _c_check_db_password = _c_check_db_passwordPtr
+      .asFunction<CResult_u8 Function(int, ffi.Pointer<ffi.Char>)>();
 
   CResult_u8 c_encrypt_db(
     int coin,
@@ -1121,6 +1226,16 @@ final class CResult_u32 extends ffi.Struct {
 
 final class CResult_____c_char extends ffi.Struct {
   external ffi.Pointer<ffi.Char> value;
+
+  external ffi.Pointer<ffi.Char> error;
+
+  @ffi.Uint32()
+  external int len;
+}
+
+final class CResult_u64 extends ffi.Struct {
+  @ffi.Uint64()
+  external int value;
 
   external ffi.Pointer<ffi.Char> error;
 

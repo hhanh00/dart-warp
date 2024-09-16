@@ -27,20 +27,22 @@ void main(List<String> arguments) async {
   }
   print('Synchronization completed');
 
-  final payments = [PaymentRequestT(
-    address: "zs1avauf3r6afmt052aw03wwk874uu3s5cxwdtmcqaawt5jxevr5sevw6avna6wvf233ezu59zgkfm",
-    amount: 1000000,
-    memoString: "Hello",
-    memoBytes: [])];
+  await warp.retrieveTransactionDetails(zcash);
 
-  final req = PaymentRequestsT(payments: payments);
-  var plan = await warp.pay(zcash, 1, req, 7, true, 1);
-  // plan.data = []; // discard the tx bytes
-  final txBytes = await warp.sign(zcash, plan, await warp.getBCHeight(0) + 50);
-  print(txBytes.length);
+  // final payments = [PaymentRequestT(
+  //   address: "zs1avauf3r6afmt052aw03wwk874uu3s5cxwdtmcqaawt5jxevr5sevw6avna6wvf233ezu59zgkfm",
+  //   amount: 1000000,
+  //   memoString: "Hello",
+  //   memoBytes: [])];
 
-  final txid = await warp.broadcast(zcash, txBytes);
-  print(txid);
+  // final req = PaymentRequestsT(payments: payments);
+  // var plan = await warp.pay(zcash, 1, req, 7, true, 1);
+  // // plan.data = []; // discard the tx bytes
+  // final txBytes = await warp.sign(zcash, plan, await warp.getBCHeight(0) + 50);
+  // print(txBytes.length);
+
+  // final txid = await warp.broadcast(zcash, txBytes);
+  // print(txid);
 
   final txd = await warp.fetchTxDetails(zcash, 1, 25);
   print(txd);

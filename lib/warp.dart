@@ -32,8 +32,13 @@ class Warp {
     warpLib.c_setup();
   }
 
-  void configure(int coin, { String? db, String? url, String? warp, int? warpEndHeight }) {
-    final config = fb.ConfigT(dbPath: db, lwdUrl: url, warpUrl: warp, warpEndHeight: warpEndHeight ?? 0);
+  void configure(int coin,
+      {String? db, String? url, String? warp, int? warpEndHeight}) {
+    final config = fb.ConfigT(
+        dbPath: db,
+        lwdUrl: url,
+        warpUrl: warp,
+        warpEndHeight: warpEndHeight ?? 0);
     final param = toParam(config);
     unwrapResultU8(warpLib.c_configure(coin, param.ref));
   }
@@ -62,9 +67,9 @@ class Warp {
   int createAccount(
       int coin, String name, String key, int accIndex, int birth) {
     return unwrapResultU32(
-          warpLib.c_create_new_account(
-              coin, toNative(name), toNative(key), accIndex, birth),
-        );
+      warpLib.c_create_new_account(
+          coin, toNative(name), toNative(key), accIndex, birth),
+    );
   }
 
   List<fb.AccountNameT> listAccounts(int coin) {
@@ -99,12 +104,7 @@ class Warp {
       bool feePaidBySender,
       int confirmations) async {
     return Isolate.run(() {
-      final builder = Builder();
-      final recipientOffset = recipients.pack(builder);
-      builder.finish(recipientOffset);
-      final recipientParam = calloc<CParam>();
-      recipientParam.ref.value = toNativeBytes(builder.buffer);
-      recipientParam.ref.len = builder.buffer.length;
+      final recipientParam = toParam(recipients);
       final summaryBytes = toBC(warpLib.c_prepare_payment(
           coin,
           account,
@@ -132,7 +132,6 @@ class Warp {
     return Isolate.run(() {
       final txBytesParam = toParamBytes(txBytes);
       final r = warpLib.c_tx_broadcast(coin, txBytesParam.ref);
-      calloc.free(txBytesParam);
       return unwrapResultString(r);
     });
   }
@@ -215,6 +214,19 @@ class Warp {
   Future<int> getHeightByTime(int coin, int time) async {
     return Isolate.run(
         () => unwrapResultU32(warpLib.c_get_height_by_time(coin, time)));
+  }
+
+  Future<List<fb.CheckpointT>> listCheckpoints(int coin) async {
+    return Isolate.run(() {
+      final bc = toBC(warpLib.c_list_checkpoints(coin));
+      final reader = ListReader<fb.Checkpoint>(fb.Checkpoint.reader);
+      final list = reader.read(bc, 0);
+      return list.map((e) => e.unpack()).toList();
+    });
+  }
+
+  Future<void> rewindTo(int coin, int height) async {
+    Isolate.run(() => unwrapResultU8(warpLib.c_rewind(coin, height)));
   }
 
   Future<fb.ShieldedMessageT> prevMessage(
@@ -403,6 +415,10 @@ class Warp {
     });
   }
 
+  int isValidAddressOrUri(int coin, String s) {
+    return unwrapResultU8(warpLib.c_is_valid_address_or_uri(coin, toNative(s)));
+  }
+
   Future<String> makePaymentURI(
       int coin, List<fb.PaymentRequestT> recipients) async {
     return Isolate.run(() {
@@ -411,11 +427,13 @@ class Warp {
     });
   }
 
-  Future<fb.PaymentRequestsT> parsePaymentURI(int coin, String uri) async {
-    return Isolate.run(() {
+  fb.PaymentRequestsT? parsePaymentURI(int coin, String uri) {
+    try {
       final bc = toBC(warpLib.c_parse_payment_uri(coin, toNative(uri)));
       return fb.PaymentRequests.reader.read(bc, 0).unpack();
-    });
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<void> retrieveTransactionDetails(int coin) async {
@@ -432,7 +450,8 @@ class Warp {
     });
   }
 
-  Future<fb.Zip32KeysT> deriveZip32Keys(int coin, int account, int index) async {
+  Future<fb.Zip32KeysT> deriveZip32Keys(
+      int coin, int account, int index) async {
     return Isolate.run(() {
       final bc = toBC(warpLib.c_derive_zip32_keys(coin, account, index));
       return fb.Zip32Keys.reader.read(bc, 0).unpack();
@@ -526,6 +545,9 @@ String convertCString(Pointer<Char> s) {
 }
 
 Uint8List convertBytes(Pointer<Uint8> s, int len) {
+  final b = s.asTypedList(len);
+  Uint8List copy = Uint8List(b.length);
+  copy.setRange(0, b.length, b);
   // warp_api_lib.deallocate_bytes(s, len);
-  return s.asTypedList(len);
+  return copy;
 }

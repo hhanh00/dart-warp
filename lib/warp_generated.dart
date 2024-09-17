@@ -795,6 +795,23 @@ class NativeLibrary {
   late final _c_parse_payment_uri = _c_parse_payment_uriPtr
       .asFunction<CResult______u8 Function(int, ffi.Pointer<ffi.Char>)>();
 
+  CResult_u8 c_is_valid_address_or_uri(
+    int coin,
+    ffi.Pointer<ffi.Char> s,
+  ) {
+    return _c_is_valid_address_or_uri(
+      coin,
+      s,
+    );
+  }
+
+  late final _c_is_valid_address_or_uriPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(
+              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_is_valid_address_or_uri');
+  late final _c_is_valid_address_or_uri = _c_is_valid_address_or_uriPtr
+      .asFunction<CResult_u8 Function(int, ffi.Pointer<ffi.Char>)>();
+
   CResult_u32 c_get_activation_date(
     int coin,
   ) {

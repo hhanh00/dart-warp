@@ -206,9 +206,8 @@ class Warp {
     });
   }
 
-  Future<int> getActivationDate(int coin) async {
-    return Isolate.run(
-        () => unwrapResultU32(warpLib.c_get_activation_date(coin)));
+  int getActivationDate(int coin) {
+    return unwrapResultU32(warpLib.c_get_activation_date(coin));
   }
 
   Future<int> getHeightByTime(int coin, int time) async {
@@ -365,13 +364,8 @@ class Warp {
     unwrapResultU8(warpLib.c_set_backup_reminder(coin, account, saved ? 1 : 0));
   }
 
-  String getAccountAddress(int coin, int account, int mask) {
-    return unwrapResultString(warpLib.c_get_address(coin, account, mask));
-  }
-
-  String getAccountDiversifiedAddress(int coin, int account, int mask) {
-    return unwrapResultString(
-        warpLib.c_get_account_diversified_address(coin, account, mask));
+  String getAccountAddress(int coin, int account, int time, int mask) {
+    return unwrapResultString(warpLib.c_get_address(coin, account, time, mask));
   }
 
   Future<fb.TransactionSummaryT> sweep(int coin, int account, int confirmations,
@@ -419,12 +413,9 @@ class Warp {
     return unwrapResultU8(warpLib.c_is_valid_address_or_uri(coin, toNative(s)));
   }
 
-  Future<String> makePaymentURI(
-      int coin, List<fb.PaymentRequestT> recipients) async {
-    return Isolate.run(() {
-      final payments = toParam(fb.PaymentRequestsT(payments: recipients));
-      return unwrapResultString(warpLib.c_make_payment_uri(coin, payments.ref));
-    });
+  String makePaymentURI(int coin, List<fb.PaymentRequestT> recipients) {
+    final payments = toParam(fb.PaymentRequestsT(payments: recipients));
+    return unwrapResultString(warpLib.c_make_payment_uri(coin, payments.ref));
   }
 
   fb.PaymentRequestsT? parsePaymentURI(int coin, String uri) {

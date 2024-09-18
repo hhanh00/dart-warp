@@ -692,11 +692,13 @@ class NativeLibrary {
   CResult_____c_char c_get_address(
     int coin,
     int account,
+    int time,
     int mask,
   ) {
     return _c_get_address(
       coin,
       account,
+      time,
       mask,
     );
   }
@@ -704,9 +706,9 @@ class NativeLibrary {
   late final _c_get_addressPtr = _lookup<
       ffi.NativeFunction<
           CResult_____c_char Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint8)>>('c_get_address');
+              ffi.Uint8, ffi.Uint32, ffi.Uint32, ffi.Uint8)>>('c_get_address');
   late final _c_get_address = _c_get_addressPtr
-      .asFunction<CResult_____c_char Function(int, int, int)>();
+      .asFunction<CResult_____c_char Function(int, int, int, int)>();
 
   CResult_u8 c_set_db_password(
     int coin,
@@ -741,26 +743,6 @@ class NativeLibrary {
               ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_decode_address');
   late final _c_decode_address = _c_decode_addressPtr
       .asFunction<CResult______u8 Function(int, ffi.Pointer<ffi.Char>)>();
-
-  CResult_____c_char c_get_account_diversified_address(
-    int coin,
-    int account,
-    int pools,
-  ) {
-    return _c_get_account_diversified_address(
-      coin,
-      account,
-      pools,
-    );
-  }
-
-  late final _c_get_account_diversified_addressPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_____c_char Function(ffi.Uint8, ffi.Uint32,
-              ffi.Uint8)>>('c_get_account_diversified_address');
-  late final _c_get_account_diversified_address =
-      _c_get_account_diversified_addressPtr
-          .asFunction<CResult_____c_char Function(int, int, int)>();
 
   CResult_____c_char c_make_payment_uri(
     int coin,

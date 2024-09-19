@@ -44,14 +44,14 @@ class Warp {
   }
 
   Future<void> initProver(Uint8List spend, Uint8List output) async {
-    Isolate.run(() {
+    return Isolate.run(() {
       unwrapResultU8(warpLib.c_init_sapling_prover(
           0, toParamBytes(spend).ref, toParamBytes(output).ref));
     });
   }
 
   Future<void> resetTables(int coin) async {
-    Isolate.run(() {
+    return Isolate.run(() {
       unwrapResultU8(warpLib.c_reset_tables(coin));
     });
   }
@@ -61,7 +61,7 @@ class Warp {
   }
 
   Future<void> createTables(int coin) async {
-    Isolate.run(() => unwrapResultU8(warpLib.c_reset_tables(coin)));
+    return Isolate.run(() => unwrapResultU8(warpLib.c_reset_tables(coin)));
   }
 
   int createAccount(
@@ -85,7 +85,8 @@ class Warp {
   }
 
   Future<void> resetChain(int coin, int height) async {
-    Isolate.run(() => unwrapResultU8(warpLib.c_reset_chain(coin, height)));
+    return Isolate.run(
+        () => unwrapResultU8(warpLib.c_reset_chain(coin, height)));
   }
 
   int getSyncHeight(int coin) {
@@ -144,22 +145,23 @@ class Warp {
 
   Future<void> setAccountProperty(
       int coin, int account, String name, Uint8List value) async {
-    Isolate.run(() => unwrapResultU8(warpLib.c_set_account_property(
+    return Isolate.run(() => unwrapResultU8(warpLib.c_set_account_property(
         coin, account, toNative(name), toParamBytes(value).ref)));
   }
 
   Future<void> editAccountName(int coin, int account, String name) async {
-    Isolate.run(() => unwrapResultU8(
+    return Isolate.run(() => unwrapResultU8(
         warpLib.c_edit_account_name(coin, account, toNative(name))));
   }
 
   Future<void> editAccountBirthHeight(int coin, int account, int height) async {
-    Isolate.run(() =>
+    return Isolate.run(() =>
         unwrapResultU8(warpLib.c_edit_account_birth(coin, account, height)));
   }
 
   Future<void> deleteAccount(int coin, int account) async {
-    Isolate.run(() => unwrapResultU8(warpLib.c_delete_account(coin, account)));
+    return Isolate.run(
+        () => unwrapResultU8(warpLib.c_delete_account(coin, account)));
   }
 
   Future<List<fb.ContactCardT>> listContacts(int coin) async {
@@ -184,17 +186,18 @@ class Warp {
   }
 
   Future<void> editContactName(int coin, int id, String name) async {
-    Isolate.run(() =>
+    return Isolate.run(() =>
         unwrapResultU8(warpLib.c_edit_contact_name(coin, id, toNative(name))));
   }
 
   Future<void> editContactAddress(int coin, int id, String address) async {
-    Isolate.run(() => unwrapResultU8(
+    return Isolate.run(() => unwrapResultU8(
         warpLib.c_edit_contact_address(coin, id, toNative(address))));
   }
 
   Future<void> deleteContact(int coin, int id) async {
-    Isolate.run(() => unwrapResultU8(warpLib.c_delete_contact(coin, id)));
+    return Isolate.run(
+        () => unwrapResultU8(warpLib.c_delete_contact(coin, id)));
   }
 
   Future<fb.TransactionSummaryT> saveContacts(
@@ -210,9 +213,18 @@ class Warp {
     return unwrapResultU32(warpLib.c_get_activation_date(coin));
   }
 
+  int getActivationHeight(int coin) {
+    return unwrapResultU32(warpLib.c_get_activation_height(coin));
+  }
+
   Future<int> getHeightByTime(int coin, int time) async {
     return Isolate.run(
         () => unwrapResultU32(warpLib.c_get_height_by_time(coin, time)));
+  }
+
+  Future<int> getTimeByHeight(int coin, int height) async {
+    return Isolate.run(
+        () => unwrapResultU32(warpLib.c_get_time_by_height(coin, height)));
   }
 
   Future<List<fb.CheckpointT>> listCheckpoints(int coin) async {
@@ -225,7 +237,7 @@ class Warp {
   }
 
   Future<void> rewindTo(int coin, int height) async {
-    Isolate.run(() => unwrapResultU8(warpLib.c_rewind(coin, height)));
+    return Isolate.run(() => unwrapResultU8(warpLib.c_rewind(coin, height)));
   }
 
   Future<fb.ShieldedMessageT> prevMessage(
@@ -262,12 +274,12 @@ class Warp {
   }
 
   Future<void> markMessageRead(int coin, int id, bool reverse) async {
-    Isolate.run(
+    return Isolate.run(
         () => unwrapResultU8(warpLib.c_mark_read(coin, id, reverse ? 1 : 0)));
   }
 
   Future<void> markAllMessagesRead(int coin, int account, bool reverse) async {
-    Isolate.run(() => unwrapResultU8(
+    return Isolate.run(() => unwrapResultU8(
         warpLib.c_mark_all_read(coin, account, reverse ? 1 : 0)));
   }
 
@@ -282,11 +294,11 @@ class Warp {
   }
 
   Future<void> excludeNote(int coin, int id, bool reverse) async {
-    Isolate.run(() => warpLib.c_exclude_note(coin, id, reverse ? 1 : 0));
+    return Isolate.run(() => warpLib.c_exclude_note(coin, id, reverse ? 1 : 0));
   }
 
   Future<void> reverseNoteExclusion(int coin, int account) async {
-    Isolate.run(() => warpLib.c_reverse_note_exclusion(coin, account));
+    return Isolate.run(() => warpLib.c_reverse_note_exclusion(coin, account));
   }
 
   bool checkDbPassword(int coin, String password) {
@@ -296,12 +308,12 @@ class Warp {
   }
 
   Future<void> encryptDb(int coin, String password, String dbPath) async {
-    Isolate.run(() => unwrapResultU8(
+    return Isolate.run(() => unwrapResultU8(
         warpLib.c_encrypt_db(coin, toNative(password), toNative(dbPath))));
   }
 
   Future<void> setDbPassword(int coin, String password, String dbPath) async {
-    Isolate.run(() =>
+    return Isolate.run(() =>
         unwrapResultU8(warpLib.c_set_db_password(coin, toNative(password))));
   }
 
@@ -314,7 +326,7 @@ class Warp {
 
   Future<void> encryptZIPDbFiles(String directory, String extension,
       String targetPath, String publicKey) async {
-    Isolate.run(() => warpLib.c_encrypt_zip_database_files(
+    return Isolate.run(() => warpLib.c_encrypt_zip_database_files(
         0,
         toNative(directory),
         toNative(extension),
@@ -324,7 +336,7 @@ class Warp {
 
   Future<void> decryptZIPDbFiles(
       String filePath, String targetPath, String secretKey) async {
-    Isolate.run(() => warpLib.c_decrypt_zip_database_files(
+    return Isolate.run(() => warpLib.c_decrypt_zip_database_files(
         0, toNative(filePath), toNative(targetPath), toNative(secretKey)));
   }
 
@@ -366,6 +378,20 @@ class Warp {
 
   String getAccountAddress(int coin, int account, int time, int mask) {
     return unwrapResultString(warpLib.c_get_address(coin, account, time, mask));
+  }
+
+  fb.AccountSigningCapabilitiesT getAccountCapabilities(int coin, int account) {
+    final bc = toBC(warpLib.c_get_account_signing_capabilities(coin, account));
+    return fb.AccountSigningCapabilities.reader.read(bc, 0).unpack();
+  }
+
+  Future<void> downgradeAccount(int coin, int account, fb.AccountSigningCapabilitiesT capabilities) async {
+    return Isolate.run(() => unwrapResultU8(warpLib.c_downgrade_account(
+        coin, account, toParam(capabilities).ref)));
+  }
+
+  bool canSign(int coin, int account, fb.TransactionSummaryT summary) {
+    return unwrapResultBool(warpLib.c_can_sign(coin, account, toParam(summary).ref));
   }
 
   Future<fb.TransactionSummaryT> sweep(int coin, int account, int confirmations,
@@ -418,17 +444,13 @@ class Warp {
     return unwrapResultString(warpLib.c_make_payment_uri(coin, payments.ref));
   }
 
-  fb.PaymentRequestsT? parsePaymentURI(int coin, String uri) {
-    try {
-      final bc = toBC(warpLib.c_parse_payment_uri(coin, toNative(uri)));
-      return fb.PaymentRequests.reader.read(bc, 0).unpack();
-    } catch (_) {
-      return null;
-    }
+  fb.PaymentRequestsT parsePaymentURI(int coin, String uri) {
+    final bc = toBC(warpLib.c_parse_payment_uri(coin, toNative(uri)));
+    return fb.PaymentRequests.reader.read(bc, 0).unpack();
   }
 
   Future<void> retrieveTransactionDetails(int coin) async {
-    Isolate.run(() => warpLib.c_retrieve_tx_details(coin));
+    return Isolate.run(() => warpLib.c_retrieve_tx_details(coin));
   }
 
   Future<List<fb.SpendingT>> getSpendings(
@@ -499,10 +521,10 @@ Pointer<Uint8> toNativeBytes(Uint8List bytes) {
   return ptr;
 }
 
-// bool unwrapResultBool(CResult_bool r) {
-//   if (r.error != nullptr) throw convertCString(r.error);
-//   return r.value != 0;
-// }
+bool unwrapResultBool(CResult_bool r) {
+  if (r.error != nullptr) throw convertCString(r.error);
+  return r.value != 0;
+}
 
 int unwrapResultU8(CResult_u8 r) {
   if (r.error != nullptr) throw convertCString(r.error);

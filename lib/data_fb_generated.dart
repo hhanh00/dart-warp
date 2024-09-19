@@ -4107,3 +4107,140 @@ class ConfigObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class AccountSigningCapabilities {
+  AccountSigningCapabilities._(this._bc, this._bcOffset);
+  factory AccountSigningCapabilities(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<AccountSigningCapabilities> reader = _AccountSigningCapabilitiesReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  bool get seed => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  int get transparent => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get sapling => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get orchard => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0);
+
+  @override
+  String toString() {
+    return 'AccountSigningCapabilities{seed: ${seed}, transparent: ${transparent}, sapling: ${sapling}, orchard: ${orchard}}';
+  }
+
+  AccountSigningCapabilitiesT unpack() => AccountSigningCapabilitiesT(
+      seed: seed,
+      transparent: transparent,
+      sapling: sapling,
+      orchard: orchard);
+
+  static int pack(fb.Builder fbBuilder, AccountSigningCapabilitiesT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class AccountSigningCapabilitiesT implements fb.Packable {
+  bool seed;
+  int transparent;
+  int sapling;
+  int orchard;
+
+  AccountSigningCapabilitiesT({
+      this.seed = false,
+      this.transparent = 0,
+      this.sapling = 0,
+      this.orchard = 0});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    fbBuilder.startTable(4);
+    fbBuilder.addBool(0, seed);
+    fbBuilder.addUint8(1, transparent);
+    fbBuilder.addUint8(2, sapling);
+    fbBuilder.addUint8(3, orchard);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'AccountSigningCapabilitiesT{seed: ${seed}, transparent: ${transparent}, sapling: ${sapling}, orchard: ${orchard}}';
+  }
+}
+
+class _AccountSigningCapabilitiesReader extends fb.TableReader<AccountSigningCapabilities> {
+  const _AccountSigningCapabilitiesReader();
+
+  @override
+  AccountSigningCapabilities createObject(fb.BufferContext bc, int offset) => 
+    AccountSigningCapabilities._(bc, offset);
+}
+
+class AccountSigningCapabilitiesBuilder {
+  AccountSigningCapabilitiesBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addSeed(bool? seed) {
+    fbBuilder.addBool(0, seed);
+    return fbBuilder.offset;
+  }
+  int addTransparent(int? transparent) {
+    fbBuilder.addUint8(1, transparent);
+    return fbBuilder.offset;
+  }
+  int addSapling(int? sapling) {
+    fbBuilder.addUint8(2, sapling);
+    return fbBuilder.offset;
+  }
+  int addOrchard(int? orchard) {
+    fbBuilder.addUint8(3, orchard);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class AccountSigningCapabilitiesObjectBuilder extends fb.ObjectBuilder {
+  final bool? _seed;
+  final int? _transparent;
+  final int? _sapling;
+  final int? _orchard;
+
+  AccountSigningCapabilitiesObjectBuilder({
+    bool? seed,
+    int? transparent,
+    int? sapling,
+    int? orchard,
+  })
+      : _seed = seed,
+        _transparent = transparent,
+        _sapling = sapling,
+        _orchard = orchard;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(4);
+    fbBuilder.addBool(0, _seed);
+    fbBuilder.addUint8(1, _transparent);
+    fbBuilder.addUint8(2, _sapling);
+    fbBuilder.addUint8(3, _orchard);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}

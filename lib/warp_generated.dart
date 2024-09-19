@@ -109,6 +109,23 @@ class NativeLibrary {
   late final _c_get_balance =
       _c_get_balancePtr.asFunction<CResult______u8 Function(int, int, int)>();
 
+  CResult______u8 c_get_account_signing_capabilities(
+    int coin,
+    int account,
+  ) {
+    return _c_get_account_signing_capabilities(
+      coin,
+      account,
+    );
+  }
+
+  late final _c_get_account_signing_capabilitiesPtr = _lookup<
+          ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      'c_get_account_signing_capabilities');
+  late final _c_get_account_signing_capabilities =
+      _c_get_account_signing_capabilitiesPtr
+          .asFunction<CResult______u8 Function(int, int)>();
+
   CResult______u8 c_get_account_property(
     int coin,
     int account,
@@ -267,6 +284,25 @@ class NativeLibrary {
       'c_set_backup_reminder');
   late final _c_set_backup_reminder = _c_set_backup_reminderPtr
       .asFunction<CResult_u8 Function(int, int, int)>();
+
+  CResult_u8 c_downgrade_account(
+    int coin,
+    int account,
+    CParam capabilities,
+  ) {
+    return _c_downgrade_account(
+      coin,
+      account,
+      capabilities,
+    );
+  }
+
+  late final _c_downgrade_accountPtr = _lookup<
+          ffi
+          .NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, CParam)>>(
+      'c_downgrade_account');
+  late final _c_downgrade_account = _c_downgrade_accountPtr
+      .asFunction<CResult_u8 Function(int, int, CParam)>();
 
   CResult_u32 c_store_contact(
     int coin,
@@ -824,6 +860,36 @@ class NativeLibrary {
   late final _c_get_height_by_time =
       _c_get_height_by_timePtr.asFunction<CResult_u32 Function(int, int)>();
 
+  CResult_u32 c_get_activation_height(
+    int coin,
+  ) {
+    return _c_get_activation_height(
+      coin,
+    );
+  }
+
+  late final _c_get_activation_heightPtr =
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
+          'c_get_activation_height');
+  late final _c_get_activation_height =
+      _c_get_activation_heightPtr.asFunction<CResult_u32 Function(int)>();
+
+  CResult_u32 c_get_time_by_height(
+    int coin,
+    int height,
+  ) {
+    return _c_get_time_by_height(
+      coin,
+      height,
+    );
+  }
+
+  late final _c_get_time_by_heightPtr =
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_get_time_by_height');
+  late final _c_get_time_by_height =
+      _c_get_time_by_heightPtr.asFunction<CResult_u32 Function(int, int)>();
+
   CResult_u8 c_reset_chain(
     int coin,
     int height,
@@ -1048,6 +1114,24 @@ class NativeLibrary {
   late final _c_prepare_payment = _c_prepare_paymentPtr
       .asFunction<CResult______u8 Function(int, int, CParam, int, int, int)>();
 
+  CResult_bool c_can_sign(
+    int coin,
+    int account,
+    CParam summary,
+  ) {
+    return _c_can_sign(
+      coin,
+      account,
+      summary,
+    );
+  }
+
+  late final _c_can_signPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_bool Function(ffi.Uint8, ffi.Uint32, CParam)>>('c_can_sign');
+  late final _c_can_sign =
+      _c_can_signPtr.asFunction<CResult_bool Function(int, int, CParam)>();
+
   CResult______u8 c_sign(
     int coin,
     CParam summary,
@@ -1234,6 +1318,16 @@ final class CResult_____c_char extends ffi.Struct {
 
 final class CResult_u64 extends ffi.Struct {
   @ffi.Uint64()
+  external int value;
+
+  external ffi.Pointer<ffi.Char> error;
+
+  @ffi.Uint32()
+  external int len;
+}
+
+final class CResult_bool extends ffi.Struct {
+  @bool()
   external int value;
 
   external ffi.Pointer<ffi.Char> error;

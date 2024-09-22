@@ -1849,6 +1849,166 @@ class UareceiversObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class Recipient {
+  Recipient._(this._bc, this._bcOffset);
+  factory Recipient(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Recipient> reader = _RecipientReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get address => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  int get amount => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get pools => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  UserMemo? get memo => UserMemo.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  List<int>? get memoBytes => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'Recipient{address: ${address}, amount: ${amount}, pools: ${pools}, memo: ${memo}, memoBytes: ${memoBytes}}';
+  }
+
+  RecipientT unpack() => RecipientT(
+      address: address,
+      amount: amount,
+      pools: pools,
+      memo: memo?.unpack(),
+      memoBytes: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 12));
+
+  static int pack(fb.Builder fbBuilder, RecipientT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class RecipientT implements fb.Packable {
+  String? address;
+  int amount;
+  int pools;
+  UserMemoT? memo;
+  List<int>? memoBytes;
+
+  RecipientT({
+      this.address,
+      this.amount = 0,
+      this.pools = 0,
+      this.memo,
+      this.memoBytes});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    final int? addressOffset = address == null ? null
+        : fbBuilder.writeString(address!);
+    final int? memoOffset = memo?.pack(fbBuilder);
+    final int? memoBytesOffset = memoBytes == null ? null
+        : fbBuilder.writeListUint8(memoBytes!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, addressOffset);
+    fbBuilder.addUint64(1, amount);
+    fbBuilder.addUint8(2, pools);
+    fbBuilder.addOffset(3, memoOffset);
+    fbBuilder.addOffset(4, memoBytesOffset);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'RecipientT{address: ${address}, amount: ${amount}, pools: ${pools}, memo: ${memo}, memoBytes: ${memoBytes}}';
+  }
+}
+
+class _RecipientReader extends fb.TableReader<Recipient> {
+  const _RecipientReader();
+
+  @override
+  Recipient createObject(fb.BufferContext bc, int offset) => 
+    Recipient._(bc, offset);
+}
+
+class RecipientBuilder {
+  RecipientBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addAddressOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addAmount(int? amount) {
+    fbBuilder.addUint64(1, amount);
+    return fbBuilder.offset;
+  }
+  int addPools(int? pools) {
+    fbBuilder.addUint8(2, pools);
+    return fbBuilder.offset;
+  }
+  int addMemoOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addMemoBytesOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RecipientObjectBuilder extends fb.ObjectBuilder {
+  final String? _address;
+  final int? _amount;
+  final int? _pools;
+  final UserMemoObjectBuilder? _memo;
+  final List<int>? _memoBytes;
+
+  RecipientObjectBuilder({
+    String? address,
+    int? amount,
+    int? pools,
+    UserMemoObjectBuilder? memo,
+    List<int>? memoBytes,
+  })
+      : _address = address,
+        _amount = amount,
+        _pools = pools,
+        _memo = memo,
+        _memoBytes = memoBytes;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? addressOffset = _address == null ? null
+        : fbBuilder.writeString(_address!);
+    final int? memoOffset = _memo?.getOrCreateOffset(fbBuilder);
+    final int? memoBytesOffset = _memoBytes == null ? null
+        : fbBuilder.writeListUint8(_memoBytes!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, addressOffset);
+    fbBuilder.addUint64(1, _amount);
+    fbBuilder.addUint8(2, _pools);
+    fbBuilder.addOffset(3, memoOffset);
+    fbBuilder.addOffset(4, memoBytesOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 class PaymentRequest {
   PaymentRequest._(this._bc, this._bcOffset);
   factory PaymentRequest(List<int> bytes) {
@@ -1861,21 +2021,25 @@ class PaymentRequest {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  String? get address => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  int get amount => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  UserMemo? get memo => UserMemo.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  List<int>? get memoBytes => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
+  List<Recipient>? get recipients => const fb.ListReader<Recipient>(Recipient.reader).vTableGetNullable(_bc, _bcOffset, 4);
+  int get srcPools => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  bool get senderPayFees => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  bool get useChange => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  int get height => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get expiration => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
 
   @override
   String toString() {
-    return 'PaymentRequest{address: ${address}, amount: ${amount}, memo: ${memo}, memoBytes: ${memoBytes}}';
+    return 'PaymentRequest{recipients: ${recipients}, srcPools: ${srcPools}, senderPayFees: ${senderPayFees}, useChange: ${useChange}, height: ${height}, expiration: ${expiration}}';
   }
 
   PaymentRequestT unpack() => PaymentRequestT(
-      address: address,
-      amount: amount,
-      memo: memo?.unpack(),
-      memoBytes: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 10));
+      recipients: recipients?.map((e) => e.unpack()).toList(),
+      srcPools: srcPools,
+      senderPayFees: senderPayFees,
+      useChange: useChange,
+      height: height,
+      expiration: expiration);
 
   static int pack(fb.Builder fbBuilder, PaymentRequestT? object) {
     if (object == null) return 0;
@@ -1884,35 +2048,38 @@ class PaymentRequest {
 }
 
 class PaymentRequestT implements fb.Packable {
-  String? address;
-  int amount;
-  UserMemoT? memo;
-  List<int>? memoBytes;
+  List<RecipientT>? recipients;
+  int srcPools;
+  bool senderPayFees;
+  bool useChange;
+  int height;
+  int expiration;
 
   PaymentRequestT({
-      this.address,
-      this.amount = 0,
-      this.memo,
-      this.memoBytes});
+      this.recipients,
+      this.srcPools = 0,
+      this.senderPayFees = false,
+      this.useChange = false,
+      this.height = 0,
+      this.expiration = 0});
 
   @override
   int pack(fb.Builder fbBuilder) {
-    final int? addressOffset = address == null ? null
-        : fbBuilder.writeString(address!);
-    final int? memoOffset = memo?.pack(fbBuilder);
-    final int? memoBytesOffset = memoBytes == null ? null
-        : fbBuilder.writeListUint8(memoBytes!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, addressOffset);
-    fbBuilder.addUint64(1, amount);
-    fbBuilder.addOffset(2, memoOffset);
-    fbBuilder.addOffset(3, memoBytesOffset);
+    final int? recipientsOffset = recipients == null ? null
+        : fbBuilder.writeList(recipients!.map((b) => b.pack(fbBuilder)).toList());
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, recipientsOffset);
+    fbBuilder.addUint8(1, srcPools);
+    fbBuilder.addBool(2, senderPayFees);
+    fbBuilder.addBool(3, useChange);
+    fbBuilder.addUint32(4, height);
+    fbBuilder.addUint32(5, expiration);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'PaymentRequestT{address: ${address}, amount: ${amount}, memo: ${memo}, memoBytes: ${memoBytes}}';
+    return 'PaymentRequestT{recipients: ${recipients}, srcPools: ${srcPools}, senderPayFees: ${senderPayFees}, useChange: ${useChange}, height: ${height}, expiration: ${expiration}}';
   }
 }
 
@@ -1930,23 +2097,31 @@ class PaymentRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(6);
   }
 
-  int addAddressOffset(int? offset) {
+  int addRecipientsOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addAmount(int? amount) {
-    fbBuilder.addUint64(1, amount);
+  int addSrcPools(int? srcPools) {
+    fbBuilder.addUint8(1, srcPools);
     return fbBuilder.offset;
   }
-  int addMemoOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addSenderPayFees(bool? senderPayFees) {
+    fbBuilder.addBool(2, senderPayFees);
     return fbBuilder.offset;
   }
-  int addMemoBytesOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addUseChange(bool? useChange) {
+    fbBuilder.addBool(3, useChange);
+    return fbBuilder.offset;
+  }
+  int addHeight(int? height) {
+    fbBuilder.addUint32(4, height);
+    return fbBuilder.offset;
+  }
+  int addExpiration(int? expiration) {
+    fbBuilder.addUint32(5, expiration);
     return fbBuilder.offset;
   }
 
@@ -1956,137 +2131,40 @@ class PaymentRequestBuilder {
 }
 
 class PaymentRequestObjectBuilder extends fb.ObjectBuilder {
-  final String? _address;
-  final int? _amount;
-  final UserMemoObjectBuilder? _memo;
-  final List<int>? _memoBytes;
+  final List<RecipientObjectBuilder>? _recipients;
+  final int? _srcPools;
+  final bool? _senderPayFees;
+  final bool? _useChange;
+  final int? _height;
+  final int? _expiration;
 
   PaymentRequestObjectBuilder({
-    String? address,
-    int? amount,
-    UserMemoObjectBuilder? memo,
-    List<int>? memoBytes,
+    List<RecipientObjectBuilder>? recipients,
+    int? srcPools,
+    bool? senderPayFees,
+    bool? useChange,
+    int? height,
+    int? expiration,
   })
-      : _address = address,
-        _amount = amount,
-        _memo = memo,
-        _memoBytes = memoBytes;
+      : _recipients = recipients,
+        _srcPools = srcPools,
+        _senderPayFees = senderPayFees,
+        _useChange = useChange,
+        _height = height,
+        _expiration = expiration;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? addressOffset = _address == null ? null
-        : fbBuilder.writeString(_address!);
-    final int? memoOffset = _memo?.getOrCreateOffset(fbBuilder);
-    final int? memoBytesOffset = _memoBytes == null ? null
-        : fbBuilder.writeListUint8(_memoBytes!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, addressOffset);
-    fbBuilder.addUint64(1, _amount);
-    fbBuilder.addOffset(2, memoOffset);
-    fbBuilder.addOffset(3, memoBytesOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class PaymentRequests {
-  PaymentRequests._(this._bc, this._bcOffset);
-  factory PaymentRequests(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<PaymentRequests> reader = _PaymentRequestsReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  List<PaymentRequest>? get payments => const fb.ListReader<PaymentRequest>(PaymentRequest.reader).vTableGetNullable(_bc, _bcOffset, 4);
-
-  @override
-  String toString() {
-    return 'PaymentRequests{payments: ${payments}}';
-  }
-
-  PaymentRequestsT unpack() => PaymentRequestsT(
-      payments: payments?.map((e) => e.unpack()).toList());
-
-  static int pack(fb.Builder fbBuilder, PaymentRequestsT? object) {
-    if (object == null) return 0;
-    return object.pack(fbBuilder);
-  }
-}
-
-class PaymentRequestsT implements fb.Packable {
-  List<PaymentRequestT>? payments;
-
-  PaymentRequestsT({
-      this.payments});
-
-  @override
-  int pack(fb.Builder fbBuilder) {
-    final int? paymentsOffset = payments == null ? null
-        : fbBuilder.writeList(payments!.map((b) => b.pack(fbBuilder)).toList());
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, paymentsOffset);
-    return fbBuilder.endTable();
-  }
-
-  @override
-  String toString() {
-    return 'PaymentRequestsT{payments: ${payments}}';
-  }
-}
-
-class _PaymentRequestsReader extends fb.TableReader<PaymentRequests> {
-  const _PaymentRequestsReader();
-
-  @override
-  PaymentRequests createObject(fb.BufferContext bc, int offset) => 
-    PaymentRequests._(bc, offset);
-}
-
-class PaymentRequestsBuilder {
-  PaymentRequestsBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(1);
-  }
-
-  int addPaymentsOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class PaymentRequestsObjectBuilder extends fb.ObjectBuilder {
-  final List<PaymentRequestObjectBuilder>? _payments;
-
-  PaymentRequestsObjectBuilder({
-    List<PaymentRequestObjectBuilder>? payments,
-  })
-      : _payments = payments;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? paymentsOffset = _payments == null ? null
-        : fbBuilder.writeList(_payments!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, paymentsOffset);
+    final int? recipientsOffset = _recipients == null ? null
+        : fbBuilder.writeList(_recipients!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, recipientsOffset);
+    fbBuilder.addUint8(1, _srcPools);
+    fbBuilder.addBool(2, _senderPayFees);
+    fbBuilder.addBool(3, _useChange);
+    fbBuilder.addUint32(4, _height);
+    fbBuilder.addUint32(5, _expiration);
     return fbBuilder.endTable();
   }
 
@@ -2437,15 +2515,17 @@ class TransactionRecipient {
 
   String? get address => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   int get amount => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  bool get change => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
 
   @override
   String toString() {
-    return 'TransactionRecipient{address: ${address}, amount: ${amount}}';
+    return 'TransactionRecipient{address: ${address}, amount: ${amount}, change: ${change}}';
   }
 
   TransactionRecipientT unpack() => TransactionRecipientT(
       address: address,
-      amount: amount);
+      amount: amount,
+      change: change);
 
   static int pack(fb.Builder fbBuilder, TransactionRecipientT? object) {
     if (object == null) return 0;
@@ -2456,24 +2536,27 @@ class TransactionRecipient {
 class TransactionRecipientT implements fb.Packable {
   String? address;
   int amount;
+  bool change;
 
   TransactionRecipientT({
       this.address,
-      this.amount = 0});
+      this.amount = 0,
+      this.change = false});
 
   @override
   int pack(fb.Builder fbBuilder) {
     final int? addressOffset = address == null ? null
         : fbBuilder.writeString(address!);
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(3);
     fbBuilder.addOffset(0, addressOffset);
     fbBuilder.addUint64(1, amount);
+    fbBuilder.addBool(2, change);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'TransactionRecipientT{address: ${address}, amount: ${amount}}';
+    return 'TransactionRecipientT{address: ${address}, amount: ${amount}, change: ${change}}';
   }
 }
 
@@ -2491,7 +2574,7 @@ class TransactionRecipientBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(3);
   }
 
   int addAddressOffset(int? offset) {
@@ -2500,6 +2583,10 @@ class TransactionRecipientBuilder {
   }
   int addAmount(int? amount) {
     fbBuilder.addUint64(1, amount);
+    return fbBuilder.offset;
+  }
+  int addChange(bool? change) {
+    fbBuilder.addBool(2, change);
     return fbBuilder.offset;
   }
 
@@ -2511,22 +2598,26 @@ class TransactionRecipientBuilder {
 class TransactionRecipientObjectBuilder extends fb.ObjectBuilder {
   final String? _address;
   final int? _amount;
+  final bool? _change;
 
   TransactionRecipientObjectBuilder({
     String? address,
     int? amount,
+    bool? change,
   })
       : _address = address,
-        _amount = amount;
+        _amount = amount,
+        _change = change;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? addressOffset = _address == null ? null
         : fbBuilder.writeString(_address!);
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(3);
     fbBuilder.addOffset(0, addressOffset);
     fbBuilder.addUint64(1, _amount);
+    fbBuilder.addBool(2, _change);
     return fbBuilder.endTable();
   }
 
@@ -3962,10 +4053,11 @@ class Config {
   String? get warpUrl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   int get warpEndHeight => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
   int get confirmations => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  bool get regtest => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
 
   @override
   String toString() {
-    return 'Config{dbPath: ${dbPath}, lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}}';
+    return 'Config{dbPath: ${dbPath}, lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
   }
 
   ConfigT unpack() => ConfigT(
@@ -3973,7 +4065,8 @@ class Config {
       lwdUrl: lwdUrl,
       warpUrl: warpUrl,
       warpEndHeight: warpEndHeight,
-      confirmations: confirmations);
+      confirmations: confirmations,
+      regtest: regtest);
 
   static int pack(fb.Builder fbBuilder, ConfigT? object) {
     if (object == null) return 0;
@@ -3987,13 +4080,15 @@ class ConfigT implements fb.Packable {
   String? warpUrl;
   int warpEndHeight;
   int confirmations;
+  bool regtest;
 
   ConfigT({
       this.dbPath,
       this.lwdUrl,
       this.warpUrl,
       this.warpEndHeight = 0,
-      this.confirmations = 0});
+      this.confirmations = 0,
+      this.regtest = false});
 
   @override
   int pack(fb.Builder fbBuilder) {
@@ -4003,18 +4098,19 @@ class ConfigT implements fb.Packable {
         : fbBuilder.writeString(lwdUrl!);
     final int? warpUrlOffset = warpUrl == null ? null
         : fbBuilder.writeString(warpUrl!);
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
     fbBuilder.addOffset(0, dbPathOffset);
     fbBuilder.addOffset(1, lwdUrlOffset);
     fbBuilder.addOffset(2, warpUrlOffset);
     fbBuilder.addUint32(3, warpEndHeight);
     fbBuilder.addUint32(4, confirmations);
+    fbBuilder.addBool(5, regtest);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'ConfigT{dbPath: ${dbPath}, lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}}';
+    return 'ConfigT{dbPath: ${dbPath}, lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
   }
 }
 
@@ -4032,7 +4128,7 @@ class ConfigBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
   }
 
   int addDbPathOffset(int? offset) {
@@ -4055,6 +4151,10 @@ class ConfigBuilder {
     fbBuilder.addUint32(4, confirmations);
     return fbBuilder.offset;
   }
+  int addRegtest(bool? regtest) {
+    fbBuilder.addBool(5, regtest);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -4067,6 +4167,7 @@ class ConfigObjectBuilder extends fb.ObjectBuilder {
   final String? _warpUrl;
   final int? _warpEndHeight;
   final int? _confirmations;
+  final bool? _regtest;
 
   ConfigObjectBuilder({
     String? dbPath,
@@ -4074,12 +4175,14 @@ class ConfigObjectBuilder extends fb.ObjectBuilder {
     String? warpUrl,
     int? warpEndHeight,
     int? confirmations,
+    bool? regtest,
   })
       : _dbPath = dbPath,
         _lwdUrl = lwdUrl,
         _warpUrl = warpUrl,
         _warpEndHeight = warpEndHeight,
-        _confirmations = confirmations;
+        _confirmations = confirmations,
+        _regtest = regtest;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -4090,12 +4193,13 @@ class ConfigObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_lwdUrl!);
     final int? warpUrlOffset = _warpUrl == null ? null
         : fbBuilder.writeString(_warpUrl!);
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
     fbBuilder.addOffset(0, dbPathOffset);
     fbBuilder.addOffset(1, lwdUrlOffset);
     fbBuilder.addOffset(2, warpUrlOffset);
     fbBuilder.addUint32(3, _warpEndHeight);
     fbBuilder.addUint32(4, _confirmations);
+    fbBuilder.addBool(5, _regtest);
     return fbBuilder.endTable();
   }
 

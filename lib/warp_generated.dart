@@ -782,11 +782,11 @@ class NativeLibrary {
 
   CResult_____c_char c_make_payment_uri(
     int coin,
-    CParam recipients,
+    CParam payment,
   ) {
     return _c_make_payment_uri(
       coin,
-      recipients,
+      payment,
     );
   }
 
@@ -1092,27 +1092,21 @@ class NativeLibrary {
   CResult______u8 c_prepare_payment(
     int coin,
     int account,
-    CParam recipients,
-    int src_pools,
-    int fee_paid_by_sender,
-    int confirmations,
+    CParam payment,
   ) {
     return _c_prepare_payment(
       coin,
       account,
-      recipients,
-      src_pools,
-      fee_paid_by_sender,
-      confirmations,
+      payment,
     );
   }
 
   late final _c_prepare_paymentPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Uint32, CParam, ffi.Uint8,
-              bool, ffi.Uint32)>>('c_prepare_payment');
+          CResult______u8 Function(
+              ffi.Uint8, ffi.Uint32, CParam)>>('c_prepare_payment');
   late final _c_prepare_payment = _c_prepare_paymentPtr
-      .asFunction<CResult______u8 Function(int, int, CParam, int, int, int)>();
+      .asFunction<CResult______u8 Function(int, int, CParam)>();
 
   CResult_bool c_can_sign(
     int coin,

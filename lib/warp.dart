@@ -98,23 +98,17 @@ class Warp {
   }
 
   Future<fb.TransactionSummaryT> pay(
-      int coin,
-      int account,
-      fb.PaymentRequestsT recipients,
-      int srcPools,
-      bool feePaidBySender,
-      int confirmations) async {
+    int coin,
+    int account,
+    fb.PaymentRequestT payment,
+  ) async {
     return Isolate.run(() {
-      final recipientParam = toParam(recipients);
       final summaryBytes = toBC(warpLib.c_prepare_payment(
-          coin,
-          account,
-          recipientParam.ref,
-          srcPools,
-          feePaidBySender ? 1 : 0,
-          confirmations));
+        coin,
+        account,
+        toParam(payment).ref,
+      ));
       final summary = fb.TransactionSummary.reader.read(summaryBytes, 0);
-      calloc.free(recipientParam);
       return summary.unpack();
     });
   }
@@ -385,13 +379,15 @@ class Warp {
     return fb.AccountSigningCapabilities.reader.read(bc, 0).unpack();
   }
 
-  Future<void> downgradeAccount(int coin, int account, fb.AccountSigningCapabilitiesT capabilities) async {
-    return Isolate.run(() => unwrapResultU8(warpLib.c_downgrade_account(
-        coin, account, toParam(capabilities).ref)));
+  Future<void> downgradeAccount(int coin, int account,
+      fb.AccountSigningCapabilitiesT capabilities) async {
+    return Isolate.run(() => unwrapResultU8(
+        warpLib.c_downgrade_account(coin, account, toParam(capabilities).ref)));
   }
 
   bool canSign(int coin, int account, fb.TransactionSummaryT summary) {
-    return unwrapResultBool(warpLib.c_can_sign(coin, account, toParam(summary).ref));
+    return unwrapResultBool(
+        warpLib.c_can_sign(coin, account, toParam(summary).ref));
   }
 
   Future<fb.TransactionSummaryT> sweep(int coin, int account, int confirmations,
@@ -439,14 +435,14 @@ class Warp {
     return unwrapResultU8(warpLib.c_is_valid_address_or_uri(coin, toNative(s)));
   }
 
-  String makePaymentURI(int coin, List<fb.PaymentRequestT> recipients) {
-    final payments = toParam(fb.PaymentRequestsT(payments: recipients));
+  String makePaymentURI(int coin, List<fb.RecipientT> recipients) {
+    final payments = toParam(fb.PaymentRequestT(recipients: recipients));
     return unwrapResultString(warpLib.c_make_payment_uri(coin, payments.ref));
   }
 
-  fb.PaymentRequestsT parsePaymentURI(int coin, String uri) {
+  fb.PaymentRequestT parsePaymentURI(int coin, String uri) {
     final bc = toBC(warpLib.c_parse_payment_uri(coin, toNative(uri)));
-    return fb.PaymentRequests.reader.read(bc, 0).unpack();
+    return fb.PaymentRequest.reader.read(bc, 0).unpack();
   }
 
   Future<void> retrieveTransactionDetails(int coin) async {

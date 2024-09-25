@@ -62,19 +62,21 @@ class NativeLibrary {
   late final _c_get_txs =
       _c_get_txsPtr.asFunction<CResult______u8 Function(int, int, int)>();
 
-  CResult_u8 c_reset_tables(
+  CResult_bool c_reset_tables(
     int coin,
+    int upgrade,
   ) {
     return _c_reset_tables(
       coin,
+      upgrade,
     );
   }
 
   late final _c_reset_tablesPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8)>>(
+      _lookup<ffi.NativeFunction<CResult_bool Function(ffi.Uint8, bool)>>(
           'c_reset_tables');
   late final _c_reset_tables =
-      _c_reset_tablesPtr.asFunction<CResult_u8 Function(int)>();
+      _c_reset_tablesPtr.asFunction<CResult_bool Function(int, int)>();
 
   CResult______u8 c_list_accounts(
     int coin,
@@ -674,21 +676,21 @@ class NativeLibrary {
       .asFunction<CResult______u8 Function(int, int, int)>();
 
   CResult_u8 c_check_db_password(
-    int coin,
+    ffi.Pointer<ffi.Char> path,
     ffi.Pointer<ffi.Char> password,
   ) {
     return _c_check_db_password(
-      coin,
+      path,
       password,
     );
   }
 
   late final _c_check_db_passwordPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_check_db_password');
-  late final _c_check_db_password = _c_check_db_passwordPtr
-      .asFunction<CResult_u8 Function(int, ffi.Pointer<ffi.Char>)>();
+          CResult_u8 Function(ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('c_check_db_password');
+  late final _c_check_db_password = _c_check_db_passwordPtr.asFunction<
+      CResult_u8 Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
 
   CResult_u8 c_encrypt_db(
     int coin,
@@ -746,22 +748,76 @@ class NativeLibrary {
   late final _c_get_address = _c_get_addressPtr
       .asFunction<CResult_____c_char Function(int, int, int, int)>();
 
-  CResult_u8 c_set_db_password(
+  CResult_u8 c_set_db_path_password(
     int coin,
+    ffi.Pointer<ffi.Char> path,
     ffi.Pointer<ffi.Char> password,
   ) {
-    return _c_set_db_password(
+    return _c_set_db_path_password(
       coin,
+      path,
       password,
     );
   }
 
-  late final _c_set_db_passwordPtr = _lookup<
+  late final _c_set_db_path_passwordPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_set_db_password');
-  late final _c_set_db_password = _c_set_db_passwordPtr
-      .asFunction<CResult_u8 Function(int, ffi.Pointer<ffi.Char>)>();
+          CResult_u8 Function(ffi.Uint8, ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('c_set_db_path_password');
+  late final _c_set_db_path_password = _c_set_db_path_passwordPtr.asFunction<
+      CResult_u8 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+
+  int c_schema_version() {
+    return _c_schema_version();
+  }
+
+  late final _c_schema_versionPtr =
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function()>>('c_schema_version');
+  late final _c_schema_version =
+      _c_schema_versionPtr.asFunction<int Function()>();
+
+  CResult_u8 c_create_db(
+    int coin,
+    ffi.Pointer<ffi.Char> path,
+    ffi.Pointer<ffi.Char> password,
+  ) {
+    return _c_create_db(
+      coin,
+      path,
+      password,
+    );
+  }
+
+  late final _c_create_dbPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(ffi.Uint8, ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('c_create_db');
+  late final _c_create_db = _c_create_dbPtr.asFunction<
+      CResult_u8 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+
+  CResult_u8 c_migrate_db(
+    int coin,
+    int major,
+    ffi.Pointer<ffi.Char> src,
+    ffi.Pointer<ffi.Char> dest,
+    ffi.Pointer<ffi.Char> password,
+  ) {
+    return _c_migrate_db(
+      coin,
+      major,
+      src,
+      dest,
+      password,
+    );
+  }
+
+  late final _c_migrate_dbPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(ffi.Uint8, ffi.Uint8, ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>>('c_migrate_db');
+  late final _c_migrate_db = _c_migrate_dbPtr.asFunction<
+      CResult_u8 Function(int, int, ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
 
   CResult______u8 c_decode_address(
     int coin,
@@ -779,6 +835,25 @@ class NativeLibrary {
               ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_decode_address');
   late final _c_decode_address = _c_decode_addressPtr
       .asFunction<CResult______u8 Function(int, ffi.Pointer<ffi.Char>)>();
+
+  CResult_____c_char c_filter_address(
+    int coin,
+    ffi.Pointer<ffi.Char> address,
+    int pool_mask,
+  ) {
+    return _c_filter_address(
+      coin,
+      address,
+      pool_mask,
+    );
+  }
+
+  late final _c_filter_addressPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_____c_char Function(ffi.Uint8, ffi.Pointer<ffi.Char>,
+              ffi.Uint8)>>('c_filter_address');
+  late final _c_filter_address = _c_filter_addressPtr.asFunction<
+      CResult_____c_char Function(int, ffi.Pointer<ffi.Char>, int)>();
 
   CResult_____c_char c_make_payment_uri(
     int coin,
@@ -799,19 +874,23 @@ class NativeLibrary {
   CResult______u8 c_parse_payment_uri(
     int coin,
     ffi.Pointer<ffi.Char> uri,
+    int height,
+    int expiration,
   ) {
     return _c_parse_payment_uri(
       coin,
       uri,
+      height,
+      expiration,
     );
   }
 
   late final _c_parse_payment_uriPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_parse_payment_uri');
-  late final _c_parse_payment_uri = _c_parse_payment_uriPtr
-      .asFunction<CResult______u8 Function(int, ffi.Pointer<ffi.Char>)>();
+          CResult______u8 Function(ffi.Uint8, ffi.Pointer<ffi.Char>, ffi.Uint32,
+              ffi.Uint32)>>('c_parse_payment_uri');
+  late final _c_parse_payment_uri = _c_parse_payment_uriPtr.asFunction<
+      CResult______u8 Function(int, ffi.Pointer<ffi.Char>, int, int)>();
 
   CResult_u8 c_is_valid_address_or_uri(
     int coin,
@@ -988,32 +1067,19 @@ class NativeLibrary {
 
   CResult_u8 c_encrypt_zip_database_files(
     int coin,
-    ffi.Pointer<ffi.Char> directory,
-    ffi.Pointer<ffi.Char> extension1,
-    ffi.Pointer<ffi.Char> target_path,
-    ffi.Pointer<ffi.Char> public_key,
+    CParam zip_db_config,
   ) {
     return _c_encrypt_zip_database_files(
       coin,
-      directory,
-      extension1,
-      target_path,
-      public_key,
+      zip_db_config,
     );
   }
 
-  late final _c_encrypt_zip_database_filesPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>>('c_encrypt_zip_database_files');
-  late final _c_encrypt_zip_database_files =
-      _c_encrypt_zip_database_filesPtr.asFunction<
-          CResult_u8 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+  late final _c_encrypt_zip_database_filesPtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, CParam)>>(
+          'c_encrypt_zip_database_files');
+  late final _c_encrypt_zip_database_files = _c_encrypt_zip_database_filesPtr
+      .asFunction<CResult_u8 Function(int, CParam)>();
 
   CResult_u8 c_decrypt_zip_database_files(
     int coin,
@@ -1284,6 +1350,18 @@ final class CResult______u8 extends ffi.Struct {
   external int len;
 }
 
+final class CResult_bool extends ffi.Struct {
+  @bool()
+  external int value;
+
+  external ffi.Pointer<ffi.Char> error;
+
+  @ffi.Uint32()
+  external int len;
+}
+
+typedef bool = ffi.Char;
+
 final class CParam extends ffi.Struct {
   external ffi.Pointer<ffi.Uint8> value;
 
@@ -1319,15 +1397,3 @@ final class CResult_u64 extends ffi.Struct {
   @ffi.Uint32()
   external int len;
 }
-
-final class CResult_bool extends ffi.Struct {
-  @bool()
-  external int value;
-
-  external ffi.Pointer<ffi.Char> error;
-
-  @ffi.Uint32()
-  external int len;
-}
-
-typedef bool = ffi.Char;

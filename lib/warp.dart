@@ -33,9 +33,8 @@ class Warp {
   }
 
   void configure(int coin,
-      {String? db, String? url, String? warp, int? warpEndHeight}) {
+      {String? url, String? warp, int? warpEndHeight}) {
     final config = fb.ConfigT(
-        dbPath: db,
         lwdUrl: url,
         warpUrl: warp,
         warpEndHeight: warpEndHeight ?? 0);
@@ -50,18 +49,17 @@ class Warp {
     });
   }
 
-  Future<void> resetTables(int coin) async {
+  Future<bool> migrateDb(
+      int coin, int major, String src, String dest, String password) async {
     return Isolate.run(() {
-      unwrapResultU8(warpLib.c_reset_tables(coin));
+      return unwrapResultU8(warpLib.c_migrate_db(
+              coin, major, toNative(src), toNative(dest), toNative(password))) !=
+          0;
     });
   }
 
   Future<int> pingServer(String url) async {
     return Isolate.run(() => unwrapResultU64(warpLib.c_ping(0, toNative(url))));
-  }
-
-  Future<void> createTables(int coin) async {
-    return Isolate.run(() => unwrapResultU8(warpLib.c_reset_tables(coin)));
   }
 
   int createAccount(
@@ -295,9 +293,18 @@ class Warp {
     return Isolate.run(() => warpLib.c_reverse_note_exclusion(coin, account));
   }
 
-  bool checkDbPassword(int coin, String password) {
+  int getSchemaVersion() {
+    return warpLib.c_schema_version();
+  }
+
+  Future<void> createDb(int coin, String path, String password) {
+    return Isolate.run(
+        () => unwrapResultU8(warpLib.c_create_db(coin, toNative(path), toNative(password))));
+  }
+
+  bool checkDbPassword(String path, String password) {
     return unwrapResultU8(
-            warpLib.c_check_db_password(coin, toNative(password))) !=
+            warpLib.c_check_db_password(toNative(path), toNative(password))) !=
         0;
   }
 
@@ -306,9 +313,8 @@ class Warp {
         warpLib.c_encrypt_db(coin, toNative(password), toNative(dbPath))));
   }
 
-  Future<void> setDbPassword(int coin, String password, String dbPath) async {
-    return Isolate.run(() =>
-        unwrapResultU8(warpLib.c_set_db_password(coin, toNative(password))));
+  void setDbPathPassword(int coin, String path, String password) {
+    unwrapResultU8(warpLib.c_set_db_path_password(coin, toNative(path), toNative(password)));
   }
 
   Future<fb.AgekeysT> generateZIPDbKeys() async {
@@ -318,14 +324,16 @@ class Warp {
     });
   }
 
-  Future<void> encryptZIPDbFiles(String directory, String extension,
+  Future<void> encryptZIPDbFiles(String directory, List<String> fileList,
       String targetPath, String publicKey) async {
-    return Isolate.run(() => warpLib.c_encrypt_zip_database_files(
-        0,
-        toNative(directory),
-        toNative(extension),
-        toNative(targetPath),
-        toNative(publicKey)));
+    return Isolate.run(() {
+      final config = fb.ZipDbConfigT(
+          directory: directory,
+          fileList: fileList,
+          targetPath: targetPath,
+          publicKey: publicKey);
+      warpLib.c_encrypt_zip_database_files(0, toParam(config).ref);
+    });
   }
 
   Future<void> decryptZIPDbFiles(
@@ -440,8 +448,10 @@ class Warp {
     return unwrapResultString(warpLib.c_make_payment_uri(coin, payments.ref));
   }
 
-  fb.PaymentRequestT parsePaymentURI(int coin, String uri) {
-    final bc = toBC(warpLib.c_parse_payment_uri(coin, toNative(uri)));
+  fb.PaymentRequestT parsePaymentURI(
+      int coin, String uri, int height, int expiration) {
+    final bc = toBC(
+        warpLib.c_parse_payment_uri(coin, toNative(uri), height, expiration));
     return fb.PaymentRequest.reader.read(bc, 0).unpack();
   }
 

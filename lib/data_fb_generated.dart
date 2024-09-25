@@ -4048,20 +4048,18 @@ class Config {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  String? get dbPath => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get lwdUrl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get warpUrl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  int get warpEndHeight => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get confirmations => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  bool get regtest => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  String? get lwdUrl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get warpUrl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  int get warpEndHeight => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get confirmations => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  bool get regtest => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
 
   @override
   String toString() {
-    return 'Config{dbPath: ${dbPath}, lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
+    return 'Config{lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
   }
 
   ConfigT unpack() => ConfigT(
-      dbPath: dbPath,
       lwdUrl: lwdUrl,
       warpUrl: warpUrl,
       warpEndHeight: warpEndHeight,
@@ -4075,7 +4073,6 @@ class Config {
 }
 
 class ConfigT implements fb.Packable {
-  String? dbPath;
   String? lwdUrl;
   String? warpUrl;
   int warpEndHeight;
@@ -4083,7 +4080,6 @@ class ConfigT implements fb.Packable {
   bool regtest;
 
   ConfigT({
-      this.dbPath,
       this.lwdUrl,
       this.warpUrl,
       this.warpEndHeight = 0,
@@ -4092,25 +4088,22 @@ class ConfigT implements fb.Packable {
 
   @override
   int pack(fb.Builder fbBuilder) {
-    final int? dbPathOffset = dbPath == null ? null
-        : fbBuilder.writeString(dbPath!);
     final int? lwdUrlOffset = lwdUrl == null ? null
         : fbBuilder.writeString(lwdUrl!);
     final int? warpUrlOffset = warpUrl == null ? null
         : fbBuilder.writeString(warpUrl!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, dbPathOffset);
-    fbBuilder.addOffset(1, lwdUrlOffset);
-    fbBuilder.addOffset(2, warpUrlOffset);
-    fbBuilder.addUint32(3, warpEndHeight);
-    fbBuilder.addUint32(4, confirmations);
-    fbBuilder.addBool(5, regtest);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, lwdUrlOffset);
+    fbBuilder.addOffset(1, warpUrlOffset);
+    fbBuilder.addUint32(2, warpEndHeight);
+    fbBuilder.addUint32(3, confirmations);
+    fbBuilder.addBool(4, regtest);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'ConfigT{dbPath: ${dbPath}, lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
+    return 'ConfigT{lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
   }
 }
 
@@ -4128,31 +4121,27 @@ class ConfigBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(5);
   }
 
-  int addDbPathOffset(int? offset) {
+  int addLwdUrlOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addLwdUrlOffset(int? offset) {
+  int addWarpUrlOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addWarpUrlOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
   int addWarpEndHeight(int? warpEndHeight) {
-    fbBuilder.addUint32(3, warpEndHeight);
+    fbBuilder.addUint32(2, warpEndHeight);
     return fbBuilder.offset;
   }
   int addConfirmations(int? confirmations) {
-    fbBuilder.addUint32(4, confirmations);
+    fbBuilder.addUint32(3, confirmations);
     return fbBuilder.offset;
   }
   int addRegtest(bool? regtest) {
-    fbBuilder.addBool(5, regtest);
+    fbBuilder.addBool(4, regtest);
     return fbBuilder.offset;
   }
 
@@ -4162,7 +4151,6 @@ class ConfigBuilder {
 }
 
 class ConfigObjectBuilder extends fb.ObjectBuilder {
-  final String? _dbPath;
   final String? _lwdUrl;
   final String? _warpUrl;
   final int? _warpEndHeight;
@@ -4170,15 +4158,13 @@ class ConfigObjectBuilder extends fb.ObjectBuilder {
   final bool? _regtest;
 
   ConfigObjectBuilder({
-    String? dbPath,
     String? lwdUrl,
     String? warpUrl,
     int? warpEndHeight,
     int? confirmations,
     bool? regtest,
   })
-      : _dbPath = dbPath,
-        _lwdUrl = lwdUrl,
+      : _lwdUrl = lwdUrl,
         _warpUrl = warpUrl,
         _warpEndHeight = warpEndHeight,
         _confirmations = confirmations,
@@ -4187,19 +4173,16 @@ class ConfigObjectBuilder extends fb.ObjectBuilder {
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? dbPathOffset = _dbPath == null ? null
-        : fbBuilder.writeString(_dbPath!);
     final int? lwdUrlOffset = _lwdUrl == null ? null
         : fbBuilder.writeString(_lwdUrl!);
     final int? warpUrlOffset = _warpUrl == null ? null
         : fbBuilder.writeString(_warpUrl!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, dbPathOffset);
-    fbBuilder.addOffset(1, lwdUrlOffset);
-    fbBuilder.addOffset(2, warpUrlOffset);
-    fbBuilder.addUint32(3, _warpEndHeight);
-    fbBuilder.addUint32(4, _confirmations);
-    fbBuilder.addBool(5, _regtest);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, lwdUrlOffset);
+    fbBuilder.addOffset(1, warpUrlOffset);
+    fbBuilder.addUint32(2, _warpEndHeight);
+    fbBuilder.addUint32(3, _confirmations);
+    fbBuilder.addBool(4, _regtest);
     return fbBuilder.endTable();
   }
 
@@ -4337,6 +4320,270 @@ class AccountSigningCapabilitiesObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint8(1, _transparent);
     fbBuilder.addUint8(2, _sapling);
     fbBuilder.addUint8(3, _orchard);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SchemaVersion {
+  SchemaVersion._(this._bc, this._bcOffset);
+  factory SchemaVersion(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SchemaVersion> reader = _SchemaVersionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get major => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get minor => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0);
+
+  @override
+  String toString() {
+    return 'SchemaVersion{major: ${major}, minor: ${minor}}';
+  }
+
+  SchemaVersionT unpack() => SchemaVersionT(
+      major: major,
+      minor: minor);
+
+  static int pack(fb.Builder fbBuilder, SchemaVersionT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class SchemaVersionT implements fb.Packable {
+  int major;
+  int minor;
+
+  SchemaVersionT({
+      this.major = 0,
+      this.minor = 0});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    fbBuilder.startTable(2);
+    fbBuilder.addUint8(0, major);
+    fbBuilder.addUint8(1, minor);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'SchemaVersionT{major: ${major}, minor: ${minor}}';
+  }
+}
+
+class _SchemaVersionReader extends fb.TableReader<SchemaVersion> {
+  const _SchemaVersionReader();
+
+  @override
+  SchemaVersion createObject(fb.BufferContext bc, int offset) => 
+    SchemaVersion._(bc, offset);
+}
+
+class SchemaVersionBuilder {
+  SchemaVersionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addMajor(int? major) {
+    fbBuilder.addUint8(0, major);
+    return fbBuilder.offset;
+  }
+  int addMinor(int? minor) {
+    fbBuilder.addUint8(1, minor);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SchemaVersionObjectBuilder extends fb.ObjectBuilder {
+  final int? _major;
+  final int? _minor;
+
+  SchemaVersionObjectBuilder({
+    int? major,
+    int? minor,
+  })
+      : _major = major,
+        _minor = minor;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(2);
+    fbBuilder.addUint8(0, _major);
+    fbBuilder.addUint8(1, _minor);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class ZipDbConfig {
+  ZipDbConfig._(this._bc, this._bcOffset);
+  factory ZipDbConfig(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ZipDbConfig> reader = _ZipDbConfigReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get directory => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  List<String>? get fileList => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 6);
+  String? get targetPath => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get publicKey => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'ZipDbConfig{directory: ${directory}, fileList: ${fileList}, targetPath: ${targetPath}, publicKey: ${publicKey}}';
+  }
+
+  ZipDbConfigT unpack() => ZipDbConfigT(
+      directory: directory,
+      fileList: const fb.ListReader<String>(fb.StringReader(), lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
+      targetPath: targetPath,
+      publicKey: publicKey);
+
+  static int pack(fb.Builder fbBuilder, ZipDbConfigT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class ZipDbConfigT implements fb.Packable {
+  String? directory;
+  List<String>? fileList;
+  String? targetPath;
+  String? publicKey;
+
+  ZipDbConfigT({
+      this.directory,
+      this.fileList,
+      this.targetPath,
+      this.publicKey});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    final int? directoryOffset = directory == null ? null
+        : fbBuilder.writeString(directory!);
+    final int? fileListOffset = fileList == null ? null
+        : fbBuilder.writeList(fileList!.map(fbBuilder.writeString).toList());
+    final int? targetPathOffset = targetPath == null ? null
+        : fbBuilder.writeString(targetPath!);
+    final int? publicKeyOffset = publicKey == null ? null
+        : fbBuilder.writeString(publicKey!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, directoryOffset);
+    fbBuilder.addOffset(1, fileListOffset);
+    fbBuilder.addOffset(2, targetPathOffset);
+    fbBuilder.addOffset(3, publicKeyOffset);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'ZipDbConfigT{directory: ${directory}, fileList: ${fileList}, targetPath: ${targetPath}, publicKey: ${publicKey}}';
+  }
+}
+
+class _ZipDbConfigReader extends fb.TableReader<ZipDbConfig> {
+  const _ZipDbConfigReader();
+
+  @override
+  ZipDbConfig createObject(fb.BufferContext bc, int offset) => 
+    ZipDbConfig._(bc, offset);
+}
+
+class ZipDbConfigBuilder {
+  ZipDbConfigBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addDirectoryOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addFileListOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetPathOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addPublicKeyOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ZipDbConfigObjectBuilder extends fb.ObjectBuilder {
+  final String? _directory;
+  final List<String>? _fileList;
+  final String? _targetPath;
+  final String? _publicKey;
+
+  ZipDbConfigObjectBuilder({
+    String? directory,
+    List<String>? fileList,
+    String? targetPath,
+    String? publicKey,
+  })
+      : _directory = directory,
+        _fileList = fileList,
+        _targetPath = targetPath,
+        _publicKey = publicKey;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? directoryOffset = _directory == null ? null
+        : fbBuilder.writeString(_directory!);
+    final int? fileListOffset = _fileList == null ? null
+        : fbBuilder.writeList(_fileList!.map(fbBuilder.writeString).toList());
+    final int? targetPathOffset = _targetPath == null ? null
+        : fbBuilder.writeString(_targetPath!);
+    final int? publicKeyOffset = _publicKey == null ? null
+        : fbBuilder.writeString(_publicKey!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, directoryOffset);
+    fbBuilder.addOffset(1, fileListOffset);
+    fbBuilder.addOffset(2, targetPathOffset);
+    fbBuilder.addOffset(3, publicKeyOffset);
     return fbBuilder.endTable();
   }
 

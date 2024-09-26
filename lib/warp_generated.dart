@@ -306,6 +306,50 @@ class NativeLibrary {
   late final _c_downgrade_account = _c_downgrade_accountPtr
       .asFunction<CResult_u8 Function(int, int, CParam)>();
 
+  CResult_u32 c_get_sync_height(
+    int coin,
+  ) {
+    return _c_get_sync_height(
+      coin,
+    );
+  }
+
+  late final _c_get_sync_heightPtr =
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
+          'c_get_sync_height');
+  late final _c_get_sync_height =
+      _c_get_sync_heightPtr.asFunction<CResult_u32 Function(int)>();
+
+  CResult_u8 c_rewind(
+    int coin,
+    int height,
+  ) {
+    return _c_rewind(
+      coin,
+      height,
+    );
+  }
+
+  late final _c_rewindPtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_rewind');
+  late final _c_rewind =
+      _c_rewindPtr.asFunction<CResult_u8 Function(int, int)>();
+
+  CResult______u8 c_list_checkpoints(
+    int coin,
+  ) {
+    return _c_list_checkpoints(
+      coin,
+    );
+  }
+
+  late final _c_list_checkpointsPtr =
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8)>>(
+          'c_list_checkpoints');
+  late final _c_list_checkpoints =
+      _c_list_checkpointsPtr.asFunction<CResult______u8 Function(int)>();
+
   CResult_u32 c_store_contact(
     int coin,
     CParam contact,
@@ -406,49 +450,57 @@ class NativeLibrary {
   late final _c_delete_contact =
       _c_delete_contactPtr.asFunction<CResult_u8 Function(int, int)>();
 
-  CResult_u32 c_get_sync_height(
+  CResult______u8 c_list_messages(
     int coin,
+    int account,
   ) {
-    return _c_get_sync_height(
+    return _c_list_messages(
       coin,
+      account,
     );
   }
 
-  late final _c_get_sync_heightPtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
-          'c_get_sync_height');
-  late final _c_get_sync_height =
-      _c_get_sync_heightPtr.asFunction<CResult_u32 Function(int)>();
+  late final _c_list_messagesPtr = _lookup<
+          ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      'c_list_messages');
+  late final _c_list_messages =
+      _c_list_messagesPtr.asFunction<CResult______u8 Function(int, int)>();
 
-  CResult_u8 c_rewind(
+  CResult_u8 c_mark_all_read(
     int coin,
-    int height,
+    int account,
+    int reverse,
   ) {
-    return _c_rewind(
+    return _c_mark_all_read(
       coin,
-      height,
+      account,
+      reverse,
     );
   }
 
-  late final _c_rewindPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
-          'c_rewind');
-  late final _c_rewind =
-      _c_rewindPtr.asFunction<CResult_u8 Function(int, int)>();
+  late final _c_mark_all_readPtr = _lookup<
+          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, bool)>>(
+      'c_mark_all_read');
+  late final _c_mark_all_read =
+      _c_mark_all_readPtr.asFunction<CResult_u8 Function(int, int, int)>();
 
-  CResult______u8 c_list_checkpoints(
+  CResult_u8 c_mark_read(
     int coin,
+    int id,
+    int reverse,
   ) {
-    return _c_list_checkpoints(
+    return _c_mark_read(
       coin,
+      id,
+      reverse,
     );
   }
 
-  late final _c_list_checkpointsPtr =
-      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8)>>(
-          'c_list_checkpoints');
-  late final _c_list_checkpoints =
-      _c_list_checkpointsPtr.asFunction<CResult______u8 Function(int)>();
+  late final _c_mark_readPtr = _lookup<
+          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, bool)>>(
+      'c_mark_read');
+  late final _c_mark_read =
+      _c_mark_readPtr.asFunction<CResult_u8 Function(int, int, int)>();
 
   CResult______u8 c_get_unspent_notes(
     int coin,
@@ -503,57 +555,21 @@ class NativeLibrary {
   late final _c_reverse_note_exclusion =
       _c_reverse_note_exclusionPtr.asFunction<CResult_u8 Function(int, int)>();
 
-  CResult______u8 c_list_messages(
+  CResult______u8 c_get_tx_details(
     int coin,
-    int account,
+    int id_tx,
   ) {
-    return _c_list_messages(
+    return _c_get_tx_details(
       coin,
-      account,
+      id_tx,
     );
   }
 
-  late final _c_list_messagesPtr = _lookup<
+  late final _c_get_tx_detailsPtr = _lookup<
           ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
-      'c_list_messages');
-  late final _c_list_messages =
-      _c_list_messagesPtr.asFunction<CResult______u8 Function(int, int)>();
-
-  CResult_u8 c_mark_all_read(
-    int coin,
-    int account,
-    int reverse,
-  ) {
-    return _c_mark_all_read(
-      coin,
-      account,
-      reverse,
-    );
-  }
-
-  late final _c_mark_all_readPtr = _lookup<
-          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, bool)>>(
-      'c_mark_all_read');
-  late final _c_mark_all_read =
-      _c_mark_all_readPtr.asFunction<CResult_u8 Function(int, int, int)>();
-
-  CResult_u8 c_mark_read(
-    int coin,
-    int id,
-    int reverse,
-  ) {
-    return _c_mark_read(
-      coin,
-      id,
-      reverse,
-    );
-  }
-
-  late final _c_mark_readPtr = _lookup<
-          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, bool)>>(
-      'c_mark_read');
-  late final _c_mark_read =
-      _c_mark_readPtr.asFunction<CResult_u8 Function(int, int, int)>();
+      'c_get_tx_details');
+  late final _c_get_tx_details =
+      _c_get_tx_detailsPtr.asFunction<CResult______u8 Function(int, int)>();
 
   CResult_____c_char c_generate_random_mnemonic_phrase_os_rng(
     int coin,

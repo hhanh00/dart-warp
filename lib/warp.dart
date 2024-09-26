@@ -32,12 +32,9 @@ class Warp {
     warpLib.c_setup();
   }
 
-  void configure(int coin,
-      {String? url, String? warp, int? warpEndHeight}) {
+  void configure(int coin, {String? url, String? warp, int? warpEndHeight}) {
     final config = fb.ConfigT(
-        lwdUrl: url,
-        warpUrl: warp,
-        warpEndHeight: warpEndHeight ?? 0);
+        lwdUrl: url, warpUrl: warp, warpEndHeight: warpEndHeight ?? 0);
     final param = toParam(config);
     unwrapResultU8(warpLib.c_configure(coin, param.ref));
   }
@@ -52,8 +49,8 @@ class Warp {
   Future<bool> migrateDb(
       int coin, int major, String src, String dest, String password) async {
     return Isolate.run(() {
-      return unwrapResultU8(warpLib.c_migrate_db(
-              coin, major, toNative(src), toNative(dest), toNative(password))) !=
+      return unwrapResultU8(warpLib.c_migrate_db(coin, major, toNative(src),
+              toNative(dest), toNative(password))) !=
           0;
     });
   }
@@ -298,8 +295,8 @@ class Warp {
   }
 
   Future<void> createDb(int coin, String path, String password) {
-    return Isolate.run(
-        () => unwrapResultU8(warpLib.c_create_db(coin, toNative(path), toNative(password))));
+    return Isolate.run(() => unwrapResultU8(
+        warpLib.c_create_db(coin, toNative(path), toNative(password))));
   }
 
   bool checkDbPassword(String path, String password) {
@@ -314,7 +311,8 @@ class Warp {
   }
 
   void setDbPathPassword(int coin, String path, String password) {
-    unwrapResultU8(warpLib.c_set_db_path_password(coin, toNative(path), toNative(password)));
+    unwrapResultU8(warpLib.c_set_db_path_password(
+        coin, toNative(path), toNative(password)));
   }
 
   Future<fb.AgekeysT> generateZIPDbKeys() async {
@@ -439,13 +437,18 @@ class Warp {
     });
   }
 
+  fb.TransactionInfoExtendedT getTransactionDetails(int coin, int id) {
+    final bc = toBC(warpLib.c_get_tx_details(coin, id));
+    return fb.TransactionInfoExtended.reader.read(bc, 0).unpack();
+  }
+
   int isValidAddressOrUri(int coin, String s) {
     return unwrapResultU8(warpLib.c_is_valid_address_or_uri(coin, toNative(s)));
   }
 
-  String makePaymentURI(int coin, List<fb.RecipientT> recipients) {
-    final payments = toParam(fb.PaymentRequestT(recipients: recipients));
-    return unwrapResultString(warpLib.c_make_payment_uri(coin, payments.ref));
+  String makePaymentURI(int coin, fb.PaymentRequestT payment) {
+    return unwrapResultString(
+        warpLib.c_make_payment_uri(coin, toParam(payment).ref));
   }
 
   fb.PaymentRequestT parsePaymentURI(

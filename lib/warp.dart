@@ -340,8 +340,7 @@ class Warp {
         0, toNative(filePath), toNative(targetPath), toNative(secretKey)));
   }
 
-  List<fb.PacketT> splitData(
-      int coin, Uint8List data, int threshold) {
+  List<fb.PacketT> splitData(int coin, Uint8List data, int threshold) {
     final bc = toBC(warpLib.c_split(coin, toParamBytes(data).ref, threshold));
     final list = ListReader<fb.Packet>(fb.Packet.reader).read(bc, 0);
     return list.map((e) => e.unpack()).toList();
@@ -390,20 +389,20 @@ class Warp {
         warpLib.c_can_sign(coin, account, toParam(summary).ref));
   }
 
-  Future<fb.TransactionSummaryT> sweep(int coin, int account, int confirmations,
-      String destination, int gap) async {
+  Future<fb.TransactionSummaryT> sweep(int coin, int account, int height,
+      String destination, int aindex, int gap) async {
     return Isolate.run(() {
       final bc = toBC(warpLib.c_prepare_sweep_tx(
-          coin, account, confirmations, toNative(destination), gap));
+          coin, account, height, toNative(destination), aindex, gap));
       return fb.TransactionSummary.reader.read(bc, 0).unpack();
     });
   }
 
-  Future<fb.TransactionSummaryT> sweepSK(int coin, int account,
-      String secretKey, int confirmations, String destination) async {
+  Future<fb.TransactionSummaryT> sweepSK(int coin, int account, int height,
+      String secretKey, String destination) async {
     return Isolate.run(() {
-      final bc = toBC(warpLib.c_prepare_sweep_tx_by_sk(coin, account,
-          toNative(secretKey), confirmations, toNative(destination)));
+      final bc = toBC(warpLib.c_prepare_sweep_tx_by_sk(
+          coin, account, height, toNative(secretKey), toNative(destination)));
       return fb.TransactionSummary.reader.read(bc, 0).unpack();
     });
   }

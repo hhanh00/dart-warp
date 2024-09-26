@@ -1266,50 +1266,62 @@ class NativeLibrary {
   CResult______u8 c_prepare_sweep_tx(
     int coin,
     int account,
-    int confirmations,
+    int height,
     ffi.Pointer<ffi.Char> destination_address,
+    int addr_index,
     int gap_limit,
   ) {
     return _c_prepare_sweep_tx(
       coin,
       account,
-      confirmations,
+      height,
       destination_address,
+      addr_index,
       gap_limit,
     );
   }
 
   late final _c_prepare_sweep_txPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
-              ffi.Pointer<ffi.Char>, ffi.UintPtr)>>('c_prepare_sweep_tx');
+          CResult______u8 Function(
+              ffi.Uint8,
+              ffi.Uint32,
+              ffi.Uint32,
+              ffi.Pointer<ffi.Char>,
+              ffi.Uint32,
+              ffi.UintPtr)>>('c_prepare_sweep_tx');
   late final _c_prepare_sweep_tx = _c_prepare_sweep_txPtr.asFunction<
-      CResult______u8 Function(int, int, int, ffi.Pointer<ffi.Char>, int)>();
+      CResult______u8 Function(
+          int, int, int, ffi.Pointer<ffi.Char>, int, int)>();
 
   CResult______u8 c_prepare_sweep_tx_by_sk(
     int coin,
     int account,
+    int height,
     ffi.Pointer<ffi.Char> sk,
-    int confirmations,
     ffi.Pointer<ffi.Char> destination_address,
   ) {
     return _c_prepare_sweep_tx_by_sk(
       coin,
       account,
+      height,
       sk,
-      confirmations,
       destination_address,
     );
   }
 
   late final _c_prepare_sweep_tx_by_skPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Uint32, ffi.Pointer<ffi.Char>,
-              ffi.Uint32, ffi.Pointer<ffi.Char>)>>('c_prepare_sweep_tx_by_sk');
+          CResult______u8 Function(
+              ffi.Uint8,
+              ffi.Uint32,
+              ffi.Uint32,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('c_prepare_sweep_tx_by_sk');
   late final _c_prepare_sweep_tx_by_sk =
       _c_prepare_sweep_tx_by_skPtr.asFunction<
           CResult______u8 Function(
-              int, int, ffi.Pointer<ffi.Char>, int, ffi.Pointer<ffi.Char>)>();
+              int, int, int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
 
   CResult______u8 c_fetch_tx_details(
     int coin,

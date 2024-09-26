@@ -4048,18 +4048,20 @@ class Config {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  String? get lwdUrl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get warpUrl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  int get warpEndHeight => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get confirmations => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  bool get regtest => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  String? get dbPath => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get lwdUrl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get warpUrl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  int get warpEndHeight => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get confirmations => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  bool get regtest => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
 
   @override
   String toString() {
-    return 'Config{lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
+    return 'Config{dbPath: ${dbPath}, lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
   }
 
   ConfigT unpack() => ConfigT(
+      dbPath: dbPath,
       lwdUrl: lwdUrl,
       warpUrl: warpUrl,
       warpEndHeight: warpEndHeight,
@@ -4073,6 +4075,7 @@ class Config {
 }
 
 class ConfigT implements fb.Packable {
+  String? dbPath;
   String? lwdUrl;
   String? warpUrl;
   int warpEndHeight;
@@ -4080,6 +4083,7 @@ class ConfigT implements fb.Packable {
   bool regtest;
 
   ConfigT({
+      this.dbPath,
       this.lwdUrl,
       this.warpUrl,
       this.warpEndHeight = 0,
@@ -4088,22 +4092,25 @@ class ConfigT implements fb.Packable {
 
   @override
   int pack(fb.Builder fbBuilder) {
+    final int? dbPathOffset = dbPath == null ? null
+        : fbBuilder.writeString(dbPath!);
     final int? lwdUrlOffset = lwdUrl == null ? null
         : fbBuilder.writeString(lwdUrl!);
     final int? warpUrlOffset = warpUrl == null ? null
         : fbBuilder.writeString(warpUrl!);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, lwdUrlOffset);
-    fbBuilder.addOffset(1, warpUrlOffset);
-    fbBuilder.addUint32(2, warpEndHeight);
-    fbBuilder.addUint32(3, confirmations);
-    fbBuilder.addBool(4, regtest);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, dbPathOffset);
+    fbBuilder.addOffset(1, lwdUrlOffset);
+    fbBuilder.addOffset(2, warpUrlOffset);
+    fbBuilder.addUint32(3, warpEndHeight);
+    fbBuilder.addUint32(4, confirmations);
+    fbBuilder.addBool(5, regtest);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'ConfigT{lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
+    return 'ConfigT{dbPath: ${dbPath}, lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
   }
 }
 
@@ -4121,27 +4128,31 @@ class ConfigBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
   }
 
-  int addLwdUrlOffset(int? offset) {
+  int addDbPathOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addWarpUrlOffset(int? offset) {
+  int addLwdUrlOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
+  int addWarpUrlOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
   int addWarpEndHeight(int? warpEndHeight) {
-    fbBuilder.addUint32(2, warpEndHeight);
+    fbBuilder.addUint32(3, warpEndHeight);
     return fbBuilder.offset;
   }
   int addConfirmations(int? confirmations) {
-    fbBuilder.addUint32(3, confirmations);
+    fbBuilder.addUint32(4, confirmations);
     return fbBuilder.offset;
   }
   int addRegtest(bool? regtest) {
-    fbBuilder.addBool(4, regtest);
+    fbBuilder.addBool(5, regtest);
     return fbBuilder.offset;
   }
 
@@ -4151,6 +4162,7 @@ class ConfigBuilder {
 }
 
 class ConfigObjectBuilder extends fb.ObjectBuilder {
+  final String? _dbPath;
   final String? _lwdUrl;
   final String? _warpUrl;
   final int? _warpEndHeight;
@@ -4158,13 +4170,15 @@ class ConfigObjectBuilder extends fb.ObjectBuilder {
   final bool? _regtest;
 
   ConfigObjectBuilder({
+    String? dbPath,
     String? lwdUrl,
     String? warpUrl,
     int? warpEndHeight,
     int? confirmations,
     bool? regtest,
   })
-      : _lwdUrl = lwdUrl,
+      : _dbPath = dbPath,
+        _lwdUrl = lwdUrl,
         _warpUrl = warpUrl,
         _warpEndHeight = warpEndHeight,
         _confirmations = confirmations,
@@ -4173,16 +4187,19 @@ class ConfigObjectBuilder extends fb.ObjectBuilder {
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
+    final int? dbPathOffset = _dbPath == null ? null
+        : fbBuilder.writeString(_dbPath!);
     final int? lwdUrlOffset = _lwdUrl == null ? null
         : fbBuilder.writeString(_lwdUrl!);
     final int? warpUrlOffset = _warpUrl == null ? null
         : fbBuilder.writeString(_warpUrl!);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, lwdUrlOffset);
-    fbBuilder.addOffset(1, warpUrlOffset);
-    fbBuilder.addUint32(2, _warpEndHeight);
-    fbBuilder.addUint32(3, _confirmations);
-    fbBuilder.addBool(4, _regtest);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, dbPathOffset);
+    fbBuilder.addOffset(1, lwdUrlOffset);
+    fbBuilder.addOffset(2, warpUrlOffset);
+    fbBuilder.addUint32(3, _warpEndHeight);
+    fbBuilder.addUint32(4, _confirmations);
+    fbBuilder.addBool(5, _regtest);
     return fbBuilder.endTable();
   }
 

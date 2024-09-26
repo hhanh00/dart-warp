@@ -340,17 +340,11 @@ class Warp {
         0, toNative(filePath), toNative(targetPath), toNative(secretKey)));
   }
 
-  Future<List<fb.PacketT>> splitData(
-      int coin, Uint8List data, int threshold) async {
-    return Isolate.run(() {
-      final dataParam = calloc<CParam>();
-      dataParam.ref.value = toNativeBytes(data);
-      dataParam.ref.len = data.length;
-      final bc = toBC(warpLib.c_split(coin, dataParam.ref, threshold));
-      final reader = ListReader<fb.Packet>(fb.Packet.reader);
-      final list = reader.read(bc, 0);
-      return list.map((e) => e.unpack()).toList();
-    });
+  List<fb.PacketT> splitData(
+      int coin, Uint8List data, int threshold) {
+    final bc = toBC(warpLib.c_split(coin, toParamBytes(data).ref, threshold));
+    final list = ListReader<fb.Packet>(fb.Packet.reader).read(bc, 0);
+    return list.map((e) => e.unpack()).toList();
   }
 
   Future<fb.PacketT> mergeData(int coin, List<fb.PacketT> packets) async {

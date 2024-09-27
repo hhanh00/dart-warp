@@ -153,16 +153,17 @@ class Warp {
         () => unwrapResultU8(warpLib.c_delete_account(coin, account)));
   }
 
-  Future<List<fb.TransparentAddressT>> listTransparentAddresses(
-      int coin, int account) async {
-    return Isolate.run(() {
-      final bc =
-          toBC(warpLib.c_list_account_transparent_addresses(coin, account));
-      final reader =
-          ListReader<fb.TransparentAddress>(fb.TransparentAddress.reader);
-      final list = reader.read(bc, 0);
-      return list.map((e) => e.unpack()).toList();
-    });
+  void newTransparentAddress(int coin, int account) {
+    unwrapResultU8(warpLib.c_new_transparent_address(coin, account));
+  }
+
+  List<fb.TransparentAddressT> listTransparentAddresses(int coin, int account) {
+    final bc =
+        toBC(warpLib.c_list_account_transparent_addresses(coin, account));
+    final reader =
+        ListReader<fb.TransparentAddress>(fb.TransparentAddress.reader);
+    final list = reader.read(bc, 0);
+    return list.map((e) => e.unpack()).toList();
   }
 
   Future<List<fb.ContactCardT>> listContacts(int coin) async {
@@ -294,15 +295,11 @@ class Warp {
     });
   }
 
-  Future<List<fb.InputTransparentT>> listUtxos(
-      int coin, int account, int height) async {
-    return Isolate.run(() {
-      final bc = toBC(warpLib.c_get_unspent_utxos(coin, account, height));
-      final reader =
-          ListReader<fb.InputTransparent>(fb.InputTransparent.reader);
-      final list = reader.read(bc, 0);
-      return list.map((e) => e.unpack()).toList();
-    });
+  List<fb.InputTransparentT> listUtxos(int coin, int account, int height) {
+    final bc = toBC(warpLib.c_get_unspent_utxos(coin, account, height));
+    final reader = ListReader<fb.InputTransparent>(fb.InputTransparent.reader);
+    final list = reader.read(bc, 0);
+    return list.map((e) => e.unpack()).toList();
   }
 
   Future<void> excludeNote(int coin, int id, bool reverse) async {
@@ -412,21 +409,10 @@ class Warp {
         warpLib.c_can_sign(coin, account, toParam(summary).ref));
   }
 
-  Future<fb.TransactionSummaryT> sweep(int coin, int account, int height,
-      String destination, int aindex, int gap) async {
+  Future<void> scanTransparentAddresses(int coin, int account, int gapLimit) async {
     return Isolate.run(() {
-      final bc = toBC(warpLib.c_prepare_sweep_tx(
-          coin, account, height, toNative(destination), aindex, gap));
-      return fb.TransactionSummary.reader.read(bc, 0).unpack();
-    });
-  }
-
-  Future<fb.TransactionSummaryT> sweepSK(int coin, int account, int height,
-      String secretKey, String destination) async {
-    return Isolate.run(() {
-      final bc = toBC(warpLib.c_prepare_sweep_tx_by_sk(
-          coin, account, height, toNative(secretKey), toNative(destination)));
-      return fb.TransactionSummary.reader.read(bc, 0).unpack();
+      unwrapResultU8(warpLib.c_scan_transparent_addresses(
+          coin, account, gapLimit));
     });
   }
 

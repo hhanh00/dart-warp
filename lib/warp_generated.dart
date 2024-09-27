@@ -232,6 +232,22 @@ class NativeLibrary {
       CResult_u32 Function(
           int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int, int)>();
 
+  CResult_u8 c_new_transparent_address(
+    int coin,
+    int account,
+  ) {
+    return _c_new_transparent_address(
+      coin,
+      account,
+    );
+  }
+
+  late final _c_new_transparent_addressPtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_new_transparent_address');
+  late final _c_new_transparent_address =
+      _c_new_transparent_addressPtr.asFunction<CResult_u8 Function(int, int)>();
+
   CResult_u8 c_edit_account_name(
     int coin,
     int account,
@@ -669,6 +685,25 @@ class NativeLibrary {
       'c_init_sapling_prover');
   late final _c_init_sapling_prover = _c_init_sapling_proverPtr
       .asFunction<CResult_u8 Function(int, CParam, CParam)>();
+
+  CResult_u8 c_scan_transparent_addresses(
+    int coin,
+    int account,
+    int gap_limit,
+  ) {
+    return _c_scan_transparent_addresses(
+      coin,
+      account,
+      gap_limit,
+    );
+  }
+
+  late final _c_scan_transparent_addressesPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(ffi.Uint8, ffi.Uint32,
+              ffi.Uint32)>>('c_scan_transparent_addresses');
+  late final _c_scan_transparent_addresses = _c_scan_transparent_addressesPtr
+      .asFunction<CResult_u8 Function(int, int, int)>();
 
   CResult_u8 c_retrieve_tx_details(
     int coin,
@@ -1298,66 +1333,6 @@ class NativeLibrary {
               ffi.Uint32)>>('c_save_contacts');
   late final _c_save_contacts = _c_save_contactsPtr
       .asFunction<CResult______u8 Function(int, int, int, int)>();
-
-  CResult______u8 c_prepare_sweep_tx(
-    int coin,
-    int account,
-    int height,
-    ffi.Pointer<ffi.Char> destination_address,
-    int addr_index,
-    int gap_limit,
-  ) {
-    return _c_prepare_sweep_tx(
-      coin,
-      account,
-      height,
-      destination_address,
-      addr_index,
-      gap_limit,
-    );
-  }
-
-  late final _c_prepare_sweep_txPtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8,
-              ffi.Uint32,
-              ffi.Uint32,
-              ffi.Pointer<ffi.Char>,
-              ffi.Uint32,
-              ffi.UintPtr)>>('c_prepare_sweep_tx');
-  late final _c_prepare_sweep_tx = _c_prepare_sweep_txPtr.asFunction<
-      CResult______u8 Function(
-          int, int, int, ffi.Pointer<ffi.Char>, int, int)>();
-
-  CResult______u8 c_prepare_sweep_tx_by_sk(
-    int coin,
-    int account,
-    int height,
-    ffi.Pointer<ffi.Char> sk,
-    ffi.Pointer<ffi.Char> destination_address,
-  ) {
-    return _c_prepare_sweep_tx_by_sk(
-      coin,
-      account,
-      height,
-      sk,
-      destination_address,
-    );
-  }
-
-  late final _c_prepare_sweep_tx_by_skPtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8,
-              ffi.Uint32,
-              ffi.Uint32,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>>('c_prepare_sweep_tx_by_sk');
-  late final _c_prepare_sweep_tx_by_sk =
-      _c_prepare_sweep_tx_by_skPtr.asFunction<
-          CResult______u8 Function(
-              int, int, int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
 
   CResult______u8 c_fetch_tx_details(
     int coin,

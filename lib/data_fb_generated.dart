@@ -2651,11 +2651,10 @@ class TransactionSummary {
   List<int>? get numInputs => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 18);
   List<int>? get numOutputs => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 20);
   List<int>? get data => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 22);
-  List<int>? get keys => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 24);
 
   @override
   String toString() {
-    return 'TransactionSummary{height: ${height}, recipients: ${recipients}, transparentIns: ${transparentIns}, saplingNet: ${saplingNet}, orchardNet: ${orchardNet}, fee: ${fee}, privacyLevel: ${privacyLevel}, numInputs: ${numInputs}, numOutputs: ${numOutputs}, data: ${data}, keys: ${keys}}';
+    return 'TransactionSummary{height: ${height}, recipients: ${recipients}, transparentIns: ${transparentIns}, saplingNet: ${saplingNet}, orchardNet: ${orchardNet}, fee: ${fee}, privacyLevel: ${privacyLevel}, numInputs: ${numInputs}, numOutputs: ${numOutputs}, data: ${data}}';
   }
 
   TransactionSummaryT unpack() => TransactionSummaryT(
@@ -2668,8 +2667,7 @@ class TransactionSummary {
       privacyLevel: privacyLevel,
       numInputs: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 18),
       numOutputs: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 20),
-      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 22),
-      keys: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 24));
+      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 22));
 
   static int pack(fb.Builder fbBuilder, TransactionSummaryT? object) {
     if (object == null) return 0;
@@ -2688,7 +2686,6 @@ class TransactionSummaryT implements fb.Packable {
   List<int>? numInputs;
   List<int>? numOutputs;
   List<int>? data;
-  List<int>? keys;
 
   TransactionSummaryT({
       this.height = 0,
@@ -2700,8 +2697,7 @@ class TransactionSummaryT implements fb.Packable {
       this.privacyLevel = 0,
       this.numInputs,
       this.numOutputs,
-      this.data,
-      this.keys});
+      this.data});
 
   @override
   int pack(fb.Builder fbBuilder) {
@@ -2713,9 +2709,7 @@ class TransactionSummaryT implements fb.Packable {
         : fbBuilder.writeListUint8(numOutputs!);
     final int? dataOffset = data == null ? null
         : fbBuilder.writeListUint8(data!);
-    final int? keysOffset = keys == null ? null
-        : fbBuilder.writeListUint8(keys!);
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(10);
     fbBuilder.addUint32(0, height);
     fbBuilder.addOffset(1, recipientsOffset);
     fbBuilder.addUint64(2, transparentIns);
@@ -2726,13 +2720,12 @@ class TransactionSummaryT implements fb.Packable {
     fbBuilder.addOffset(7, numInputsOffset);
     fbBuilder.addOffset(8, numOutputsOffset);
     fbBuilder.addOffset(9, dataOffset);
-    fbBuilder.addOffset(10, keysOffset);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'TransactionSummaryT{height: ${height}, recipients: ${recipients}, transparentIns: ${transparentIns}, saplingNet: ${saplingNet}, orchardNet: ${orchardNet}, fee: ${fee}, privacyLevel: ${privacyLevel}, numInputs: ${numInputs}, numOutputs: ${numOutputs}, data: ${data}, keys: ${keys}}';
+    return 'TransactionSummaryT{height: ${height}, recipients: ${recipients}, transparentIns: ${transparentIns}, saplingNet: ${saplingNet}, orchardNet: ${orchardNet}, fee: ${fee}, privacyLevel: ${privacyLevel}, numInputs: ${numInputs}, numOutputs: ${numOutputs}, data: ${data}}';
   }
 }
 
@@ -2750,7 +2743,7 @@ class TransactionSummaryBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(10);
   }
 
   int addHeight(int? height) {
@@ -2793,10 +2786,6 @@ class TransactionSummaryBuilder {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addKeysOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2814,7 +2803,6 @@ class TransactionSummaryObjectBuilder extends fb.ObjectBuilder {
   final List<int>? _numInputs;
   final List<int>? _numOutputs;
   final List<int>? _data;
-  final List<int>? _keys;
 
   TransactionSummaryObjectBuilder({
     int? height,
@@ -2827,7 +2815,6 @@ class TransactionSummaryObjectBuilder extends fb.ObjectBuilder {
     List<int>? numInputs,
     List<int>? numOutputs,
     List<int>? data,
-    List<int>? keys,
   })
       : _height = height,
         _recipients = recipients,
@@ -2838,8 +2825,7 @@ class TransactionSummaryObjectBuilder extends fb.ObjectBuilder {
         _privacyLevel = privacyLevel,
         _numInputs = numInputs,
         _numOutputs = numOutputs,
-        _data = data,
-        _keys = keys;
+        _data = data;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2852,9 +2838,7 @@ class TransactionSummaryObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListUint8(_numOutputs!);
     final int? dataOffset = _data == null ? null
         : fbBuilder.writeListUint8(_data!);
-    final int? keysOffset = _keys == null ? null
-        : fbBuilder.writeListUint8(_keys!);
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(10);
     fbBuilder.addUint32(0, _height);
     fbBuilder.addOffset(1, recipientsOffset);
     fbBuilder.addUint64(2, _transparentIns);
@@ -2865,7 +2849,6 @@ class TransactionSummaryObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(7, numInputsOffset);
     fbBuilder.addOffset(8, numOutputsOffset);
     fbBuilder.addOffset(9, dataOffset);
-    fbBuilder.addOffset(10, keysOffset);
     return fbBuilder.endTable();
   }
 

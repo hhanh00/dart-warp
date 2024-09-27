@@ -153,6 +153,18 @@ class Warp {
         () => unwrapResultU8(warpLib.c_delete_account(coin, account)));
   }
 
+  Future<List<fb.TransparentAddressT>> listTransparentAddresses(
+      int coin, int account) async {
+    return Isolate.run(() {
+      final bc =
+          toBC(warpLib.c_list_account_transparent_addresses(coin, account));
+      final reader =
+          ListReader<fb.TransparentAddress>(fb.TransparentAddress.reader);
+      final list = reader.read(bc, 0);
+      return list.map((e) => e.unpack()).toList();
+    });
+  }
+
   Future<List<fb.ContactCardT>> listContacts(int coin) async {
     return Isolate.run(() {
       final bc = toBC(warpLib.c_list_contact_cards(coin));
@@ -277,6 +289,17 @@ class Warp {
     return Isolate.run(() {
       final bc = toBC(warpLib.c_get_unspent_notes(coin, account, height));
       final reader = ListReader<fb.ShieldedNote>(fb.ShieldedNote.reader);
+      final list = reader.read(bc, 0);
+      return list.map((e) => e.unpack()).toList();
+    });
+  }
+
+  Future<List<fb.InputTransparentT>> listUtxos(
+      int coin, int account, int height) async {
+    return Isolate.run(() {
+      final bc = toBC(warpLib.c_get_unspent_utxos(coin, account, height));
+      final reader =
+          ListReader<fb.InputTransparent>(fb.InputTransparent.reader);
       final list = reader.read(bc, 0);
       return list.map((e) => e.unpack()).toList();
     });

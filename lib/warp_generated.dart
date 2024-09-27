@@ -92,6 +92,23 @@ class NativeLibrary {
   late final _c_list_accounts =
       _c_list_accountsPtr.asFunction<CResult______u8 Function(int)>();
 
+  CResult______u8 c_list_account_transparent_addresses(
+    int coin,
+    int account,
+  ) {
+    return _c_list_account_transparent_addresses(
+      coin,
+      account,
+    );
+  }
+
+  late final _c_list_account_transparent_addressesPtr = _lookup<
+          ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      'c_list_account_transparent_addresses');
+  late final _c_list_account_transparent_addresses =
+      _c_list_account_transparent_addressesPtr
+          .asFunction<CResult______u8 Function(int, int)>();
+
   CResult______u8 c_get_balance(
     int coin,
     int account,
@@ -519,6 +536,25 @@ class NativeLibrary {
           CResult______u8 Function(
               ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_get_unspent_notes');
   late final _c_get_unspent_notes = _c_get_unspent_notesPtr
+      .asFunction<CResult______u8 Function(int, int, int)>();
+
+  CResult______u8 c_get_unspent_utxos(
+    int coin,
+    int account,
+    int bc_height,
+  ) {
+    return _c_get_unspent_utxos(
+      coin,
+      account,
+      bc_height,
+    );
+  }
+
+  late final _c_get_unspent_utxosPtr = _lookup<
+      ffi.NativeFunction<
+          CResult______u8 Function(
+              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_get_unspent_utxos');
+  late final _c_get_unspent_utxos = _c_get_unspent_utxosPtr
       .asFunction<CResult______u8 Function(int, int, int)>();
 
   CResult_u8 c_exclude_note(

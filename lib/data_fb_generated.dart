@@ -4612,3 +4612,118 @@ class ZipDbConfigObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class TransparentAddress {
+  TransparentAddress._(this._bc, this._bcOffset);
+  factory TransparentAddress(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<TransparentAddress> reader = _TransparentAddressReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get addrIndex => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  String? get address => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'TransparentAddress{addrIndex: ${addrIndex}, address: ${address}}';
+  }
+
+  TransparentAddressT unpack() => TransparentAddressT(
+      addrIndex: addrIndex,
+      address: address);
+
+  static int pack(fb.Builder fbBuilder, TransparentAddressT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class TransparentAddressT implements fb.Packable {
+  int addrIndex;
+  String? address;
+
+  TransparentAddressT({
+      this.addrIndex = 0,
+      this.address});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    final int? addressOffset = address == null ? null
+        : fbBuilder.writeString(address!);
+    fbBuilder.startTable(2);
+    fbBuilder.addUint32(0, addrIndex);
+    fbBuilder.addOffset(1, addressOffset);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'TransparentAddressT{addrIndex: ${addrIndex}, address: ${address}}';
+  }
+}
+
+class _TransparentAddressReader extends fb.TableReader<TransparentAddress> {
+  const _TransparentAddressReader();
+
+  @override
+  TransparentAddress createObject(fb.BufferContext bc, int offset) => 
+    TransparentAddress._(bc, offset);
+}
+
+class TransparentAddressBuilder {
+  TransparentAddressBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addAddrIndex(int? addrIndex) {
+    fbBuilder.addUint32(0, addrIndex);
+    return fbBuilder.offset;
+  }
+  int addAddressOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class TransparentAddressObjectBuilder extends fb.ObjectBuilder {
+  final int? _addrIndex;
+  final String? _address;
+
+  TransparentAddressObjectBuilder({
+    int? addrIndex,
+    String? address,
+  })
+      : _addrIndex = addrIndex,
+        _address = address;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? addressOffset = _address == null ? null
+        : fbBuilder.writeString(_address!);
+    fbBuilder.startTable(2);
+    fbBuilder.addUint32(0, _addrIndex);
+    fbBuilder.addOffset(1, addressOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}

@@ -204,6 +204,23 @@ class NativeLibrary {
   late final _c_get_spendings =
       _c_get_spendingsPtr.asFunction<CResult______u8 Function(int, int, int)>();
 
+  CResult_bool c_is_valid_key(
+    int coin,
+    ffi.Pointer<ffi.Char> key,
+  ) {
+    return _c_is_valid_key(
+      coin,
+      key,
+    );
+  }
+
+  late final _c_is_valid_keyPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_bool Function(
+              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_is_valid_key');
+  late final _c_is_valid_key = _c_is_valid_keyPtr
+      .asFunction<CResult_bool Function(int, ffi.Pointer<ffi.Char>)>();
+
   CResult_u32 c_create_new_account(
     int coin,
     ffi.Pointer<ffi.Char> name,
@@ -747,20 +764,24 @@ class NativeLibrary {
     int coin,
     int account,
     int acc_index,
+    int change,
+    int addr_index,
   ) {
     return _c_derive_zip32_keys(
       coin,
       account,
       acc_index,
+      change,
+      addr_index,
     );
   }
 
   late final _c_derive_zip32_keysPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_derive_zip32_keys');
+          CResult______u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
+              ffi.Uint32, ffi.Uint32)>>('c_derive_zip32_keys');
   late final _c_derive_zip32_keys = _c_derive_zip32_keysPtr
-      .asFunction<CResult______u8 Function(int, int, int)>();
+      .asFunction<CResult______u8 Function(int, int, int, int, int)>();
 
   CResult_u8 c_check_db_password(
     ffi.Pointer<ffi.Char> path,

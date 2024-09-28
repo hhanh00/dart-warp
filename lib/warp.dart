@@ -59,6 +59,10 @@ class Warp {
     return Isolate.run(() => unwrapResultU64(warpLib.c_ping(0, toNative(url))));
   }
 
+  bool isValidKey(int coin, String key) {
+    return unwrapResultBool(warpLib.c_is_valid_key(coin, toNative(key)));
+  }
+
   int createAccount(
       int coin, String name, String key, int accIndex, int birth) {
     return unwrapResultU32(
@@ -475,9 +479,9 @@ class Warp {
   }
 
   Future<fb.Zip32KeysT> deriveZip32Keys(
-      int coin, int account, int index) async {
+      int coin, int account, int aindex, int change, int addrIndex) async {
     return Isolate.run(() {
-      final bc = toBC(warpLib.c_derive_zip32_keys(coin, account, index));
+      final bc = toBC(warpLib.c_derive_zip32_keys(coin, account, aindex, change, addrIndex));
       return fb.Zip32Keys.reader.read(bc, 0).unpack();
     });
   }

@@ -112,19 +112,18 @@ class Warp {
     });
   }
 
-  Future<Uint8List> sign(
+  Future<fb.TransactionBytesT> sign(
       int coin, fb.TransactionSummaryT summary, int expirationHeight) async {
     return Isolate.run(() {
       final summaryParam = toParam(summary);
-      final r = warpLib.c_sign(coin, summaryParam.ref, expirationHeight);
-      calloc.free(summaryParam);
-      return unwrapResultBytes(r);
+      final bc = toBC(warpLib.c_sign(coin, summaryParam.ref, expirationHeight));
+      return fb.TransactionBytes.reader.read(bc, 0).unpack();
     });
   }
 
-  Future<String> broadcast(int coin, Uint8List txBytes) async {
+  Future<String> broadcast(int coin, fb.TransactionBytesT txBytes) async {
     return Isolate.run(() {
-      final txBytesParam = toParamBytes(txBytes);
+      final txBytesParam = toParam(txBytes);
       final r = warpLib.c_tx_broadcast(coin, txBytesParam.ref);
       return unwrapResultString(r);
     });

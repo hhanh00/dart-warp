@@ -4710,3 +4710,226 @@ class TransparentAddressObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class IdNote {
+  IdNote._(this._bc, this._bcOffset);
+
+  static const fb.Reader<IdNote> reader = _IdNoteReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get pool => const fb.Uint8Reader().read(_bc, _bcOffset + 0);
+  int get id => const fb.Uint32Reader().read(_bc, _bcOffset + 4);
+
+  @override
+  String toString() {
+    return 'IdNote{pool: ${pool}, id: ${id}}';
+  }
+
+  IdNoteT unpack() => IdNoteT(
+      pool: pool,
+      id: id);
+
+  static int pack(fb.Builder fbBuilder, IdNoteT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class IdNoteT implements fb.Packable {
+  int pool;
+  int id;
+
+  IdNoteT({
+      required this.pool,
+      required this.id});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    fbBuilder.putUint32(id);
+    fbBuilder.pad(3);
+    fbBuilder.putUint8(pool);
+    return fbBuilder.offset;
+  }
+
+  @override
+  String toString() {
+    return 'IdNoteT{pool: ${pool}, id: ${id}}';
+  }
+}
+
+class _IdNoteReader extends fb.StructReader<IdNote> {
+  const _IdNoteReader();
+
+  @override
+  int get size => 8;
+
+  @override
+  IdNote createObject(fb.BufferContext bc, int offset) => 
+    IdNote._(bc, offset);
+}
+
+class IdNoteBuilder {
+  IdNoteBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  int finish(int pool, int id) {
+    fbBuilder.putUint32(id);
+    fbBuilder.pad(3);
+    fbBuilder.putUint8(pool);
+    return fbBuilder.offset;
+  }
+
+}
+
+class IdNoteObjectBuilder extends fb.ObjectBuilder {
+  final int _pool;
+  final int _id;
+
+  IdNoteObjectBuilder({
+    required int pool,
+    required int id,
+  })
+      : _pool = pool,
+        _id = id;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.putUint32(_id);
+    fbBuilder.pad(3);
+    fbBuilder.putUint8(_pool);
+    return fbBuilder.offset;
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class TransactionBytes {
+  TransactionBytes._(this._bc, this._bcOffset);
+  factory TransactionBytes(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<TransactionBytes> reader = _TransactionBytesReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<IdNote>? get notes => const fb.ListReader<IdNote>(IdNote.reader).vTableGetNullable(_bc, _bcOffset, 4);
+  List<int>? get data => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'TransactionBytes{notes: ${notes}, data: ${data}}';
+  }
+
+  TransactionBytesT unpack() => TransactionBytesT(
+      notes: notes?.map((e) => e.unpack()).toList(),
+      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6));
+
+  static int pack(fb.Builder fbBuilder, TransactionBytesT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class TransactionBytesT implements fb.Packable {
+  List<IdNoteT>? notes;
+  List<int>? data;
+
+  TransactionBytesT({
+      this.notes,
+      this.data});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    int? notesOffset;
+    if (notes != null) {
+      for (var e in notes!) { e.pack(fbBuilder); }
+      notesOffset = fbBuilder.endStructVector(notes!.length);
+    }
+    final int? dataOffset = data == null ? null
+        : fbBuilder.writeListUint8(data!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, notesOffset);
+    fbBuilder.addOffset(1, dataOffset);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'TransactionBytesT{notes: ${notes}, data: ${data}}';
+  }
+}
+
+class _TransactionBytesReader extends fb.TableReader<TransactionBytes> {
+  const _TransactionBytesReader();
+
+  @override
+  TransactionBytes createObject(fb.BufferContext bc, int offset) => 
+    TransactionBytes._(bc, offset);
+}
+
+class TransactionBytesBuilder {
+  TransactionBytesBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addNotesOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDataOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class TransactionBytesObjectBuilder extends fb.ObjectBuilder {
+  final List<IdNoteObjectBuilder>? _notes;
+  final List<int>? _data;
+
+  TransactionBytesObjectBuilder({
+    List<IdNoteObjectBuilder>? notes,
+    List<int>? data,
+  })
+      : _notes = notes,
+        _data = data;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? notesOffset = _notes == null ? null
+        : fbBuilder.writeListOfStructs(_notes!);
+    final int? dataOffset = _data == null ? null
+        : fbBuilder.writeListUint8(_data!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, notesOffset);
+    fbBuilder.addOffset(1, dataOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}

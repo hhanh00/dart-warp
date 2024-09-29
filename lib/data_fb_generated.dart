@@ -246,7 +246,7 @@ class TransactionInfo {
   final int _bcOffset;
 
   int get id => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  String? get txid => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  List<int>? get txid => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
   int get height => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
   int get confirmations => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
   int get timestamp => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
@@ -262,7 +262,7 @@ class TransactionInfo {
 
   TransactionInfoT unpack() => TransactionInfoT(
       id: id,
-      txid: txid,
+      txid: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
       height: height,
       confirmations: confirmations,
       timestamp: timestamp,
@@ -279,7 +279,7 @@ class TransactionInfo {
 
 class TransactionInfoT implements fb.Packable {
   int id;
-  String? txid;
+  List<int>? txid;
   int height;
   int confirmations;
   int timestamp;
@@ -302,7 +302,7 @@ class TransactionInfoT implements fb.Packable {
   @override
   int pack(fb.Builder fbBuilder) {
     final int? txidOffset = txid == null ? null
-        : fbBuilder.writeString(txid!);
+        : fbBuilder.writeListUint8(txid!);
     final int? addressOffset = address == null ? null
         : fbBuilder.writeString(address!);
     final int? contactOffset = contact == null ? null
@@ -389,7 +389,7 @@ class TransactionInfoBuilder {
 
 class TransactionInfoObjectBuilder extends fb.ObjectBuilder {
   final int? _id;
-  final String? _txid;
+  final List<int>? _txid;
   final int? _height;
   final int? _confirmations;
   final int? _timestamp;
@@ -400,7 +400,7 @@ class TransactionInfoObjectBuilder extends fb.ObjectBuilder {
 
   TransactionInfoObjectBuilder({
     int? id,
-    String? txid,
+    List<int>? txid,
     int? height,
     int? confirmations,
     int? timestamp,
@@ -423,7 +423,7 @@ class TransactionInfoObjectBuilder extends fb.ObjectBuilder {
   @override
   int finish(fb.Builder fbBuilder) {
     final int? txidOffset = _txid == null ? null
-        : fbBuilder.writeString(_txid!);
+        : fbBuilder.writeListUint8(_txid!);
     final int? addressOffset = _address == null ? null
         : fbBuilder.writeString(_address!);
     final int? contactOffset = _contact == null ? null

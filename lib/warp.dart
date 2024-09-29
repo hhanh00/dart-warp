@@ -359,8 +359,8 @@ class Warp {
 
   Future<void> decryptZIPDbFiles(
       String filePath, String targetPath, String secretKey) async {
-    return Isolate.run(() => warpLib.c_decrypt_zip_database_files(
-        0, toNative(filePath), toNative(targetPath), toNative(secretKey)));
+    return Isolate.run(() => unwrapResultU8(warpLib.c_decrypt_zip_database_files(
+        0, toNative(filePath), toNative(targetPath), toNative(secretKey))));
   }
 
   List<fb.PacketT> splitData(int coin, Uint8List data, int threshold) {
@@ -442,8 +442,8 @@ class Warp {
     });
   }
 
-  fb.TransactionInfoExtendedT getTransactionDetails(int coin, int id) {
-    final bc = toBC(warpLib.c_get_tx_details(coin, id));
+  fb.TransactionInfoExtendedT getTransactionDetails(int coin, Uint8List txid) {
+    final bc = toBC(warpLib.c_get_tx_details(coin, toParamBytes(txid).ref));
     return fb.TransactionInfoExtended.reader.read(bc, 0).unpack();
   }
 

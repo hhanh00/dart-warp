@@ -500,6 +500,22 @@ class NativeLibrary {
   late final _c_delete_contact =
       _c_delete_contactPtr.asFunction<CResult_u8 Function(int, int)>();
 
+  CResult_u8 c_on_contacts_saved(
+    int coin,
+    int account,
+  ) {
+    return _c_on_contacts_saved(
+      coin,
+      account,
+    );
+  }
+
+  late final _c_on_contacts_savedPtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_on_contacts_saved');
+  late final _c_on_contacts_saved =
+      _c_on_contacts_savedPtr.asFunction<CResult_u8 Function(int, int)>();
+
   CResult______u8 c_list_messages(
     int coin,
     int account,
@@ -1267,20 +1283,22 @@ class NativeLibrary {
     int coin,
     int account,
     CParam payment,
+    ffi.Pointer<ffi.Char> redirect,
   ) {
     return _c_prepare_payment(
       coin,
       account,
       payment,
+      redirect,
     );
   }
 
   late final _c_prepare_paymentPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, CParam)>>('c_prepare_payment');
-  late final _c_prepare_payment = _c_prepare_paymentPtr
-      .asFunction<CResult______u8 Function(int, int, CParam)>();
+          CResult______u8 Function(ffi.Uint8, ffi.Uint32, CParam,
+              ffi.Pointer<ffi.Char>)>>('c_prepare_payment');
+  late final _c_prepare_payment = _c_prepare_paymentPtr.asFunction<
+      CResult______u8 Function(int, int, CParam, ffi.Pointer<ffi.Char>)>();
 
   CResult_bool c_can_sign(
     int coin,
@@ -1338,22 +1356,22 @@ class NativeLibrary {
     int coin,
     int account,
     int height,
-    int confirmations,
+    ffi.Pointer<ffi.Char> redirect,
   ) {
     return _c_save_contacts(
       coin,
       account,
       height,
-      confirmations,
+      redirect,
     );
   }
 
   late final _c_save_contactsPtr = _lookup<
       ffi.NativeFunction<
           CResult______u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
-              ffi.Uint32)>>('c_save_contacts');
-  late final _c_save_contacts = _c_save_contactsPtr
-      .asFunction<CResult______u8 Function(int, int, int, int)>();
+              ffi.Pointer<ffi.Char>)>>('c_save_contacts');
+  late final _c_save_contacts = _c_save_contactsPtr.asFunction<
+      CResult______u8 Function(int, int, int, ffi.Pointer<ffi.Char>)>();
 
   CResult______u8 c_fetch_tx_details(
     int coin,

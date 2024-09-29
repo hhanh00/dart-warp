@@ -2651,10 +2651,11 @@ class TransactionSummary {
   List<int>? get numInputs => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 18);
   List<int>? get numOutputs => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 20);
   List<int>? get data => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get redirect => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
 
   @override
   String toString() {
-    return 'TransactionSummary{height: ${height}, recipients: ${recipients}, transparentIns: ${transparentIns}, saplingNet: ${saplingNet}, orchardNet: ${orchardNet}, fee: ${fee}, privacyLevel: ${privacyLevel}, numInputs: ${numInputs}, numOutputs: ${numOutputs}, data: ${data}}';
+    return 'TransactionSummary{height: ${height}, recipients: ${recipients}, transparentIns: ${transparentIns}, saplingNet: ${saplingNet}, orchardNet: ${orchardNet}, fee: ${fee}, privacyLevel: ${privacyLevel}, numInputs: ${numInputs}, numOutputs: ${numOutputs}, data: ${data}, redirect: ${redirect}}';
   }
 
   TransactionSummaryT unpack() => TransactionSummaryT(
@@ -2667,7 +2668,8 @@ class TransactionSummary {
       privacyLevel: privacyLevel,
       numInputs: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 18),
       numOutputs: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 20),
-      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 22));
+      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 22),
+      redirect: redirect);
 
   static int pack(fb.Builder fbBuilder, TransactionSummaryT? object) {
     if (object == null) return 0;
@@ -2686,6 +2688,7 @@ class TransactionSummaryT implements fb.Packable {
   List<int>? numInputs;
   List<int>? numOutputs;
   List<int>? data;
+  String? redirect;
 
   TransactionSummaryT({
       this.height = 0,
@@ -2697,7 +2700,8 @@ class TransactionSummaryT implements fb.Packable {
       this.privacyLevel = 0,
       this.numInputs,
       this.numOutputs,
-      this.data});
+      this.data,
+      this.redirect});
 
   @override
   int pack(fb.Builder fbBuilder) {
@@ -2709,7 +2713,9 @@ class TransactionSummaryT implements fb.Packable {
         : fbBuilder.writeListUint8(numOutputs!);
     final int? dataOffset = data == null ? null
         : fbBuilder.writeListUint8(data!);
-    fbBuilder.startTable(10);
+    final int? redirectOffset = redirect == null ? null
+        : fbBuilder.writeString(redirect!);
+    fbBuilder.startTable(11);
     fbBuilder.addUint32(0, height);
     fbBuilder.addOffset(1, recipientsOffset);
     fbBuilder.addUint64(2, transparentIns);
@@ -2720,12 +2726,13 @@ class TransactionSummaryT implements fb.Packable {
     fbBuilder.addOffset(7, numInputsOffset);
     fbBuilder.addOffset(8, numOutputsOffset);
     fbBuilder.addOffset(9, dataOffset);
+    fbBuilder.addOffset(10, redirectOffset);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'TransactionSummaryT{height: ${height}, recipients: ${recipients}, transparentIns: ${transparentIns}, saplingNet: ${saplingNet}, orchardNet: ${orchardNet}, fee: ${fee}, privacyLevel: ${privacyLevel}, numInputs: ${numInputs}, numOutputs: ${numOutputs}, data: ${data}}';
+    return 'TransactionSummaryT{height: ${height}, recipients: ${recipients}, transparentIns: ${transparentIns}, saplingNet: ${saplingNet}, orchardNet: ${orchardNet}, fee: ${fee}, privacyLevel: ${privacyLevel}, numInputs: ${numInputs}, numOutputs: ${numOutputs}, data: ${data}, redirect: ${redirect}}';
   }
 }
 
@@ -2743,7 +2750,7 @@ class TransactionSummaryBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(11);
   }
 
   int addHeight(int? height) {
@@ -2786,6 +2793,10 @@ class TransactionSummaryBuilder {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
+  int addRedirectOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2803,6 +2814,7 @@ class TransactionSummaryObjectBuilder extends fb.ObjectBuilder {
   final List<int>? _numInputs;
   final List<int>? _numOutputs;
   final List<int>? _data;
+  final String? _redirect;
 
   TransactionSummaryObjectBuilder({
     int? height,
@@ -2815,6 +2827,7 @@ class TransactionSummaryObjectBuilder extends fb.ObjectBuilder {
     List<int>? numInputs,
     List<int>? numOutputs,
     List<int>? data,
+    String? redirect,
   })
       : _height = height,
         _recipients = recipients,
@@ -2825,7 +2838,8 @@ class TransactionSummaryObjectBuilder extends fb.ObjectBuilder {
         _privacyLevel = privacyLevel,
         _numInputs = numInputs,
         _numOutputs = numOutputs,
-        _data = data;
+        _data = data,
+        _redirect = redirect;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2838,7 +2852,9 @@ class TransactionSummaryObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListUint8(_numOutputs!);
     final int? dataOffset = _data == null ? null
         : fbBuilder.writeListUint8(_data!);
-    fbBuilder.startTable(10);
+    final int? redirectOffset = _redirect == null ? null
+        : fbBuilder.writeString(_redirect!);
+    fbBuilder.startTable(11);
     fbBuilder.addUint32(0, _height);
     fbBuilder.addOffset(1, recipientsOffset);
     fbBuilder.addUint64(2, _transparentIns);
@@ -2849,6 +2865,7 @@ class TransactionSummaryObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(7, numInputsOffset);
     fbBuilder.addOffset(8, numOutputsOffset);
     fbBuilder.addOffset(9, dataOffset);
+    fbBuilder.addOffset(10, redirectOffset);
     return fbBuilder.endTable();
   }
 
@@ -4825,15 +4842,17 @@ class TransactionBytes {
 
   List<IdNote>? get notes => const fb.ListReader<IdNote>(IdNote.reader).vTableGetNullable(_bc, _bcOffset, 4);
   List<int>? get data => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get redirect => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
 
   @override
   String toString() {
-    return 'TransactionBytes{notes: ${notes}, data: ${data}}';
+    return 'TransactionBytes{notes: ${notes}, data: ${data}, redirect: ${redirect}}';
   }
 
   TransactionBytesT unpack() => TransactionBytesT(
       notes: notes?.map((e) => e.unpack()).toList(),
-      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6));
+      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
+      redirect: redirect);
 
   static int pack(fb.Builder fbBuilder, TransactionBytesT? object) {
     if (object == null) return 0;
@@ -4844,10 +4863,12 @@ class TransactionBytes {
 class TransactionBytesT implements fb.Packable {
   List<IdNoteT>? notes;
   List<int>? data;
+  String? redirect;
 
   TransactionBytesT({
       this.notes,
-      this.data});
+      this.data,
+      this.redirect});
 
   @override
   int pack(fb.Builder fbBuilder) {
@@ -4858,15 +4879,18 @@ class TransactionBytesT implements fb.Packable {
     }
     final int? dataOffset = data == null ? null
         : fbBuilder.writeListUint8(data!);
-    fbBuilder.startTable(2);
+    final int? redirectOffset = redirect == null ? null
+        : fbBuilder.writeString(redirect!);
+    fbBuilder.startTable(3);
     fbBuilder.addOffset(0, notesOffset);
     fbBuilder.addOffset(1, dataOffset);
+    fbBuilder.addOffset(2, redirectOffset);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'TransactionBytesT{notes: ${notes}, data: ${data}}';
+    return 'TransactionBytesT{notes: ${notes}, data: ${data}, redirect: ${redirect}}';
   }
 }
 
@@ -4884,7 +4908,7 @@ class TransactionBytesBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(3);
   }
 
   int addNotesOffset(int? offset) {
@@ -4893,6 +4917,10 @@ class TransactionBytesBuilder {
   }
   int addDataOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addRedirectOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
 
@@ -4904,13 +4932,16 @@ class TransactionBytesBuilder {
 class TransactionBytesObjectBuilder extends fb.ObjectBuilder {
   final List<IdNoteObjectBuilder>? _notes;
   final List<int>? _data;
+  final String? _redirect;
 
   TransactionBytesObjectBuilder({
     List<IdNoteObjectBuilder>? notes,
     List<int>? data,
+    String? redirect,
   })
       : _notes = notes,
-        _data = data;
+        _data = data,
+        _redirect = redirect;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -4919,9 +4950,12 @@ class TransactionBytesObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListOfStructs(_notes!);
     final int? dataOffset = _data == null ? null
         : fbBuilder.writeListUint8(_data!);
-    fbBuilder.startTable(2);
+    final int? redirectOffset = _redirect == null ? null
+        : fbBuilder.writeString(_redirect!);
+    fbBuilder.startTable(3);
     fbBuilder.addOffset(0, notesOffset);
     fbBuilder.addOffset(1, dataOffset);
+    fbBuilder.addOffset(2, redirectOffset);
     return fbBuilder.endTable();
   }
 

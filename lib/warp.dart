@@ -106,6 +106,7 @@ class Warp {
         coin,
         account,
         toParam(payment).ref,
+        toNative("")
       ));
       final summary = fb.TransactionSummary.reader.read(summaryBytes, 0);
       return summary.unpack();
@@ -206,12 +207,16 @@ class Warp {
   }
 
   Future<fb.TransactionSummaryT> saveContacts(
-      int coin, int account, int height, int confirmations) async {
+      int coin, int account, int height, String redirect) async {
     return Isolate.run(() {
       final bc =
-          toBC(warpLib.c_save_contacts(coin, account, height, confirmations));
+          toBC(warpLib.c_save_contacts(coin, account, height, toNative(redirect)));
       return fb.TransactionSummary.reader.read(bc, 0).unpack();
     });
+  }
+
+  void onContactsSaved(int coin, int account) {
+    warpLib.c_on_contacts_saved(coin, account);
   }
 
   int getActivationDate(int coin) {

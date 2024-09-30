@@ -780,14 +780,12 @@ class NativeLibrary {
     int coin,
     int account,
     int acc_index,
-    int change,
     int addr_index,
   ) {
     return _c_derive_zip32_keys(
       coin,
       account,
       acc_index,
-      change,
       addr_index,
     );
   }
@@ -795,9 +793,9 @@ class NativeLibrary {
   late final _c_derive_zip32_keysPtr = _lookup<
       ffi.NativeFunction<
           CResult______u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
-              ffi.Uint32, ffi.Uint32)>>('c_derive_zip32_keys');
+              ffi.Uint32)>>('c_derive_zip32_keys');
   late final _c_derive_zip32_keys = _c_derive_zip32_keysPtr
-      .asFunction<CResult______u8 Function(int, int, int, int, int)>();
+      .asFunction<CResult______u8 Function(int, int, int, int)>();
 
   CResult_u8 c_check_db_password(
     ffi.Pointer<ffi.Char> path,

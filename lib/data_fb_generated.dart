@@ -1498,13 +1498,14 @@ class ShieldedMessage {
   int get height => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
   int get timestamp => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
   bool get incoming => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
-  int get nout => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  UserMemo? get memo => UserMemo.reader.vTableGetNullable(_bc, _bcOffset, 20);
-  bool get read => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  String? get contact => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  int get nout => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  UserMemo? get memo => UserMemo.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  bool get read => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
 
   @override
   String toString() {
-    return 'ShieldedMessage{idMsg: ${idMsg}, account: ${account}, idTx: ${idTx}, txid: ${txid}, height: ${height}, timestamp: ${timestamp}, incoming: ${incoming}, nout: ${nout}, memo: ${memo}, read: ${read}}';
+    return 'ShieldedMessage{idMsg: ${idMsg}, account: ${account}, idTx: ${idTx}, txid: ${txid}, height: ${height}, timestamp: ${timestamp}, incoming: ${incoming}, contact: ${contact}, nout: ${nout}, memo: ${memo}, read: ${read}}';
   }
 
   ShieldedMessageT unpack() => ShieldedMessageT(
@@ -1515,6 +1516,7 @@ class ShieldedMessage {
       height: height,
       timestamp: timestamp,
       incoming: incoming,
+      contact: contact,
       nout: nout,
       memo: memo?.unpack(),
       read: read);
@@ -1533,6 +1535,7 @@ class ShieldedMessageT implements fb.Packable {
   int height;
   int timestamp;
   bool incoming;
+  String? contact;
   int nout;
   UserMemoT? memo;
   bool read;
@@ -1545,6 +1548,7 @@ class ShieldedMessageT implements fb.Packable {
       this.height = 0,
       this.timestamp = 0,
       this.incoming = false,
+      this.contact,
       this.nout = 0,
       this.memo,
       this.read = false});
@@ -1553,8 +1557,10 @@ class ShieldedMessageT implements fb.Packable {
   int pack(fb.Builder fbBuilder) {
     final int? txidOffset = txid == null ? null
         : fbBuilder.writeListUint8(txid!);
+    final int? contactOffset = contact == null ? null
+        : fbBuilder.writeString(contact!);
     final int? memoOffset = memo?.pack(fbBuilder);
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(11);
     fbBuilder.addUint32(0, idMsg);
     fbBuilder.addUint32(1, account);
     fbBuilder.addUint32(2, idTx);
@@ -1562,15 +1568,16 @@ class ShieldedMessageT implements fb.Packable {
     fbBuilder.addUint32(4, height);
     fbBuilder.addUint32(5, timestamp);
     fbBuilder.addBool(6, incoming);
-    fbBuilder.addUint32(7, nout);
-    fbBuilder.addOffset(8, memoOffset);
-    fbBuilder.addBool(9, read);
+    fbBuilder.addOffset(7, contactOffset);
+    fbBuilder.addUint32(8, nout);
+    fbBuilder.addOffset(9, memoOffset);
+    fbBuilder.addBool(10, read);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'ShieldedMessageT{idMsg: ${idMsg}, account: ${account}, idTx: ${idTx}, txid: ${txid}, height: ${height}, timestamp: ${timestamp}, incoming: ${incoming}, nout: ${nout}, memo: ${memo}, read: ${read}}';
+    return 'ShieldedMessageT{idMsg: ${idMsg}, account: ${account}, idTx: ${idTx}, txid: ${txid}, height: ${height}, timestamp: ${timestamp}, incoming: ${incoming}, contact: ${contact}, nout: ${nout}, memo: ${memo}, read: ${read}}';
   }
 }
 
@@ -1588,7 +1595,7 @@ class ShieldedMessageBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(11);
   }
 
   int addIdMsg(int? idMsg) {
@@ -1619,16 +1626,20 @@ class ShieldedMessageBuilder {
     fbBuilder.addBool(6, incoming);
     return fbBuilder.offset;
   }
+  int addContactOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
   int addNout(int? nout) {
-    fbBuilder.addUint32(7, nout);
+    fbBuilder.addUint32(8, nout);
     return fbBuilder.offset;
   }
   int addMemoOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
   int addRead(bool? read) {
-    fbBuilder.addBool(9, read);
+    fbBuilder.addBool(10, read);
     return fbBuilder.offset;
   }
 
@@ -1645,6 +1656,7 @@ class ShieldedMessageObjectBuilder extends fb.ObjectBuilder {
   final int? _height;
   final int? _timestamp;
   final bool? _incoming;
+  final String? _contact;
   final int? _nout;
   final UserMemoObjectBuilder? _memo;
   final bool? _read;
@@ -1657,6 +1669,7 @@ class ShieldedMessageObjectBuilder extends fb.ObjectBuilder {
     int? height,
     int? timestamp,
     bool? incoming,
+    String? contact,
     int? nout,
     UserMemoObjectBuilder? memo,
     bool? read,
@@ -1668,6 +1681,7 @@ class ShieldedMessageObjectBuilder extends fb.ObjectBuilder {
         _height = height,
         _timestamp = timestamp,
         _incoming = incoming,
+        _contact = contact,
         _nout = nout,
         _memo = memo,
         _read = read;
@@ -1677,8 +1691,10 @@ class ShieldedMessageObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? txidOffset = _txid == null ? null
         : fbBuilder.writeListUint8(_txid!);
+    final int? contactOffset = _contact == null ? null
+        : fbBuilder.writeString(_contact!);
     final int? memoOffset = _memo?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(11);
     fbBuilder.addUint32(0, _idMsg);
     fbBuilder.addUint32(1, _account);
     fbBuilder.addUint32(2, _idTx);
@@ -1686,9 +1702,10 @@ class ShieldedMessageObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint32(4, _height);
     fbBuilder.addUint32(5, _timestamp);
     fbBuilder.addBool(6, _incoming);
-    fbBuilder.addUint32(7, _nout);
-    fbBuilder.addOffset(8, memoOffset);
-    fbBuilder.addBool(9, _read);
+    fbBuilder.addOffset(7, contactOffset);
+    fbBuilder.addUint32(8, _nout);
+    fbBuilder.addOffset(9, memoOffset);
+    fbBuilder.addBool(10, _read);
     return fbBuilder.endTable();
   }
 

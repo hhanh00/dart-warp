@@ -21,8 +21,7 @@ void main(List<String> arguments) async {
   final balance = await warp.getBalance(zcash, 1, 0);
   print(balance);
 
-  while (await warp.getBCHeight(zcash) > await warp.getSyncHeight(zcash)) {
-    print("${await warp.getBCHeight(zcash)} ${await warp.getSyncHeight(zcash)}");
+  while (await warp.getBCHeight(zcash) > warp.getSyncHeight(zcash)) {
     await WarpSync.synchronize(zcash, await warp.getBCHeight(zcash));
   }
   print('Synchronization completed');

@@ -109,6 +109,26 @@ class NativeLibrary {
       _c_list_account_transparent_addressesPtr
           .asFunction<CResult______u8 Function(int, int)>();
 
+  CResult_u8 c_update_account_primary_transparent_address(
+    int coin,
+    int account,
+    int addr_index,
+  ) {
+    return _c_update_account_primary_transparent_address(
+      coin,
+      account,
+      addr_index,
+    );
+  }
+
+  late final _c_update_account_primary_transparent_addressPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(ffi.Uint8, ffi.Uint32,
+              ffi.Uint32)>>('c_update_account_primary_transparent_address');
+  late final _c_update_account_primary_transparent_address =
+      _c_update_account_primary_transparent_addressPtr
+          .asFunction<CResult_u8 Function(int, int, int)>();
+
   CResult______u8 c_get_balance(
     int coin,
     int account,
@@ -776,26 +796,115 @@ class NativeLibrary {
   late final _c_configure =
       _c_configurePtr.asFunction<CResult_u8 Function(int, CParam)>();
 
-  CResult______u8 c_derive_zip32_keys(
+  CResult_u32 c_get_activation_date(
     int coin,
-    int account,
-    int acc_index,
-    int addr_index,
   ) {
-    return _c_derive_zip32_keys(
+    return _c_get_activation_date(
       coin,
-      account,
-      acc_index,
-      addr_index,
     );
   }
 
-  late final _c_derive_zip32_keysPtr = _lookup<
+  late final _c_get_activation_datePtr =
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
+          'c_get_activation_date');
+  late final _c_get_activation_date =
+      _c_get_activation_datePtr.asFunction<CResult_u32 Function(int)>();
+
+  CResult_u32 c_get_height_by_time(
+    int coin,
+    int time,
+  ) {
+    return _c_get_height_by_time(
+      coin,
+      time,
+    );
+  }
+
+  late final _c_get_height_by_timePtr =
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_get_height_by_time');
+  late final _c_get_height_by_time =
+      _c_get_height_by_timePtr.asFunction<CResult_u32 Function(int, int)>();
+
+  CResult_u32 c_get_activation_height(
+    int coin,
+  ) {
+    return _c_get_activation_height(
+      coin,
+    );
+  }
+
+  late final _c_get_activation_heightPtr =
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
+          'c_get_activation_height');
+  late final _c_get_activation_height =
+      _c_get_activation_heightPtr.asFunction<CResult_u32 Function(int)>();
+
+  CResult_u32 c_get_time_by_height(
+    int coin,
+    int height,
+  ) {
+    return _c_get_time_by_height(
+      coin,
+      height,
+    );
+  }
+
+  late final _c_get_time_by_heightPtr =
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_get_time_by_height');
+  late final _c_get_time_by_height =
+      _c_get_time_by_heightPtr.asFunction<CResult_u32 Function(int, int)>();
+
+  CResult_u8 c_reset_chain(
+    int coin,
+    int height,
+  ) {
+    return _c_reset_chain(
+      coin,
+      height,
+    );
+  }
+
+  late final _c_reset_chainPtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_reset_chain');
+  late final _c_reset_chain =
+      _c_reset_chainPtr.asFunction<CResult_u8 Function(int, int)>();
+
+  CResult______u8 c_split(
+    int coin,
+    CParam data,
+    int threshold,
+  ) {
+    return _c_split(
+      coin,
+      data,
+      threshold,
+    );
+  }
+
+  late final _c_splitPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
-              ffi.Uint32)>>('c_derive_zip32_keys');
-  late final _c_derive_zip32_keys = _c_derive_zip32_keysPtr
-      .asFunction<CResult______u8 Function(int, int, int, int)>();
+          CResult______u8 Function(ffi.Uint8, CParam, ffi.Uint32)>>('c_split');
+  late final _c_split =
+      _c_splitPtr.asFunction<CResult______u8 Function(int, CParam, int)>();
+
+  CResult______u8 c_merge(
+    int coin,
+    CParam parts,
+  ) {
+    return _c_merge(
+      coin,
+      parts,
+    );
+  }
+
+  late final _c_mergePtr =
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, CParam)>>(
+          'c_merge');
+  late final _c_merge =
+      _c_mergePtr.asFunction<CResult______u8 Function(int, CParam)>();
 
   CResult_u8 c_check_db_password(
     ffi.Pointer<ffi.Char> path,
@@ -941,171 +1050,26 @@ class NativeLibrary {
       CResult_u8 Function(int, int, ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
 
-  CResult______u8 c_decode_address(
+  CResult______u8 c_derive_zip32_keys(
     int coin,
-    ffi.Pointer<ffi.Char> address,
+    int account,
+    int acc_index,
+    int addr_index,
   ) {
-    return _c_decode_address(
+    return _c_derive_zip32_keys(
       coin,
-      address,
+      account,
+      acc_index,
+      addr_index,
     );
   }
 
-  late final _c_decode_addressPtr = _lookup<
+  late final _c_derive_zip32_keysPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_decode_address');
-  late final _c_decode_address = _c_decode_addressPtr
-      .asFunction<CResult______u8 Function(int, ffi.Pointer<ffi.Char>)>();
-
-  CResult_____c_char c_filter_address(
-    int coin,
-    ffi.Pointer<ffi.Char> address,
-    int pool_mask,
-  ) {
-    return _c_filter_address(
-      coin,
-      address,
-      pool_mask,
-    );
-  }
-
-  late final _c_filter_addressPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_____c_char Function(ffi.Uint8, ffi.Pointer<ffi.Char>,
-              ffi.Uint8)>>('c_filter_address');
-  late final _c_filter_address = _c_filter_addressPtr.asFunction<
-      CResult_____c_char Function(int, ffi.Pointer<ffi.Char>, int)>();
-
-  CResult_____c_char c_make_payment_uri(
-    int coin,
-    CParam payment,
-  ) {
-    return _c_make_payment_uri(
-      coin,
-      payment,
-    );
-  }
-
-  late final _c_make_payment_uriPtr = _lookup<
-          ffi.NativeFunction<CResult_____c_char Function(ffi.Uint8, CParam)>>(
-      'c_make_payment_uri');
-  late final _c_make_payment_uri = _c_make_payment_uriPtr
-      .asFunction<CResult_____c_char Function(int, CParam)>();
-
-  CResult______u8 c_parse_payment_uri(
-    int coin,
-    ffi.Pointer<ffi.Char> uri,
-    int height,
-    int expiration,
-  ) {
-    return _c_parse_payment_uri(
-      coin,
-      uri,
-      height,
-      expiration,
-    );
-  }
-
-  late final _c_parse_payment_uriPtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Pointer<ffi.Char>, ffi.Uint32,
-              ffi.Uint32)>>('c_parse_payment_uri');
-  late final _c_parse_payment_uri = _c_parse_payment_uriPtr.asFunction<
-      CResult______u8 Function(int, ffi.Pointer<ffi.Char>, int, int)>();
-
-  CResult_u8 c_is_valid_address_or_uri(
-    int coin,
-    ffi.Pointer<ffi.Char> s,
-  ) {
-    return _c_is_valid_address_or_uri(
-      coin,
-      s,
-    );
-  }
-
-  late final _c_is_valid_address_or_uriPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_is_valid_address_or_uri');
-  late final _c_is_valid_address_or_uri = _c_is_valid_address_or_uriPtr
-      .asFunction<CResult_u8 Function(int, ffi.Pointer<ffi.Char>)>();
-
-  CResult_u32 c_get_activation_date(
-    int coin,
-  ) {
-    return _c_get_activation_date(
-      coin,
-    );
-  }
-
-  late final _c_get_activation_datePtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
-          'c_get_activation_date');
-  late final _c_get_activation_date =
-      _c_get_activation_datePtr.asFunction<CResult_u32 Function(int)>();
-
-  CResult_u32 c_get_height_by_time(
-    int coin,
-    int time,
-  ) {
-    return _c_get_height_by_time(
-      coin,
-      time,
-    );
-  }
-
-  late final _c_get_height_by_timePtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8, ffi.Uint32)>>(
-          'c_get_height_by_time');
-  late final _c_get_height_by_time =
-      _c_get_height_by_timePtr.asFunction<CResult_u32 Function(int, int)>();
-
-  CResult_u32 c_get_activation_height(
-    int coin,
-  ) {
-    return _c_get_activation_height(
-      coin,
-    );
-  }
-
-  late final _c_get_activation_heightPtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
-          'c_get_activation_height');
-  late final _c_get_activation_height =
-      _c_get_activation_heightPtr.asFunction<CResult_u32 Function(int)>();
-
-  CResult_u32 c_get_time_by_height(
-    int coin,
-    int height,
-  ) {
-    return _c_get_time_by_height(
-      coin,
-      height,
-    );
-  }
-
-  late final _c_get_time_by_heightPtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8, ffi.Uint32)>>(
-          'c_get_time_by_height');
-  late final _c_get_time_by_height =
-      _c_get_time_by_heightPtr.asFunction<CResult_u32 Function(int, int)>();
-
-  CResult_u8 c_reset_chain(
-    int coin,
-    int height,
-  ) {
-    return _c_reset_chain(
-      coin,
-      height,
-    );
-  }
-
-  late final _c_reset_chainPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
-          'c_reset_chain');
-  late final _c_reset_chain =
-      _c_reset_chainPtr.asFunction<CResult_u8 Function(int, int)>();
+          CResult______u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
+              ffi.Uint32)>>('c_derive_zip32_keys');
+  late final _c_derive_zip32_keys = _c_derive_zip32_keysPtr
+      .asFunction<CResult______u8 Function(int, int, int, int)>();
 
   CResult______u8 c_prev_message(
     int coin,
@@ -1186,96 +1150,6 @@ class NativeLibrary {
               ffi.Pointer<ffi.Char>)>>('c_next_message_thread');
   late final _c_next_message_thread = _c_next_message_threadPtr.asFunction<
       CResult______u8 Function(int, int, int, ffi.Pointer<ffi.Char>)>();
-
-  CResult_u8 c_encrypt_zip_database_files(
-    int coin,
-    CParam zip_db_config,
-  ) {
-    return _c_encrypt_zip_database_files(
-      coin,
-      zip_db_config,
-    );
-  }
-
-  late final _c_encrypt_zip_database_filesPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, CParam)>>(
-          'c_encrypt_zip_database_files');
-  late final _c_encrypt_zip_database_files = _c_encrypt_zip_database_filesPtr
-      .asFunction<CResult_u8 Function(int, CParam)>();
-
-  CResult_u8 c_decrypt_zip_database_files(
-    int coin,
-    ffi.Pointer<ffi.Char> file_path,
-    ffi.Pointer<ffi.Char> target_directory,
-    ffi.Pointer<ffi.Char> secret_key,
-  ) {
-    return _c_decrypt_zip_database_files(
-      coin,
-      file_path,
-      target_directory,
-      secret_key,
-    );
-  }
-
-  late final _c_decrypt_zip_database_filesPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>>('c_decrypt_zip_database_files');
-  late final _c_decrypt_zip_database_files =
-      _c_decrypt_zip_database_filesPtr.asFunction<
-          CResult_u8 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>();
-
-  CResult______u8 c_generate_zip_database_keys(
-    int coin,
-  ) {
-    return _c_generate_zip_database_keys(
-      coin,
-    );
-  }
-
-  late final _c_generate_zip_database_keysPtr =
-      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8)>>(
-          'c_generate_zip_database_keys');
-  late final _c_generate_zip_database_keys = _c_generate_zip_database_keysPtr
-      .asFunction<CResult______u8 Function(int)>();
-
-  CResult______u8 c_split(
-    int coin,
-    CParam data,
-    int threshold,
-  ) {
-    return _c_split(
-      coin,
-      data,
-      threshold,
-    );
-  }
-
-  late final _c_splitPtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, CParam, ffi.Uint32)>>('c_split');
-  late final _c_split =
-      _c_splitPtr.asFunction<CResult______u8 Function(int, CParam, int)>();
-
-  CResult______u8 c_merge(
-    int coin,
-    CParam parts,
-  ) {
-    return _c_merge(
-      coin,
-      parts,
-    );
-  }
-
-  late final _c_mergePtr =
-      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, CParam)>>(
-          'c_merge');
-  late final _c_merge =
-      _c_mergePtr.asFunction<CResult______u8 Function(int, CParam)>();
 
   CResult______u8 c_prepare_payment(
     int coin,
@@ -1389,6 +1263,152 @@ class NativeLibrary {
               ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_fetch_tx_details');
   late final _c_fetch_tx_details = _c_fetch_tx_detailsPtr
       .asFunction<CResult______u8 Function(int, int, int)>();
+
+  CResult______u8 c_decode_address(
+    int coin,
+    ffi.Pointer<ffi.Char> address,
+  ) {
+    return _c_decode_address(
+      coin,
+      address,
+    );
+  }
+
+  late final _c_decode_addressPtr = _lookup<
+      ffi.NativeFunction<
+          CResult______u8 Function(
+              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_decode_address');
+  late final _c_decode_address = _c_decode_addressPtr
+      .asFunction<CResult______u8 Function(int, ffi.Pointer<ffi.Char>)>();
+
+  CResult_____c_char c_filter_address(
+    int coin,
+    ffi.Pointer<ffi.Char> address,
+    int pool_mask,
+  ) {
+    return _c_filter_address(
+      coin,
+      address,
+      pool_mask,
+    );
+  }
+
+  late final _c_filter_addressPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_____c_char Function(ffi.Uint8, ffi.Pointer<ffi.Char>,
+              ffi.Uint8)>>('c_filter_address');
+  late final _c_filter_address = _c_filter_addressPtr.asFunction<
+      CResult_____c_char Function(int, ffi.Pointer<ffi.Char>, int)>();
+
+  CResult_____c_char c_make_payment_uri(
+    int coin,
+    CParam payment,
+  ) {
+    return _c_make_payment_uri(
+      coin,
+      payment,
+    );
+  }
+
+  late final _c_make_payment_uriPtr = _lookup<
+          ffi.NativeFunction<CResult_____c_char Function(ffi.Uint8, CParam)>>(
+      'c_make_payment_uri');
+  late final _c_make_payment_uri = _c_make_payment_uriPtr
+      .asFunction<CResult_____c_char Function(int, CParam)>();
+
+  CResult______u8 c_parse_payment_uri(
+    int coin,
+    ffi.Pointer<ffi.Char> uri,
+    int height,
+    int expiration,
+  ) {
+    return _c_parse_payment_uri(
+      coin,
+      uri,
+      height,
+      expiration,
+    );
+  }
+
+  late final _c_parse_payment_uriPtr = _lookup<
+      ffi.NativeFunction<
+          CResult______u8 Function(ffi.Uint8, ffi.Pointer<ffi.Char>, ffi.Uint32,
+              ffi.Uint32)>>('c_parse_payment_uri');
+  late final _c_parse_payment_uri = _c_parse_payment_uriPtr.asFunction<
+      CResult______u8 Function(int, ffi.Pointer<ffi.Char>, int, int)>();
+
+  CResult_u8 c_is_valid_address_or_uri(
+    int coin,
+    ffi.Pointer<ffi.Char> s,
+  ) {
+    return _c_is_valid_address_or_uri(
+      coin,
+      s,
+    );
+  }
+
+  late final _c_is_valid_address_or_uriPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(
+              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_is_valid_address_or_uri');
+  late final _c_is_valid_address_or_uri = _c_is_valid_address_or_uriPtr
+      .asFunction<CResult_u8 Function(int, ffi.Pointer<ffi.Char>)>();
+
+  CResult_u8 c_encrypt_zip_database_files(
+    int coin,
+    CParam zip_db_config,
+  ) {
+    return _c_encrypt_zip_database_files(
+      coin,
+      zip_db_config,
+    );
+  }
+
+  late final _c_encrypt_zip_database_filesPtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, CParam)>>(
+          'c_encrypt_zip_database_files');
+  late final _c_encrypt_zip_database_files = _c_encrypt_zip_database_filesPtr
+      .asFunction<CResult_u8 Function(int, CParam)>();
+
+  CResult_u8 c_decrypt_zip_database_files(
+    int coin,
+    ffi.Pointer<ffi.Char> file_path,
+    ffi.Pointer<ffi.Char> target_directory,
+    ffi.Pointer<ffi.Char> secret_key,
+  ) {
+    return _c_decrypt_zip_database_files(
+      coin,
+      file_path,
+      target_directory,
+      secret_key,
+    );
+  }
+
+  late final _c_decrypt_zip_database_filesPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(
+              ffi.Uint8,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('c_decrypt_zip_database_files');
+  late final _c_decrypt_zip_database_files =
+      _c_decrypt_zip_database_filesPtr.asFunction<
+          CResult_u8 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>();
+
+  CResult______u8 c_generate_zip_database_keys(
+    int coin,
+  ) {
+    return _c_generate_zip_database_keys(
+      coin,
+    );
+  }
+
+  late final _c_generate_zip_database_keysPtr =
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8)>>(
+          'c_generate_zip_database_keys');
+  late final _c_generate_zip_database_keys = _c_generate_zip_database_keysPtr
+      .asFunction<CResult______u8 Function(int)>();
 
   CResult_u8 warp_synchronize(
     int coin,

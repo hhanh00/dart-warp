@@ -170,6 +170,10 @@ class Warp {
     return list.map((e) => e.unpack()).toList();
   }
 
+  void updatePrimaryTransparentAddress(int coin, int account, int addrIndex) {
+    unwrapResultU8(warpLib.c_update_account_primary_transparent_address(coin, account, addrIndex));
+  }
+
   Future<List<fb.ContactCardT>> listContacts(int coin) async {
     return Isolate.run(() {
       final bc = toBC(warpLib.c_list_contact_cards(coin));
@@ -398,7 +402,8 @@ class Warp {
   }
 
   String getAccountAddress(int coin, int account, int time, int mask) {
-    return unwrapResultString(warpLib.c_get_address(coin, account, time, mask));
+    // if no receiver available, return empty string
+    return unwrapOrDefaultString(warpLib.c_get_address(coin, account, time, mask));
   }
 
   fb.AccountSigningCapabilitiesT getAccountCapabilities(int coin, int account) {
@@ -562,6 +567,11 @@ int unwrapResultU64(CResult_u64 r) {
 
 String unwrapResultString(CResult_____c_char r) {
   if (r.error != nullptr) throw convertCString(r.error);
+  return convertCString(r.value);
+}
+
+String unwrapOrDefaultString(CResult_____c_char r) {
+  if (r.error != nullptr) return '';
   return convertCString(r.value);
 }
 

@@ -26,12 +26,15 @@ class Backup {
   String? get fvk => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get uvk => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   String? get tsk => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  int get birth => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  bool get saved => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  String? get txsk => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get tvk => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get taddr => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  int get birth => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  bool get saved => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
 
   @override
   String toString() {
-    return 'Backup{name: ${name}, seed: ${seed}, index: ${index}, sk: ${sk}, fvk: ${fvk}, uvk: ${uvk}, tsk: ${tsk}, birth: ${birth}, saved: ${saved}}';
+    return 'Backup{name: ${name}, seed: ${seed}, index: ${index}, sk: ${sk}, fvk: ${fvk}, uvk: ${uvk}, tsk: ${tsk}, txsk: ${txsk}, tvk: ${tvk}, taddr: ${taddr}, birth: ${birth}, saved: ${saved}}';
   }
 
   BackupT unpack() => BackupT(
@@ -42,6 +45,9 @@ class Backup {
       fvk: fvk,
       uvk: uvk,
       tsk: tsk,
+      txsk: txsk,
+      tvk: tvk,
+      taddr: taddr,
       birth: birth,
       saved: saved);
 
@@ -59,6 +65,9 @@ class BackupT implements fb.Packable {
   String? fvk;
   String? uvk;
   String? tsk;
+  String? txsk;
+  String? tvk;
+  String? taddr;
   int birth;
   bool saved;
 
@@ -70,6 +79,9 @@ class BackupT implements fb.Packable {
       this.fvk,
       this.uvk,
       this.tsk,
+      this.txsk,
+      this.tvk,
+      this.taddr,
       this.birth = 0,
       this.saved = false});
 
@@ -87,7 +99,13 @@ class BackupT implements fb.Packable {
         : fbBuilder.writeString(uvk!);
     final int? tskOffset = tsk == null ? null
         : fbBuilder.writeString(tsk!);
-    fbBuilder.startTable(9);
+    final int? txskOffset = txsk == null ? null
+        : fbBuilder.writeString(txsk!);
+    final int? tvkOffset = tvk == null ? null
+        : fbBuilder.writeString(tvk!);
+    final int? taddrOffset = taddr == null ? null
+        : fbBuilder.writeString(taddr!);
+    fbBuilder.startTable(12);
     fbBuilder.addOffset(0, nameOffset);
     fbBuilder.addOffset(1, seedOffset);
     fbBuilder.addUint32(2, index);
@@ -95,14 +113,17 @@ class BackupT implements fb.Packable {
     fbBuilder.addOffset(4, fvkOffset);
     fbBuilder.addOffset(5, uvkOffset);
     fbBuilder.addOffset(6, tskOffset);
-    fbBuilder.addUint32(7, birth);
-    fbBuilder.addBool(8, saved);
+    fbBuilder.addOffset(7, txskOffset);
+    fbBuilder.addOffset(8, tvkOffset);
+    fbBuilder.addOffset(9, taddrOffset);
+    fbBuilder.addUint32(10, birth);
+    fbBuilder.addBool(11, saved);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'BackupT{name: ${name}, seed: ${seed}, index: ${index}, sk: ${sk}, fvk: ${fvk}, uvk: ${uvk}, tsk: ${tsk}, birth: ${birth}, saved: ${saved}}';
+    return 'BackupT{name: ${name}, seed: ${seed}, index: ${index}, sk: ${sk}, fvk: ${fvk}, uvk: ${uvk}, tsk: ${tsk}, txsk: ${txsk}, tvk: ${tvk}, taddr: ${taddr}, birth: ${birth}, saved: ${saved}}';
   }
 }
 
@@ -120,7 +141,7 @@ class BackupBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(12);
   }
 
   int addNameOffset(int? offset) {
@@ -151,12 +172,24 @@ class BackupBuilder {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
+  int addTxskOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addTvkOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addTaddrOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
   int addBirth(int? birth) {
-    fbBuilder.addUint32(7, birth);
+    fbBuilder.addUint32(10, birth);
     return fbBuilder.offset;
   }
   int addSaved(bool? saved) {
-    fbBuilder.addBool(8, saved);
+    fbBuilder.addBool(11, saved);
     return fbBuilder.offset;
   }
 
@@ -173,6 +206,9 @@ class BackupObjectBuilder extends fb.ObjectBuilder {
   final String? _fvk;
   final String? _uvk;
   final String? _tsk;
+  final String? _txsk;
+  final String? _tvk;
+  final String? _taddr;
   final int? _birth;
   final bool? _saved;
 
@@ -184,6 +220,9 @@ class BackupObjectBuilder extends fb.ObjectBuilder {
     String? fvk,
     String? uvk,
     String? tsk,
+    String? txsk,
+    String? tvk,
+    String? taddr,
     int? birth,
     bool? saved,
   })
@@ -194,6 +233,9 @@ class BackupObjectBuilder extends fb.ObjectBuilder {
         _fvk = fvk,
         _uvk = uvk,
         _tsk = tsk,
+        _txsk = txsk,
+        _tvk = tvk,
+        _taddr = taddr,
         _birth = birth,
         _saved = saved;
 
@@ -212,7 +254,13 @@ class BackupObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_uvk!);
     final int? tskOffset = _tsk == null ? null
         : fbBuilder.writeString(_tsk!);
-    fbBuilder.startTable(9);
+    final int? txskOffset = _txsk == null ? null
+        : fbBuilder.writeString(_txsk!);
+    final int? tvkOffset = _tvk == null ? null
+        : fbBuilder.writeString(_tvk!);
+    final int? taddrOffset = _taddr == null ? null
+        : fbBuilder.writeString(_taddr!);
+    fbBuilder.startTable(12);
     fbBuilder.addOffset(0, nameOffset);
     fbBuilder.addOffset(1, seedOffset);
     fbBuilder.addUint32(2, _index);
@@ -220,8 +268,11 @@ class BackupObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(4, fvkOffset);
     fbBuilder.addOffset(5, uvkOffset);
     fbBuilder.addOffset(6, tskOffset);
-    fbBuilder.addUint32(7, _birth);
-    fbBuilder.addBool(8, _saved);
+    fbBuilder.addOffset(7, txskOffset);
+    fbBuilder.addOffset(8, tvkOffset);
+    fbBuilder.addOffset(9, taddrOffset);
+    fbBuilder.addUint32(10, _birth);
+    fbBuilder.addBool(11, _saved);
     return fbBuilder.endTable();
   }
 

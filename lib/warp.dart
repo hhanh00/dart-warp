@@ -103,11 +103,7 @@ class Warp {
   ) async {
     return Isolate.run(() {
       final summaryBytes = toBC(warpLib.c_prepare_payment(
-        coin,
-        account,
-        toParam(payment).ref,
-        toNative("")
-      ));
+          coin, account, toParam(payment).ref, toNative("")));
       final summary = fb.TransactionSummary.reader.read(summaryBytes, 0);
       return summary.unpack();
     });
@@ -171,7 +167,8 @@ class Warp {
   }
 
   void updatePrimaryTransparentAddress(int coin, int account, int addrIndex) {
-    unwrapResultU8(warpLib.c_update_account_primary_transparent_address(coin, account, addrIndex));
+    unwrapResultU8(warpLib.c_update_account_primary_transparent_address(
+        coin, account, addrIndex));
   }
 
   Future<List<fb.ContactCardT>> listContacts(int coin) async {
@@ -213,8 +210,8 @@ class Warp {
   Future<fb.TransactionSummaryT> saveContacts(
       int coin, int account, int height, String redirect) async {
     return Isolate.run(() {
-      final bc =
-          toBC(warpLib.c_save_contacts(coin, account, height, toNative(redirect)));
+      final bc = toBC(
+          warpLib.c_save_contacts(coin, account, height, toNative(redirect)));
       return fb.TransactionSummary.reader.read(bc, 0).unpack();
     });
   }
@@ -368,8 +365,9 @@ class Warp {
 
   Future<void> decryptZIPDbFiles(
       String filePath, String targetPath, String secretKey) async {
-    return Isolate.run(() => unwrapResultU8(warpLib.c_decrypt_zip_database_files(
-        0, toNative(filePath), toNative(targetPath), toNative(secretKey))));
+    return Isolate.run(() => unwrapResultU8(
+        warpLib.c_decrypt_zip_database_files(
+            0, toNative(filePath), toNative(targetPath), toNative(secretKey))));
   }
 
   List<fb.PacketT> splitData(int coin, Uint8List data, int threshold) {
@@ -403,7 +401,8 @@ class Warp {
 
   String getAccountAddress(int coin, int account, int time, int mask) {
     // if no receiver available, return empty string
-    return unwrapOrDefaultString(warpLib.c_get_address(coin, account, time, mask));
+    return unwrapOrDefaultString(
+        warpLib.c_get_address(coin, account, time, mask));
   }
 
   fb.AccountSigningCapabilitiesT getAccountCapabilities(int coin, int account) {
@@ -422,10 +421,17 @@ class Warp {
         warpLib.c_can_sign(coin, account, toParam(summary).ref));
   }
 
-  Future<void> scanTransparentAddresses(int coin, int account, int gapLimit) async {
+  Future<void> scanTransparentAddresses(
+      int coin, int account, int gapLimit) async {
     return Isolate.run(() {
-      unwrapResultU8(warpLib.c_scan_transparent_addresses(
-          coin, account, gapLimit));
+      unwrapResultU8(
+          warpLib.c_scan_transparent_addresses(coin, account, gapLimit));
+    });
+  }
+
+  Future<void> transparentSync(int coin, int account, int height) async {
+    return Isolate.run(() {
+      unwrapResultU8(warpLib.c_transparent_scan(coin, account, height));
     });
   }
 
@@ -490,7 +496,8 @@ class Warp {
   Future<fb.Zip32KeysT> deriveZip32Keys(
       int coin, int account, int aindex, int addrIndex) async {
     return Isolate.run(() {
-      final bc = toBC(warpLib.c_derive_zip32_keys(coin, account, aindex, addrIndex));
+      final bc =
+          toBC(warpLib.c_derive_zip32_keys(coin, account, aindex, addrIndex));
       return fb.Zip32Keys.reader.read(bc, 0).unpack();
     });
   }

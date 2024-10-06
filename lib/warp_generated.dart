@@ -1425,6 +1425,25 @@ class NativeLibrary {
           'warp_synchronize');
   late final _warp_synchronize =
       _warp_synchronizePtr.asFunction<CResult_u8 Function(int, int)>();
+
+  CResult_u8 c_transparent_scan(
+    int coin,
+    int account,
+    int end_height,
+  ) {
+    return _c_transparent_scan(
+      coin,
+      account,
+      end_height,
+    );
+  }
+
+  late final _c_transparent_scanPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(
+              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_transparent_scan');
+  late final _c_transparent_scan =
+      _c_transparent_scanPtr.asFunction<CResult_u8 Function(int, int, int)>();
 }
 
 final class CResult_u8 extends ffi.Struct {

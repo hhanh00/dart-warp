@@ -1410,6 +1410,28 @@ class NativeLibrary {
   late final _c_generate_zip_database_keys = _c_generate_zip_database_keysPtr
       .asFunction<CResult______u8 Function(int)>();
 
+  CResult_u8 c_download_warp_blocks(
+    int coin,
+    ffi.Pointer<ffi.Char> warp_url,
+    int end,
+    ffi.Pointer<ffi.Char> dest,
+  ) {
+    return _c_download_warp_blocks(
+      coin,
+      warp_url,
+      end,
+      dest,
+    );
+  }
+
+  late final _c_download_warp_blocksPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(ffi.Uint8, ffi.Pointer<ffi.Char>, ffi.Uint32,
+              ffi.Pointer<ffi.Char>)>>('c_download_warp_blocks');
+  late final _c_download_warp_blocks = _c_download_warp_blocksPtr.asFunction<
+      CResult_u8 Function(
+          int, ffi.Pointer<ffi.Char>, int, ffi.Pointer<ffi.Char>)>();
+
   CResult_u8 warp_synchronize(
     int coin,
     int end_height,

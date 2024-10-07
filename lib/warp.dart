@@ -507,6 +507,13 @@ class WarpSync {
   static Future<void> synchronize(int coin, int endHeight) async {
     await Isolate.run(() => warpLib.warp_synchronize(coin, endHeight));
   }
+
+  static Future<void> downloadWarpFile(
+      int coin, String url, int endHeight, String filename) async {
+    await Isolate.run(() =>
+        warpLib.c_download_warp_blocks(coin, toNative(url),
+        endHeight, toNative(filename)));
+  }
 }
 
 fb.ShieldedMessageT unwrapMessage(CResult______u8 m) {

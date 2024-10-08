@@ -1432,21 +1432,38 @@ class NativeLibrary {
       CResult_u8 Function(
           int, ffi.Pointer<ffi.Char>, int, ffi.Pointer<ffi.Char>)>();
 
-  CResult_u8 warp_synchronize(
+  CResult_u8 c_warp_synchronize(
     int coin,
     int end_height,
   ) {
-    return _warp_synchronize(
+    return _c_warp_synchronize(
       coin,
       end_height,
     );
   }
 
-  late final _warp_synchronizePtr =
+  late final _c_warp_synchronizePtr =
       _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
-          'warp_synchronize');
-  late final _warp_synchronize =
-      _warp_synchronizePtr.asFunction<CResult_u8 Function(int, int)>();
+          'c_warp_synchronize');
+  late final _c_warp_synchronize =
+      _c_warp_synchronizePtr.asFunction<CResult_u8 Function(int, int)>();
+
+  CResult_u8 c_warp_synchronize_from_file(
+    int coin,
+    ffi.Pointer<ffi.Char> file,
+  ) {
+    return _c_warp_synchronize_from_file(
+      coin,
+      file,
+    );
+  }
+
+  late final _c_warp_synchronize_from_filePtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(ffi.Uint8,
+              ffi.Pointer<ffi.Char>)>>('c_warp_synchronize_from_file');
+  late final _c_warp_synchronize_from_file = _c_warp_synchronize_from_filePtr
+      .asFunction<CResult_u8 Function(int, ffi.Pointer<ffi.Char>)>();
 
   CResult_u8 c_transparent_scan(
     int coin,

@@ -505,14 +505,20 @@ class Warp {
 
 class WarpSync {
   static Future<void> synchronize(int coin, int endHeight) async {
-    await Isolate.run(() => warpLib.warp_synchronize(coin, endHeight));
+    await Isolate.run(() => warpLib.c_warp_synchronize(coin, endHeight));
   }
 
   static Future<void> downloadWarpFile(
       int coin, String url, int endHeight, String filename) async {
-    await Isolate.run(() =>
+    return await Isolate.run(() =>
         warpLib.c_download_warp_blocks(coin, toNative(url),
         endHeight, toNative(filename)));
+  }
+
+  static Future<void> syncFromFile(
+      int coin, String filename) async {
+    return await Isolate.run(() =>
+        warpLib.c_warp_synchronize_from_file(coin, toNative(filename)));
   }
 }
 

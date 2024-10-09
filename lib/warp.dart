@@ -16,6 +16,12 @@ NativeLibrary init() {
   return lib;
 }
 
+enum AddressType {
+  invalidAddress,
+  address,
+  paymentURI,
+}
+
 DynamicLibrary open() {
   if (Platform.isAndroid) return DynamicLibrary.open('libzcash_warp.so');
   if (Platform.isIOS) return DynamicLibrary.executable();
@@ -463,8 +469,9 @@ class Warp {
     return fb.TransactionInfoExtended.reader.read(bc, 0).unpack();
   }
 
-  int isValidAddressOrUri(int coin, String s) {
-    return unwrapResultU8(warpLib.c_is_valid_address_or_uri(coin, toNative(s)));
+  AddressType isValidAddressOrUri(int coin, String s) {
+    final a = unwrapResultU8(warpLib.c_is_valid_address_or_uri(coin, toNative(s)));
+    return AddressType.values[a];
   }
 
   String makePaymentURI(int coin, fb.PaymentRequestT payment) {

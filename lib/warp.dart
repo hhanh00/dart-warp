@@ -498,10 +498,11 @@ class Warp {
   }
 
   Future<fb.Zip32KeysT> deriveZip32Keys(
-      int coin, int account, int aindex, int addrIndex) async {
+      int coin, int account, int aindex, int addrIndex, bool defaultAddress) async {
     return Isolate.run(() {
       final bc =
-          toBC(warpLib.c_derive_zip32_keys(coin, account, aindex, addrIndex));
+          toBC(warpLib.c_derive_zip32_keys(coin, account, aindex, addrIndex,
+          defaultAddress ? 1 : 0));
       return fb.Zip32Keys.reader.read(bc, 0).unpack();
     });
   }

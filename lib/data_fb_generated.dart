@@ -4052,17 +4052,21 @@ class Zip32Keys {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  String? get tsk => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get taddress => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get zsk => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get zaddress => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  int get aindex => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get addrIndex => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  String? get tsk => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get taddress => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get zsk => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get zaddress => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
 
   @override
   String toString() {
-    return 'Zip32Keys{tsk: ${tsk}, taddress: ${taddress}, zsk: ${zsk}, zaddress: ${zaddress}}';
+    return 'Zip32Keys{aindex: ${aindex}, addrIndex: ${addrIndex}, tsk: ${tsk}, taddress: ${taddress}, zsk: ${zsk}, zaddress: ${zaddress}}';
   }
 
   Zip32KeysT unpack() => Zip32KeysT(
+      aindex: aindex,
+      addrIndex: addrIndex,
       tsk: tsk,
       taddress: taddress,
       zsk: zsk,
@@ -4075,12 +4079,16 @@ class Zip32Keys {
 }
 
 class Zip32KeysT implements fb.Packable {
+  int aindex;
+  int addrIndex;
   String? tsk;
   String? taddress;
   String? zsk;
   String? zaddress;
 
   Zip32KeysT({
+      this.aindex = 0,
+      this.addrIndex = 0,
       this.tsk,
       this.taddress,
       this.zsk,
@@ -4096,17 +4104,19 @@ class Zip32KeysT implements fb.Packable {
         : fbBuilder.writeString(zsk!);
     final int? zaddressOffset = zaddress == null ? null
         : fbBuilder.writeString(zaddress!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, tskOffset);
-    fbBuilder.addOffset(1, taddressOffset);
-    fbBuilder.addOffset(2, zskOffset);
-    fbBuilder.addOffset(3, zaddressOffset);
+    fbBuilder.startTable(6);
+    fbBuilder.addUint32(0, aindex);
+    fbBuilder.addUint32(1, addrIndex);
+    fbBuilder.addOffset(2, tskOffset);
+    fbBuilder.addOffset(3, taddressOffset);
+    fbBuilder.addOffset(4, zskOffset);
+    fbBuilder.addOffset(5, zaddressOffset);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'Zip32KeysT{tsk: ${tsk}, taddress: ${taddress}, zsk: ${zsk}, zaddress: ${zaddress}}';
+    return 'Zip32KeysT{aindex: ${aindex}, addrIndex: ${addrIndex}, tsk: ${tsk}, taddress: ${taddress}, zsk: ${zsk}, zaddress: ${zaddress}}';
   }
 }
 
@@ -4124,23 +4134,31 @@ class Zip32KeysBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(6);
   }
 
+  int addAindex(int? aindex) {
+    fbBuilder.addUint32(0, aindex);
+    return fbBuilder.offset;
+  }
+  int addAddrIndex(int? addrIndex) {
+    fbBuilder.addUint32(1, addrIndex);
+    return fbBuilder.offset;
+  }
   int addTskOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addTaddressOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addZskOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addZaddressOffset(int? offset) {
+  int addTaddressOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addZskOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addZaddressOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
 
@@ -4150,18 +4168,24 @@ class Zip32KeysBuilder {
 }
 
 class Zip32KeysObjectBuilder extends fb.ObjectBuilder {
+  final int? _aindex;
+  final int? _addrIndex;
   final String? _tsk;
   final String? _taddress;
   final String? _zsk;
   final String? _zaddress;
 
   Zip32KeysObjectBuilder({
+    int? aindex,
+    int? addrIndex,
     String? tsk,
     String? taddress,
     String? zsk,
     String? zaddress,
   })
-      : _tsk = tsk,
+      : _aindex = aindex,
+        _addrIndex = addrIndex,
+        _tsk = tsk,
         _taddress = taddress,
         _zsk = zsk,
         _zaddress = zaddress;
@@ -4177,11 +4201,13 @@ class Zip32KeysObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_zsk!);
     final int? zaddressOffset = _zaddress == null ? null
         : fbBuilder.writeString(_zaddress!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, tskOffset);
-    fbBuilder.addOffset(1, taddressOffset);
-    fbBuilder.addOffset(2, zskOffset);
-    fbBuilder.addOffset(3, zaddressOffset);
+    fbBuilder.startTable(6);
+    fbBuilder.addUint32(0, _aindex);
+    fbBuilder.addUint32(1, _addrIndex);
+    fbBuilder.addOffset(2, tskOffset);
+    fbBuilder.addOffset(3, taddressOffset);
+    fbBuilder.addOffset(4, zskOffset);
+    fbBuilder.addOffset(5, zaddressOffset);
     return fbBuilder.endTable();
   }
 

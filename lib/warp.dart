@@ -79,9 +79,7 @@ class Warp {
 
   List<fb.AccountNameT> listAccounts(int coin) {
     final bc = toBC(warpLib.c_list_accounts(coin));
-    final reader = ListReader<fb.AccountName>(fb.AccountName.reader);
-    final list = reader.read(bc, 0);
-    return list.map((e) => e.unpack()).toList();
+    return fb.AccountNameList.reader.read(bc, 0).unpack().items!;
   }
 
   fb.BalanceT getBalance(int coin, int account, int height) {
@@ -318,7 +316,7 @@ class Warp {
   }
 
   Future<void> excludeNote(int coin, int id, bool reverse) async {
-    return Isolate.run(() => warpLib.c_exclude_note(coin, id, reverse ? 1 : 0));
+    return Isolate.run(() => warpLib.c_exclude_note(coin, id, reverse ? 0 : 1));
   }
 
   Future<void> reverseNoteExclusion(int coin, int account) async {
@@ -382,12 +380,11 @@ class Warp {
     return list.map((e) => e.unpack()).toList();
   }
 
-  Future<fb.PacketT> mergeData(int coin, List<fb.PacketT> packets) async {
+  Future<Uint8List> mergeData(int coin, List<fb.PacketT> packets) async {
     return Isolate.run(() {
       final p = fb.PacketsT(packets: packets);
       final packetsParam = toParam(p);
-      final bc = toBC(warpLib.c_merge(coin, packetsParam.ref));
-      return fb.Packet.reader.read(bc, 0).unpack();
+      return unwrapResultBytes(warpLib.c_merge(coin, packetsParam.ref));
     });
   }
 

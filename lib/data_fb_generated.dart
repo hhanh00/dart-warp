@@ -2398,6 +2398,108 @@ class AccountNameObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class AccountNameList {
+  AccountNameList._(this._bc, this._bcOffset);
+  factory AccountNameList(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<AccountNameList> reader = _AccountNameListReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<AccountName>? get items => const fb.ListReader<AccountName>(AccountName.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'AccountNameList{items: ${items}}';
+  }
+
+  AccountNameListT unpack() => AccountNameListT(
+      items: items?.map((e) => e.unpack()).toList());
+
+  static int pack(fb.Builder fbBuilder, AccountNameListT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class AccountNameListT implements fb.Packable {
+  List<AccountNameT>? items;
+
+  AccountNameListT({
+      this.items});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    final int? itemsOffset = items == null ? null
+        : fbBuilder.writeList(items!.map((b) => b.pack(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, itemsOffset);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'AccountNameListT{items: ${items}}';
+  }
+}
+
+class _AccountNameListReader extends fb.TableReader<AccountNameList> {
+  const _AccountNameListReader();
+
+  @override
+  AccountNameList createObject(fb.BufferContext bc, int offset) => 
+    AccountNameList._(bc, offset);
+}
+
+class AccountNameListBuilder {
+  AccountNameListBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addItemsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class AccountNameListObjectBuilder extends fb.ObjectBuilder {
+  final List<AccountNameObjectBuilder>? _items;
+
+  AccountNameListObjectBuilder({
+    List<AccountNameObjectBuilder>? items,
+  })
+      : _items = items;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? itemsOffset = _items == null ? null
+        : fbBuilder.writeList(_items!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, itemsOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 class ContactCard {
   ContactCard._(this._bc, this._bcOffset);
   factory ContactCard(List<int> bytes) {
@@ -3187,15 +3289,17 @@ class Packet {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  List<int>? get data => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 4);
+  int get len => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  List<int>? get data => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
 
   @override
   String toString() {
-    return 'Packet{data: ${data}}';
+    return 'Packet{len: ${len}, data: ${data}}';
   }
 
   PacketT unpack() => PacketT(
-      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 4));
+      len: len,
+      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6));
 
   static int pack(fb.Builder fbBuilder, PacketT? object) {
     if (object == null) return 0;
@@ -3204,23 +3308,26 @@ class Packet {
 }
 
 class PacketT implements fb.Packable {
+  int len;
   List<int>? data;
 
   PacketT({
+      this.len = 0,
       this.data});
 
   @override
   int pack(fb.Builder fbBuilder) {
     final int? dataOffset = data == null ? null
         : fbBuilder.writeListUint8(data!);
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, dataOffset);
+    fbBuilder.startTable(2);
+    fbBuilder.addUint32(0, len);
+    fbBuilder.addOffset(1, dataOffset);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'PacketT{data: ${data}}';
+    return 'PacketT{len: ${len}, data: ${data}}';
   }
 }
 
@@ -3238,11 +3345,15 @@ class PacketBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(1);
+    fbBuilder.startTable(2);
   }
 
+  int addLen(int? len) {
+    fbBuilder.addUint32(0, len);
+    return fbBuilder.offset;
+  }
   int addDataOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
 
@@ -3252,20 +3363,24 @@ class PacketBuilder {
 }
 
 class PacketObjectBuilder extends fb.ObjectBuilder {
+  final int? _len;
   final List<int>? _data;
 
   PacketObjectBuilder({
+    int? len,
     List<int>? data,
   })
-      : _data = data;
+      : _len = len,
+        _data = data;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? dataOffset = _data == null ? null
         : fbBuilder.writeListUint8(_data!);
-    fbBuilder.startTable(1);
-    fbBuilder.addOffset(0, dataOffset);
+    fbBuilder.startTable(2);
+    fbBuilder.addUint32(0, _len);
+    fbBuilder.addOffset(1, dataOffset);
     return fbBuilder.endTable();
   }
 
@@ -3290,16 +3405,14 @@ class Packets {
   final int _bcOffset;
 
   List<Packet>? get packets => const fb.ListReader<Packet>(Packet.reader).vTableGetNullable(_bc, _bcOffset, 4);
-  int get len => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
 
   @override
   String toString() {
-    return 'Packets{packets: ${packets}, len: ${len}}';
+    return 'Packets{packets: ${packets}}';
   }
 
   PacketsT unpack() => PacketsT(
-      packets: packets?.map((e) => e.unpack()).toList(),
-      len: len);
+      packets: packets?.map((e) => e.unpack()).toList());
 
   static int pack(fb.Builder fbBuilder, PacketsT? object) {
     if (object == null) return 0;
@@ -3309,25 +3422,22 @@ class Packets {
 
 class PacketsT implements fb.Packable {
   List<PacketT>? packets;
-  int len;
 
   PacketsT({
-      this.packets,
-      this.len = 0});
+      this.packets});
 
   @override
   int pack(fb.Builder fbBuilder) {
     final int? packetsOffset = packets == null ? null
         : fbBuilder.writeList(packets!.map((b) => b.pack(fbBuilder)).toList());
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(1);
     fbBuilder.addOffset(0, packetsOffset);
-    fbBuilder.addUint32(1, len);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'PacketsT{packets: ${packets}, len: ${len}}';
+    return 'PacketsT{packets: ${packets}}';
   }
 }
 
@@ -3345,15 +3455,11 @@ class PacketsBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(1);
   }
 
   int addPacketsOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addLen(int? len) {
-    fbBuilder.addUint32(1, len);
     return fbBuilder.offset;
   }
 
@@ -3364,23 +3470,19 @@ class PacketsBuilder {
 
 class PacketsObjectBuilder extends fb.ObjectBuilder {
   final List<PacketObjectBuilder>? _packets;
-  final int? _len;
 
   PacketsObjectBuilder({
     List<PacketObjectBuilder>? packets,
-    int? len,
   })
-      : _packets = packets,
-        _len = len;
+      : _packets = packets;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? packetsOffset = _packets == null ? null
         : fbBuilder.writeList(_packets!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(1);
     fbBuilder.addOffset(0, packetsOffset);
-    fbBuilder.addUint32(1, _len);
     return fbBuilder.endTable();
   }
 

@@ -38,9 +38,9 @@ class Warp {
     warpLib.c_setup();
   }
 
-  void configure(int coin, {String? url, String? warp, int? warpEndHeight}) {
+  void configure(int coin, {List<String>? servers, String? warp, int? warpEndHeight}) {
     final config = fb.ConfigT(
-        lwdUrl: url, warpUrl: warp, warpEndHeight: warpEndHeight ?? 0);
+        servers: servers, warpUrl: warp, warpEndHeight: warpEndHeight ?? 0);
     final param = toParam(config);
     unwrapResultU8(warpLib.c_configure(coin, param.ref));
   }

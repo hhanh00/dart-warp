@@ -4232,7 +4232,7 @@ class Config {
   final int _bcOffset;
 
   String? get dbPath => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get lwdUrl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  List<String>? get servers => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 6);
   String? get warpUrl => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   int get warpEndHeight => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
   int get confirmations => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
@@ -4240,12 +4240,12 @@ class Config {
 
   @override
   String toString() {
-    return 'Config{dbPath: ${dbPath}, lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
+    return 'Config{dbPath: ${dbPath}, servers: ${servers}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
   }
 
   ConfigT unpack() => ConfigT(
       dbPath: dbPath,
-      lwdUrl: lwdUrl,
+      servers: const fb.ListReader<String>(fb.StringReader(), lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
       warpUrl: warpUrl,
       warpEndHeight: warpEndHeight,
       confirmations: confirmations,
@@ -4259,7 +4259,7 @@ class Config {
 
 class ConfigT implements fb.Packable {
   String? dbPath;
-  String? lwdUrl;
+  List<String>? servers;
   String? warpUrl;
   int warpEndHeight;
   int confirmations;
@@ -4267,7 +4267,7 @@ class ConfigT implements fb.Packable {
 
   ConfigT({
       this.dbPath,
-      this.lwdUrl,
+      this.servers,
       this.warpUrl,
       this.warpEndHeight = 0,
       this.confirmations = 0,
@@ -4277,13 +4277,13 @@ class ConfigT implements fb.Packable {
   int pack(fb.Builder fbBuilder) {
     final int? dbPathOffset = dbPath == null ? null
         : fbBuilder.writeString(dbPath!);
-    final int? lwdUrlOffset = lwdUrl == null ? null
-        : fbBuilder.writeString(lwdUrl!);
+    final int? serversOffset = servers == null ? null
+        : fbBuilder.writeList(servers!.map(fbBuilder.writeString).toList());
     final int? warpUrlOffset = warpUrl == null ? null
         : fbBuilder.writeString(warpUrl!);
     fbBuilder.startTable(6);
     fbBuilder.addOffset(0, dbPathOffset);
-    fbBuilder.addOffset(1, lwdUrlOffset);
+    fbBuilder.addOffset(1, serversOffset);
     fbBuilder.addOffset(2, warpUrlOffset);
     fbBuilder.addUint32(3, warpEndHeight);
     fbBuilder.addUint32(4, confirmations);
@@ -4293,7 +4293,7 @@ class ConfigT implements fb.Packable {
 
   @override
   String toString() {
-    return 'ConfigT{dbPath: ${dbPath}, lwdUrl: ${lwdUrl}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
+    return 'ConfigT{dbPath: ${dbPath}, servers: ${servers}, warpUrl: ${warpUrl}, warpEndHeight: ${warpEndHeight}, confirmations: ${confirmations}, regtest: ${regtest}}';
   }
 }
 
@@ -4318,7 +4318,7 @@ class ConfigBuilder {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addLwdUrlOffset(int? offset) {
+  int addServersOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
@@ -4346,7 +4346,7 @@ class ConfigBuilder {
 
 class ConfigObjectBuilder extends fb.ObjectBuilder {
   final String? _dbPath;
-  final String? _lwdUrl;
+  final List<String>? _servers;
   final String? _warpUrl;
   final int? _warpEndHeight;
   final int? _confirmations;
@@ -4354,14 +4354,14 @@ class ConfigObjectBuilder extends fb.ObjectBuilder {
 
   ConfigObjectBuilder({
     String? dbPath,
-    String? lwdUrl,
+    List<String>? servers,
     String? warpUrl,
     int? warpEndHeight,
     int? confirmations,
     bool? regtest,
   })
       : _dbPath = dbPath,
-        _lwdUrl = lwdUrl,
+        _servers = servers,
         _warpUrl = warpUrl,
         _warpEndHeight = warpEndHeight,
         _confirmations = confirmations,
@@ -4372,13 +4372,13 @@ class ConfigObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? dbPathOffset = _dbPath == null ? null
         : fbBuilder.writeString(_dbPath!);
-    final int? lwdUrlOffset = _lwdUrl == null ? null
-        : fbBuilder.writeString(_lwdUrl!);
+    final int? serversOffset = _servers == null ? null
+        : fbBuilder.writeList(_servers!.map(fbBuilder.writeString).toList());
     final int? warpUrlOffset = _warpUrl == null ? null
         : fbBuilder.writeString(_warpUrl!);
     fbBuilder.startTable(6);
     fbBuilder.addOffset(0, dbPathOffset);
-    fbBuilder.addOffset(1, lwdUrlOffset);
+    fbBuilder.addOffset(1, serversOffset);
     fbBuilder.addOffset(2, warpUrlOffset);
     fbBuilder.addUint32(3, _warpEndHeight);
     fbBuilder.addUint32(4, _confirmations);

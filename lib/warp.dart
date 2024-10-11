@@ -100,6 +100,10 @@ class Warp {
     return Isolate.run(() => unwrapResultU32(warpLib.c_get_last_height(coin)));
   }
 
+  Future<int?> getBCHeightOrNull(int coin) async {
+    return Isolate.run(() => unwrapResultU32OrNull(warpLib.c_get_last_height(coin)));
+  }
+
   Future<fb.TransactionSummaryT> pay(
     int coin,
     int account,
@@ -582,6 +586,11 @@ int unwrapResultU8(CResult_u8 r) {
 
 int unwrapResultU32(CResult_u32 r) {
   if (r.error != nullptr) throw convertCString(r.error);
+  return r.value;
+}
+
+int? unwrapResultU32OrNull(CResult_u32 r) {
+  if (r.error != nullptr) return null;
   return r.value;
 }
 

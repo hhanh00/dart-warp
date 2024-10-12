@@ -38,7 +38,8 @@ class Warp {
     warpLib.c_setup();
   }
 
-  void configure(int coin, {List<String>? servers, String? warp, int? warpEndHeight}) {
+  void configure(int coin,
+      {List<String>? servers, String? warp, int? warpEndHeight}) {
     final config = fb.ConfigT(
         servers: servers, warpUrl: warp, warpEndHeight: warpEndHeight ?? 0);
     final param = toParam(config);
@@ -101,7 +102,8 @@ class Warp {
   }
 
   Future<int?> getBCHeightOrNull(int coin) async {
-    return Isolate.run(() => unwrapResultU32OrNull(warpLib.c_get_last_height(coin)));
+    return Isolate.run(
+        () => unwrapResultU32OrNull(warpLib.c_get_last_height(coin)));
   }
 
   Future<fb.TransactionSummaryT> pay(
@@ -134,16 +136,15 @@ class Warp {
     });
   }
 
-  Future<Uint8List> getAccountProperty(
-      int coin, int account, String name) async {
-    return Isolate.run(() => unwrapResultBytes(
-        warpLib.c_get_account_property(coin, account, toNative(name))));
+  Uint8List getAccountProperty(int coin, int account, String name) {
+    return unwrapResultBytes(
+        warpLib.c_get_account_property(coin, account, toNative(name)));
   }
 
-  Future<void> setAccountProperty(
-      int coin, int account, String name, Uint8List value) async {
-    return Isolate.run(() => unwrapResultU8(warpLib.c_set_account_property(
-        coin, account, toNative(name), toParamBytes(value).ref)));
+  void setAccountProperty(
+      int coin, int account, String name, Uint8List value) {
+    unwrapResultU8(warpLib.c_set_account_property(
+        coin, account, toNative(name), toParamBytes(value).ref));
   }
 
   Future<void> editAccountName(int coin, int account, String name) async {
@@ -471,7 +472,8 @@ class Warp {
   }
 
   AddressType isValidAddressOrUri(int coin, String s) {
-    final a = unwrapResultU8(warpLib.c_is_valid_address_or_uri(coin, toNative(s)));
+    final a =
+        unwrapResultU8(warpLib.c_is_valid_address_or_uri(coin, toNative(s)));
     return AddressType.values[a];
   }
 
@@ -501,12 +503,11 @@ class Warp {
     });
   }
 
-  Future<fb.Zip32KeysT> deriveZip32Keys(
-      int coin, int account, int aindex, int addrIndex, bool defaultAddress) async {
+  Future<fb.Zip32KeysT> deriveZip32Keys(int coin, int account, int aindex,
+      int addrIndex, bool defaultAddress) async {
     return Isolate.run(() {
-      final bc =
-          toBC(warpLib.c_derive_zip32_keys(coin, account, aindex, addrIndex,
-          defaultAddress ? 1 : 0));
+      final bc = toBC(warpLib.c_derive_zip32_keys(
+          coin, account, aindex, addrIndex, defaultAddress ? 1 : 0));
       return fb.Zip32Keys.reader.read(bc, 0).unpack();
     });
   }
@@ -519,15 +520,13 @@ class WarpSync {
 
   static Future<void> downloadWarpFile(
       int coin, String url, int endHeight, String filename) async {
-    return await Isolate.run(() =>
-        warpLib.c_download_warp_blocks(coin, toNative(url),
-        endHeight, toNative(filename)));
+    return await Isolate.run(() => warpLib.c_download_warp_blocks(
+        coin, toNative(url), endHeight, toNative(filename)));
   }
 
-  static Future<void> syncFromFile(
-      int coin, String filename) async {
-    return await Isolate.run(() =>
-        warpLib.c_warp_synchronize_from_file(coin, toNative(filename)));
+  static Future<void> syncFromFile(int coin, String filename) async {
+    return await Isolate.run(
+        () => warpLib.c_warp_synchronize_from_file(coin, toNative(filename)));
   }
 }
 

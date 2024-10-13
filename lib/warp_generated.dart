@@ -247,6 +247,7 @@ class NativeLibrary {
     ffi.Pointer<ffi.Char> key,
     int acc_index,
     int birth,
+    int transparent_only,
   ) {
     return _c_create_new_account(
       coin,
@@ -254,6 +255,7 @@ class NativeLibrary {
       key,
       acc_index,
       birth,
+      transparent_only,
     );
   }
 
@@ -264,10 +266,11 @@ class NativeLibrary {
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>,
               ffi.Uint32,
-              ffi.Uint32)>>('c_create_new_account');
+              ffi.Uint32,
+              bool)>>('c_create_new_account');
   late final _c_create_new_account = _c_create_new_accountPtr.asFunction<
       CResult_u32 Function(
-          int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int, int)>();
+          int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int, int, int)>();
 
   CResult_u8 c_new_transparent_address(
     int coin,

@@ -1415,6 +1415,36 @@ class NativeLibrary {
   late final _c_generate_zip_database_keys = _c_generate_zip_database_keysPtr
       .asFunction<CResult______u8 Function(int)>();
 
+  CResult_u8 c_mempool_run(
+    int coin,
+  ) {
+    return _c_mempool_run(
+      coin,
+    );
+  }
+
+  late final _c_mempool_runPtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8)>>(
+          'c_mempool_run');
+  late final _c_mempool_run =
+      _c_mempool_runPtr.asFunction<CResult_u8 Function(int)>();
+
+  CResult_u8 c_mempool_set_account(
+    int coin,
+    int account,
+  ) {
+    return _c_mempool_set_account(
+      coin,
+      account,
+    );
+  }
+
+  late final _c_mempool_set_accountPtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_mempool_set_account');
+  late final _c_mempool_set_account =
+      _c_mempool_set_accountPtr.asFunction<CResult_u8 Function(int, int)>();
+
   CResult_u8 c_download_warp_blocks(
     int coin,
     ffi.Pointer<ffi.Char> warp_url,

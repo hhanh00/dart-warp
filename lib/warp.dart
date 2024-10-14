@@ -444,6 +444,14 @@ class Warp {
     });
   }
 
+  void mempoolRun(int coin) {
+    unwrapResultU8(warpLib.c_mempool_run(coin));
+  }
+
+  void mempoolSetAccount(int coin, int account) {
+    unwrapResultU8(warpLib.c_mempool_set_account(coin, account));
+  }
+
   Future<fb.TransactionInfoExtendedT> fetchTxDetails(
       int coin, int account, int id) async {
     return Isolate.run(() {

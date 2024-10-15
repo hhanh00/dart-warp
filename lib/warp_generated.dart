@@ -679,6 +679,22 @@ class NativeLibrary {
   late final _c_get_tx_details =
       _c_get_tx_detailsPtr.asFunction<CResult______u8 Function(int, CParam)>();
 
+  CResult_i64 c_get_unconfirmed_balance(
+    int coin,
+    int account,
+  ) {
+    return _c_get_unconfirmed_balance(
+      coin,
+      account,
+    );
+  }
+
+  late final _c_get_unconfirmed_balancePtr =
+      _lookup<ffi.NativeFunction<CResult_i64 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_get_unconfirmed_balance');
+  late final _c_get_unconfirmed_balance = _c_get_unconfirmed_balancePtr
+      .asFunction<CResult_i64 Function(int, int)>();
+
   CResult_____c_char c_generate_random_mnemonic_phrase_os_rng(
     int coin,
   ) {
@@ -1560,6 +1576,16 @@ final class CParam extends ffi.Struct {
 
 final class CResult_u32 extends ffi.Struct {
   @ffi.Uint32()
+  external int value;
+
+  external ffi.Pointer<ffi.Char> error;
+
+  @ffi.Uint32()
+  external int len;
+}
+
+final class CResult_i64 extends ffi.Struct {
+  @ffi.Int64()
   external int value;
 
   external ffi.Pointer<ffi.Char> error;

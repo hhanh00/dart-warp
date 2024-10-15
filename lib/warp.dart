@@ -452,6 +452,10 @@ class Warp {
     unwrapResultU8(warpLib.c_mempool_set_account(coin, account));
   }
 
+  int getUnconfirmedBalance(int coin, int account) {
+    return unwrapResultI64(warpLib.c_get_unconfirmed_balance(coin, account));
+  }
+
   Future<fb.TransactionInfoExtendedT> fetchTxDetails(
       int coin, int account, int id) async {
     return Isolate.run(() {
@@ -603,6 +607,11 @@ int? unwrapResultU32OrNull(CResult_u32 r) {
 }
 
 int unwrapResultU64(CResult_u64 r) {
+  if (r.error != nullptr) throw convertCString(r.error);
+  return r.value;
+}
+
+int unwrapResultI64(CResult_i64 r) {
   if (r.error != nullptr) throw convertCString(r.error);
   return r.value;
 }

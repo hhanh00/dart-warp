@@ -5150,3 +5150,131 @@ class TransactionBytesObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class UnconfirmedTx {
+  UnconfirmedTx._(this._bc, this._bcOffset);
+  factory UnconfirmedTx(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<UnconfirmedTx> reader = _UnconfirmedTxReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get account => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  List<int>? get txid => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
+  int get amount => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 8, 0);
+
+  @override
+  String toString() {
+    return 'UnconfirmedTx{account: ${account}, txid: ${txid}, amount: ${amount}}';
+  }
+
+  UnconfirmedTxT unpack() => UnconfirmedTxT(
+      account: account,
+      txid: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
+      amount: amount);
+
+  static int pack(fb.Builder fbBuilder, UnconfirmedTxT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class UnconfirmedTxT implements fb.Packable {
+  int account;
+  List<int>? txid;
+  int amount;
+
+  UnconfirmedTxT({
+      this.account = 0,
+      this.txid,
+      this.amount = 0});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    final int? txidOffset = txid == null ? null
+        : fbBuilder.writeListUint8(txid!);
+    fbBuilder.startTable(3);
+    fbBuilder.addUint32(0, account);
+    fbBuilder.addOffset(1, txidOffset);
+    fbBuilder.addInt64(2, amount);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'UnconfirmedTxT{account: ${account}, txid: ${txid}, amount: ${amount}}';
+  }
+}
+
+class _UnconfirmedTxReader extends fb.TableReader<UnconfirmedTx> {
+  const _UnconfirmedTxReader();
+
+  @override
+  UnconfirmedTx createObject(fb.BufferContext bc, int offset) => 
+    UnconfirmedTx._(bc, offset);
+}
+
+class UnconfirmedTxBuilder {
+  UnconfirmedTxBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addAccount(int? account) {
+    fbBuilder.addUint32(0, account);
+    return fbBuilder.offset;
+  }
+  int addTxidOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addAmount(int? amount) {
+    fbBuilder.addInt64(2, amount);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class UnconfirmedTxObjectBuilder extends fb.ObjectBuilder {
+  final int? _account;
+  final List<int>? _txid;
+  final int? _amount;
+
+  UnconfirmedTxObjectBuilder({
+    int? account,
+    List<int>? txid,
+    int? amount,
+  })
+      : _account = account,
+        _txid = txid,
+        _amount = amount;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? txidOffset = _txid == null ? null
+        : fbBuilder.writeListUint8(_txid!);
+    fbBuilder.startTable(3);
+    fbBuilder.addUint32(0, _account);
+    fbBuilder.addOffset(1, txidOffset);
+    fbBuilder.addInt64(2, _amount);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}

@@ -248,6 +248,7 @@ class NativeLibrary {
     int acc_index,
     int birth,
     int transparent_only,
+    int is_new,
   ) {
     return _c_create_new_account(
       coin,
@@ -256,6 +257,7 @@ class NativeLibrary {
       acc_index,
       birth,
       transparent_only,
+      is_new,
     );
   }
 
@@ -267,10 +269,11 @@ class NativeLibrary {
               ffi.Pointer<ffi.Char>,
               ffi.Uint32,
               ffi.Uint32,
+              bool,
               bool)>>('c_create_new_account');
   late final _c_create_new_account = _c_create_new_accountPtr.asFunction<
-      CResult_u32 Function(
-          int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int, int, int)>();
+      CResult_u32 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
+          int, int, int, int)>();
 
   CResult_u8 c_new_transparent_address(
     int coin,
@@ -539,6 +542,22 @@ class NativeLibrary {
   late final _c_on_contacts_saved =
       _c_on_contacts_savedPtr.asFunction<CResult_u8 Function(int, int)>();
 
+  CResult_i64 c_get_unconfirmed_balance(
+    int coin,
+    int account,
+  ) {
+    return _c_get_unconfirmed_balance(
+      coin,
+      account,
+    );
+  }
+
+  late final _c_get_unconfirmed_balancePtr =
+      _lookup<ffi.NativeFunction<CResult_i64 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_get_unconfirmed_balance');
+  late final _c_get_unconfirmed_balance = _c_get_unconfirmed_balancePtr
+      .asFunction<CResult_i64 Function(int, int)>();
+
   CResult______u8 c_list_messages(
     int coin,
     int account,
@@ -678,22 +697,6 @@ class NativeLibrary {
           'c_get_tx_details');
   late final _c_get_tx_details =
       _c_get_tx_detailsPtr.asFunction<CResult______u8 Function(int, CParam)>();
-
-  CResult_i64 c_get_unconfirmed_balance(
-    int coin,
-    int account,
-  ) {
-    return _c_get_unconfirmed_balance(
-      coin,
-      account,
-    );
-  }
-
-  late final _c_get_unconfirmed_balancePtr =
-      _lookup<ffi.NativeFunction<CResult_i64 Function(ffi.Uint8, ffi.Uint32)>>(
-          'c_get_unconfirmed_balance');
-  late final _c_get_unconfirmed_balance = _c_get_unconfirmed_balancePtr
-      .asFunction<CResult_i64 Function(int, int)>();
 
   CResult_____c_char c_generate_random_mnemonic_phrase_os_rng(
     int coin,

@@ -71,11 +71,12 @@ class Warp {
   }
 
   int createAccount(
-      int coin, String name, String key, int accIndex, int birth, bool transparentOnly) {
+      int coin, String name, String key, int accIndex, int birth, bool transparentOnly,
+      isNew) {
     return unwrapResultU32(
       warpLib.c_create_new_account(
           coin, toNative(name), toNative(key), accIndex, birth,
-          transparentOnly ? 1 : 0),
+          transparentOnly ? 1 : 0, isNew ? 1 : 0),
     );
   }
 

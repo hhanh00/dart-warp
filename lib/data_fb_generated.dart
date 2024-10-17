@@ -4807,15 +4807,19 @@ class TransparentAddress {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  int get addrIndex => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  String? get address => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  int get account => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get $external => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get addrIndex => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  String? get address => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
 
   @override
   String toString() {
-    return 'TransparentAddress{addrIndex: ${addrIndex}, address: ${address}}';
+    return 'TransparentAddress{account: ${account}, \$external: ${$external}, addrIndex: ${addrIndex}, address: ${address}}';
   }
 
   TransparentAddressT unpack() => TransparentAddressT(
+      account: account,
+      $external: $external,
       addrIndex: addrIndex,
       address: address);
 
@@ -4826,10 +4830,14 @@ class TransparentAddress {
 }
 
 class TransparentAddressT implements fb.Packable {
+  int account;
+  int $external;
   int addrIndex;
   String? address;
 
   TransparentAddressT({
+      this.account = 0,
+      this.$external = 0,
       this.addrIndex = 0,
       this.address});
 
@@ -4837,15 +4845,17 @@ class TransparentAddressT implements fb.Packable {
   int pack(fb.Builder fbBuilder) {
     final int? addressOffset = address == null ? null
         : fbBuilder.writeString(address!);
-    fbBuilder.startTable(2);
-    fbBuilder.addUint32(0, addrIndex);
-    fbBuilder.addOffset(1, addressOffset);
+    fbBuilder.startTable(4);
+    fbBuilder.addUint32(0, account);
+    fbBuilder.addUint32(1, $external);
+    fbBuilder.addUint32(2, addrIndex);
+    fbBuilder.addOffset(3, addressOffset);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'TransparentAddressT{addrIndex: ${addrIndex}, address: ${address}}';
+    return 'TransparentAddressT{account: ${account}, \$external: ${$external}, addrIndex: ${addrIndex}, address: ${address}}';
   }
 }
 
@@ -4863,15 +4873,23 @@ class TransparentAddressBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(4);
   }
 
+  int addAccount(int? account) {
+    fbBuilder.addUint32(0, account);
+    return fbBuilder.offset;
+  }
+  int addExternal(int? $external) {
+    fbBuilder.addUint32(1, $external);
+    return fbBuilder.offset;
+  }
   int addAddrIndex(int? addrIndex) {
-    fbBuilder.addUint32(0, addrIndex);
+    fbBuilder.addUint32(2, addrIndex);
     return fbBuilder.offset;
   }
   int addAddressOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
 
@@ -4881,14 +4899,20 @@ class TransparentAddressBuilder {
 }
 
 class TransparentAddressObjectBuilder extends fb.ObjectBuilder {
+  final int? _account;
+  final int? _$external;
   final int? _addrIndex;
   final String? _address;
 
   TransparentAddressObjectBuilder({
+    int? account,
+    int? $external,
     int? addrIndex,
     String? address,
   })
-      : _addrIndex = addrIndex,
+      : _account = account,
+        _$external = $external,
+        _addrIndex = addrIndex,
         _address = address;
 
   /// Finish building, and store into the [fbBuilder].
@@ -4896,9 +4920,11 @@ class TransparentAddressObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? addressOffset = _address == null ? null
         : fbBuilder.writeString(_address!);
-    fbBuilder.startTable(2);
-    fbBuilder.addUint32(0, _addrIndex);
-    fbBuilder.addOffset(1, addressOffset);
+    fbBuilder.startTable(4);
+    fbBuilder.addUint32(0, _account);
+    fbBuilder.addUint32(1, _$external);
+    fbBuilder.addUint32(2, _addrIndex);
+    fbBuilder.addOffset(3, addressOffset);
     return fbBuilder.endTable();
   }
 

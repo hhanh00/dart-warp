@@ -164,8 +164,8 @@ class Warp {
         () => unwrapResultU8(warpLib.c_delete_account(coin, account)));
   }
 
-  void newTransparentAddress(int coin, int account) {
-    unwrapResultU8(warpLib.c_new_transparent_address(coin, account));
+  void newTransparentAddress(int coin, int account, int external) {
+    unwrapResultU8(warpLib.c_new_transparent_address(coin, account, external));
   }
 
   List<fb.TransparentAddressT> listTransparentAddresses(int coin, int account) {
@@ -432,10 +432,10 @@ class Warp {
   }
 
   Future<void> scanTransparentAddresses(
-      int coin, int account, int gapLimit) async {
+      int coin, int account, int external, int gapLimit) async {
     return Isolate.run(() {
       unwrapResultU8(
-          warpLib.c_scan_transparent_addresses(coin, account, gapLimit));
+          warpLib.c_scan_transparent_addresses(coin, account, external, gapLimit));
     });
   }
 

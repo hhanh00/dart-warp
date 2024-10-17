@@ -278,18 +278,21 @@ class NativeLibrary {
   CResult_u8 c_new_transparent_address(
     int coin,
     int account,
+    int external1,
   ) {
     return _c_new_transparent_address(
       coin,
       account,
+      external1,
     );
   }
 
-  late final _c_new_transparent_addressPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
-          'c_new_transparent_address');
-  late final _c_new_transparent_address =
-      _c_new_transparent_addressPtr.asFunction<CResult_u8 Function(int, int)>();
+  late final _c_new_transparent_addressPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(
+              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_new_transparent_address');
+  late final _c_new_transparent_address = _c_new_transparent_addressPtr
+      .asFunction<CResult_u8 Function(int, int, int)>();
 
   CResult_u8 c_edit_account_name(
     int coin,
@@ -764,21 +767,23 @@ class NativeLibrary {
   CResult_u8 c_scan_transparent_addresses(
     int coin,
     int account,
+    int external1,
     int gap_limit,
   ) {
     return _c_scan_transparent_addresses(
       coin,
       account,
+      external1,
       gap_limit,
     );
   }
 
   late final _c_scan_transparent_addressesPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Uint32,
+          CResult_u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
               ffi.Uint32)>>('c_scan_transparent_addresses');
   late final _c_scan_transparent_addresses = _c_scan_transparent_addressesPtr
-      .asFunction<CResult_u8 Function(int, int, int)>();
+      .asFunction<CResult_u8 Function(int, int, int, int)>();
 
   CResult_u8 c_retrieve_tx_details(
     int coin,

@@ -109,25 +109,24 @@ class NativeLibrary {
       _c_list_account_transparent_addressesPtr
           .asFunction<CResult______u8 Function(int, int)>();
 
-  CResult_u8 c_update_account_primary_transparent_address(
+  CResult_u8 c_change_account_dindex(
     int coin,
     int account,
-    int addr_index,
+    int dindex,
   ) {
-    return _c_update_account_primary_transparent_address(
+    return _c_change_account_dindex(
       coin,
       account,
-      addr_index,
+      dindex,
     );
   }
 
-  late final _c_update_account_primary_transparent_addressPtr = _lookup<
+  late final _c_change_account_dindexPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Uint32,
-              ffi.Uint32)>>('c_update_account_primary_transparent_address');
-  late final _c_update_account_primary_transparent_address =
-      _c_update_account_primary_transparent_addressPtr
-          .asFunction<CResult_u8 Function(int, int, int)>();
+          CResult_u8 Function(
+              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_change_account_dindex');
+  late final _c_change_account_dindex = _c_change_account_dindexPtr
+      .asFunction<CResult_u8 Function(int, int, int)>();
 
   CResult______u8 c_get_balance(
     int coin,
@@ -278,21 +277,18 @@ class NativeLibrary {
   CResult_u8 c_new_transparent_address(
     int coin,
     int account,
-    int external1,
   ) {
     return _c_new_transparent_address(
       coin,
       account,
-      external1,
     );
   }
 
-  late final _c_new_transparent_addressPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_new_transparent_address');
-  late final _c_new_transparent_address = _c_new_transparent_addressPtr
-      .asFunction<CResult_u8 Function(int, int, int)>();
+  late final _c_new_transparent_addressPtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_new_transparent_address');
+  late final _c_new_transparent_address =
+      _c_new_transparent_addressPtr.asFunction<CResult_u8 Function(int, int)>();
 
   CResult_u8 c_edit_account_name(
     int coin,

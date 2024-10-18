@@ -165,7 +165,7 @@ class Warp {
   }
 
   void newTransparentAddress(int coin, int account, int external) {
-    unwrapResultU8(warpLib.c_new_transparent_address(coin, account, external));
+    unwrapResultU8(warpLib.c_new_transparent_address(coin, account));
   }
 
   List<fb.TransparentAddressT> listTransparentAddresses(int coin, int account) {
@@ -177,8 +177,8 @@ class Warp {
     return list.map((e) => e.unpack()).toList();
   }
 
-  void updatePrimaryTransparentAddress(int coin, int account, int addrIndex) {
-    unwrapResultU8(warpLib.c_update_account_primary_transparent_address(
+  void changeAccountAddrIndex(int coin, int account, int addrIndex) {
+    unwrapResultU8(warpLib.c_change_account_dindex(
         coin, account, addrIndex));
   }
 

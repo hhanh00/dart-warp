@@ -1004,23 +1004,25 @@ class InputShielded {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  List<int>? get nf => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get address => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  int get value => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  List<int>? get rcm => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
-  List<int>? get rho => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
+  bool get orchard => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  List<int>? get nf => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get address => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  int get value => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  List<int>? get rcm => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
+  List<int>? get rho => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 14);
 
   @override
   String toString() {
-    return 'InputShielded{nf: ${nf}, address: ${address}, value: ${value}, rcm: ${rcm}, rho: ${rho}}';
+    return 'InputShielded{orchard: ${orchard}, nf: ${nf}, address: ${address}, value: ${value}, rcm: ${rcm}, rho: ${rho}}';
   }
 
   InputShieldedT unpack() => InputShieldedT(
-      nf: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 4),
+      orchard: orchard,
+      nf: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
       address: address,
       value: value,
-      rcm: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 10),
-      rho: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 12));
+      rcm: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 12),
+      rho: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 14));
 
   static int pack(fb.Builder fbBuilder, InputShieldedT? object) {
     if (object == null) return 0;
@@ -1029,6 +1031,7 @@ class InputShielded {
 }
 
 class InputShieldedT implements fb.Packable {
+  bool orchard;
   List<int>? nf;
   String? address;
   int value;
@@ -1036,6 +1039,7 @@ class InputShieldedT implements fb.Packable {
   List<int>? rho;
 
   InputShieldedT({
+      this.orchard = false,
       this.nf,
       this.address,
       this.value = 0,
@@ -1052,18 +1056,19 @@ class InputShieldedT implements fb.Packable {
         : fbBuilder.writeListUint8(rcm!);
     final int? rhoOffset = rho == null ? null
         : fbBuilder.writeListUint8(rho!);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, nfOffset);
-    fbBuilder.addOffset(1, addressOffset);
-    fbBuilder.addUint64(2, value);
-    fbBuilder.addOffset(3, rcmOffset);
-    fbBuilder.addOffset(4, rhoOffset);
+    fbBuilder.startTable(6);
+    fbBuilder.addBool(0, orchard);
+    fbBuilder.addOffset(1, nfOffset);
+    fbBuilder.addOffset(2, addressOffset);
+    fbBuilder.addUint64(3, value);
+    fbBuilder.addOffset(4, rcmOffset);
+    fbBuilder.addOffset(5, rhoOffset);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'InputShieldedT{nf: ${nf}, address: ${address}, value: ${value}, rcm: ${rcm}, rho: ${rho}}';
+    return 'InputShieldedT{orchard: ${orchard}, nf: ${nf}, address: ${address}, value: ${value}, rcm: ${rcm}, rho: ${rho}}';
   }
 }
 
@@ -1081,27 +1086,31 @@ class InputShieldedBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
   }
 
-  int addNfOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addOrchard(bool? orchard) {
+    fbBuilder.addBool(0, orchard);
     return fbBuilder.offset;
   }
-  int addAddressOffset(int? offset) {
+  int addNfOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
+  int addAddressOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
   int addValue(int? value) {
-    fbBuilder.addUint64(2, value);
+    fbBuilder.addUint64(3, value);
     return fbBuilder.offset;
   }
   int addRcmOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
   int addRhoOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
 
@@ -1111,6 +1120,7 @@ class InputShieldedBuilder {
 }
 
 class InputShieldedObjectBuilder extends fb.ObjectBuilder {
+  final bool? _orchard;
   final List<int>? _nf;
   final String? _address;
   final int? _value;
@@ -1118,13 +1128,15 @@ class InputShieldedObjectBuilder extends fb.ObjectBuilder {
   final List<int>? _rho;
 
   InputShieldedObjectBuilder({
+    bool? orchard,
     List<int>? nf,
     String? address,
     int? value,
     List<int>? rcm,
     List<int>? rho,
   })
-      : _nf = nf,
+      : _orchard = orchard,
+        _nf = nf,
         _address = address,
         _value = value,
         _rcm = rcm,
@@ -1141,12 +1153,13 @@ class InputShieldedObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListUint8(_rcm!);
     final int? rhoOffset = _rho == null ? null
         : fbBuilder.writeListUint8(_rho!);
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, nfOffset);
-    fbBuilder.addOffset(1, addressOffset);
-    fbBuilder.addUint64(2, _value);
-    fbBuilder.addOffset(3, rcmOffset);
-    fbBuilder.addOffset(4, rhoOffset);
+    fbBuilder.startTable(6);
+    fbBuilder.addBool(0, _orchard);
+    fbBuilder.addOffset(1, nfOffset);
+    fbBuilder.addOffset(2, addressOffset);
+    fbBuilder.addUint64(3, _value);
+    fbBuilder.addOffset(4, rcmOffset);
+    fbBuilder.addOffset(5, rhoOffset);
     return fbBuilder.endTable();
   }
 
@@ -1170,26 +1183,28 @@ class OutputShielded {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  bool get incoming => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
-  List<int>? get cmx => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get address => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  int get value => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  List<int>? get rcm => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
-  List<int>? get rho => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get memo => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  bool get orchard => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  bool get incoming => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
+  List<int>? get cmx => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get address => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  int get value => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  List<int>? get rcm => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 14);
+  List<int>? get rho => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get memo => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
 
   @override
   String toString() {
-    return 'OutputShielded{incoming: ${incoming}, cmx: ${cmx}, address: ${address}, value: ${value}, rcm: ${rcm}, rho: ${rho}, memo: ${memo}}';
+    return 'OutputShielded{orchard: ${orchard}, incoming: ${incoming}, cmx: ${cmx}, address: ${address}, value: ${value}, rcm: ${rcm}, rho: ${rho}, memo: ${memo}}';
   }
 
   OutputShieldedT unpack() => OutputShieldedT(
+      orchard: orchard,
       incoming: incoming,
-      cmx: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
+      cmx: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 8),
       address: address,
       value: value,
-      rcm: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 12),
-      rho: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 14),
+      rcm: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 14),
+      rho: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 16),
       memo: memo);
 
   static int pack(fb.Builder fbBuilder, OutputShieldedT? object) {
@@ -1199,6 +1214,7 @@ class OutputShielded {
 }
 
 class OutputShieldedT implements fb.Packable {
+  bool orchard;
   bool incoming;
   List<int>? cmx;
   String? address;
@@ -1208,6 +1224,7 @@ class OutputShieldedT implements fb.Packable {
   String? memo;
 
   OutputShieldedT({
+      this.orchard = false,
       this.incoming = false,
       this.cmx,
       this.address,
@@ -1228,20 +1245,21 @@ class OutputShieldedT implements fb.Packable {
         : fbBuilder.writeListUint8(rho!);
     final int? memoOffset = memo == null ? null
         : fbBuilder.writeString(memo!);
-    fbBuilder.startTable(7);
-    fbBuilder.addBool(0, incoming);
-    fbBuilder.addOffset(1, cmxOffset);
-    fbBuilder.addOffset(2, addressOffset);
-    fbBuilder.addUint64(3, value);
-    fbBuilder.addOffset(4, rcmOffset);
-    fbBuilder.addOffset(5, rhoOffset);
-    fbBuilder.addOffset(6, memoOffset);
+    fbBuilder.startTable(8);
+    fbBuilder.addBool(0, orchard);
+    fbBuilder.addBool(1, incoming);
+    fbBuilder.addOffset(2, cmxOffset);
+    fbBuilder.addOffset(3, addressOffset);
+    fbBuilder.addUint64(4, value);
+    fbBuilder.addOffset(5, rcmOffset);
+    fbBuilder.addOffset(6, rhoOffset);
+    fbBuilder.addOffset(7, memoOffset);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'OutputShieldedT{incoming: ${incoming}, cmx: ${cmx}, address: ${address}, value: ${value}, rcm: ${rcm}, rho: ${rho}, memo: ${memo}}';
+    return 'OutputShieldedT{orchard: ${orchard}, incoming: ${incoming}, cmx: ${cmx}, address: ${address}, value: ${value}, rcm: ${rcm}, rho: ${rho}, memo: ${memo}}';
   }
 }
 
@@ -1259,35 +1277,39 @@ class OutputShieldedBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(8);
   }
 
+  int addOrchard(bool? orchard) {
+    fbBuilder.addBool(0, orchard);
+    return fbBuilder.offset;
+  }
   int addIncoming(bool? incoming) {
-    fbBuilder.addBool(0, incoming);
+    fbBuilder.addBool(1, incoming);
     return fbBuilder.offset;
   }
   int addCmxOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addAddressOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
+  int addAddressOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
   int addValue(int? value) {
-    fbBuilder.addUint64(3, value);
+    fbBuilder.addUint64(4, value);
     return fbBuilder.offset;
   }
   int addRcmOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addRhoOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addMemoOffset(int? offset) {
+  int addRhoOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addMemoOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
 
@@ -1297,6 +1319,7 @@ class OutputShieldedBuilder {
 }
 
 class OutputShieldedObjectBuilder extends fb.ObjectBuilder {
+  final bool? _orchard;
   final bool? _incoming;
   final List<int>? _cmx;
   final String? _address;
@@ -1306,6 +1329,7 @@ class OutputShieldedObjectBuilder extends fb.ObjectBuilder {
   final String? _memo;
 
   OutputShieldedObjectBuilder({
+    bool? orchard,
     bool? incoming,
     List<int>? cmx,
     String? address,
@@ -1314,7 +1338,8 @@ class OutputShieldedObjectBuilder extends fb.ObjectBuilder {
     List<int>? rho,
     String? memo,
   })
-      : _incoming = incoming,
+      : _orchard = orchard,
+        _incoming = incoming,
         _cmx = cmx,
         _address = address,
         _value = value,
@@ -1335,14 +1360,15 @@ class OutputShieldedObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListUint8(_rho!);
     final int? memoOffset = _memo == null ? null
         : fbBuilder.writeString(_memo!);
-    fbBuilder.startTable(7);
-    fbBuilder.addBool(0, _incoming);
-    fbBuilder.addOffset(1, cmxOffset);
-    fbBuilder.addOffset(2, addressOffset);
-    fbBuilder.addUint64(3, _value);
-    fbBuilder.addOffset(4, rcmOffset);
-    fbBuilder.addOffset(5, rhoOffset);
-    fbBuilder.addOffset(6, memoOffset);
+    fbBuilder.startTable(8);
+    fbBuilder.addBool(0, _orchard);
+    fbBuilder.addBool(1, _incoming);
+    fbBuilder.addOffset(2, cmxOffset);
+    fbBuilder.addOffset(3, addressOffset);
+    fbBuilder.addUint64(4, _value);
+    fbBuilder.addOffset(5, rcmOffset);
+    fbBuilder.addOffset(6, rhoOffset);
+    fbBuilder.addOffset(7, memoOffset);
     return fbBuilder.endTable();
   }
 

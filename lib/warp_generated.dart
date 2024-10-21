@@ -274,7 +274,44 @@ class NativeLibrary {
       CResult_u32 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
           int, int, int, int)>();
 
-  CResult_u8 c_new_transparent_address(
+  CResult_u8 c_hide_account(
+    int coin,
+    int account,
+    int hidden,
+  ) {
+    return _c_hide_account(
+      coin,
+      account,
+      hidden,
+    );
+  }
+
+  late final _c_hide_accountPtr = _lookup<
+          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, bool)>>(
+      'c_hide_account');
+  late final _c_hide_account =
+      _c_hide_accountPtr.asFunction<CResult_u8 Function(int, int, int)>();
+
+  CResult_u8 c_reorder_account(
+    int coin,
+    int account,
+    int new_position,
+  ) {
+    return _c_reorder_account(
+      coin,
+      account,
+      new_position,
+    );
+  }
+
+  late final _c_reorder_accountPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(
+              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_reorder_account');
+  late final _c_reorder_account =
+      _c_reorder_accountPtr.asFunction<CResult_u8 Function(int, int, int)>();
+
+  CResult_u32 c_new_transparent_address(
     int coin,
     int account,
   ) {
@@ -285,10 +322,10 @@ class NativeLibrary {
   }
 
   late final _c_new_transparent_addressPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8, ffi.Uint32)>>(
           'c_new_transparent_address');
-  late final _c_new_transparent_address =
-      _c_new_transparent_addressPtr.asFunction<CResult_u8 Function(int, int)>();
+  late final _c_new_transparent_address = _c_new_transparent_addressPtr
+      .asFunction<CResult_u32 Function(int, int)>();
 
   CResult_u8 c_edit_account_name(
     int coin,

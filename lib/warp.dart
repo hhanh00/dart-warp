@@ -149,23 +149,28 @@ class Warp {
         coin, account, toNative(name), toParamBytes(value).ref));
   }
 
-  Future<void> editAccountName(int coin, int account, String name) async {
-    return Isolate.run(() => unwrapResultU8(
-        warpLib.c_edit_account_name(coin, account, toNative(name))));
+  void editAccountName(int coin, int account, String name) {
+    unwrapResultU8(warpLib.c_edit_account_name(coin, account, toNative(name)));
   }
 
-  Future<void> editAccountBirthHeight(int coin, int account, int height) async {
-    return Isolate.run(() =>
-        unwrapResultU8(warpLib.c_edit_account_birth(coin, account, height)));
+  void editAccountBirthHeight(int coin, int account, int height) {
+    unwrapResultU8(warpLib.c_edit_account_birth(coin, account, height));
   }
 
-  Future<void> deleteAccount(int coin, int account) async {
-    return Isolate.run(
-        () => unwrapResultU8(warpLib.c_delete_account(coin, account)));
+  void editAccountHidden(int coin, int account, bool hidden) {
+    unwrapResultU8(warpLib.c_hide_account(coin, account, hidden ? 1 : 0));
   }
 
-  void newTransparentAddress(int coin, int account, int external) {
-    unwrapResultU8(warpLib.c_new_transparent_address(coin, account));
+  void reorderAccount(int coin, int account, int newPosition) {
+    unwrapResultU8(warpLib.c_reorder_account(coin, account, newPosition));
+  }
+
+  void deleteAccount(int coin, int account) {
+    unwrapResultU8(warpLib.c_delete_account(coin, account));
+  }
+
+  int newTransparentAddress(int coin, int account, int external) {
+    return unwrapResultU32(warpLib.c_new_transparent_address(coin, account));
   }
 
   List<fb.TransparentAddressT> listTransparentAddresses(int coin, int account) {

@@ -2287,10 +2287,11 @@ class AccountName {
   String? get name => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   int get birth => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
   int get balance => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  bool get hidden => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
 
   @override
   String toString() {
-    return 'AccountName{coin: ${coin}, id: ${id}, name: ${name}, birth: ${birth}, balance: ${balance}}';
+    return 'AccountName{coin: ${coin}, id: ${id}, name: ${name}, birth: ${birth}, balance: ${balance}, hidden: ${hidden}}';
   }
 
   AccountNameT unpack() => AccountNameT(
@@ -2298,7 +2299,8 @@ class AccountName {
       id: id,
       name: name,
       birth: birth,
-      balance: balance);
+      balance: balance,
+      hidden: hidden);
 
   static int pack(fb.Builder fbBuilder, AccountNameT? object) {
     if (object == null) return 0;
@@ -2312,30 +2314,33 @@ class AccountNameT implements fb.Packable {
   String? name;
   int birth;
   int balance;
+  bool hidden;
 
   AccountNameT({
       this.coin = 0,
       this.id = 0,
       this.name,
       this.birth = 0,
-      this.balance = 0});
+      this.balance = 0,
+      this.hidden = false});
 
   @override
   int pack(fb.Builder fbBuilder) {
     final int? nameOffset = name == null ? null
         : fbBuilder.writeString(name!);
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
     fbBuilder.addUint8(0, coin);
     fbBuilder.addUint32(1, id);
     fbBuilder.addOffset(2, nameOffset);
     fbBuilder.addUint32(3, birth);
     fbBuilder.addUint64(4, balance);
+    fbBuilder.addBool(5, hidden);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'AccountNameT{coin: ${coin}, id: ${id}, name: ${name}, birth: ${birth}, balance: ${balance}}';
+    return 'AccountNameT{coin: ${coin}, id: ${id}, name: ${name}, birth: ${birth}, balance: ${balance}, hidden: ${hidden}}';
   }
 }
 
@@ -2353,7 +2358,7 @@ class AccountNameBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
   }
 
   int addCoin(int? coin) {
@@ -2376,6 +2381,10 @@ class AccountNameBuilder {
     fbBuilder.addUint64(4, balance);
     return fbBuilder.offset;
   }
+  int addHidden(bool? hidden) {
+    fbBuilder.addBool(5, hidden);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2388,6 +2397,7 @@ class AccountNameObjectBuilder extends fb.ObjectBuilder {
   final String? _name;
   final int? _birth;
   final int? _balance;
+  final bool? _hidden;
 
   AccountNameObjectBuilder({
     int? coin,
@@ -2395,24 +2405,27 @@ class AccountNameObjectBuilder extends fb.ObjectBuilder {
     String? name,
     int? birth,
     int? balance,
+    bool? hidden,
   })
       : _coin = coin,
         _id = id,
         _name = name,
         _birth = birth,
-        _balance = balance;
+        _balance = balance,
+        _hidden = hidden;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? nameOffset = _name == null ? null
         : fbBuilder.writeString(_name!);
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
     fbBuilder.addUint8(0, _coin);
     fbBuilder.addUint32(1, _id);
     fbBuilder.addOffset(2, nameOffset);
     fbBuilder.addUint32(3, _birth);
     fbBuilder.addUint64(4, _balance);
+    fbBuilder.addBool(5, _hidden);
     return fbBuilder.endTable();
   }
 

@@ -53,15 +53,6 @@ class Warp {
     });
   }
 
-  Future<bool> migrateDb(
-      int coin, int major, String src, String dest, String password) async {
-    return Isolate.run(() {
-      return unwrapResultU8(warpLib.c_migrate_db(coin, major, toNative(src),
-              toNative(dest), toNative(password))) !=
-          0;
-    });
-  }
-
   Future<int> pingServer(String url) async {
     return Isolate.run(() => unwrapResultU64(warpLib.c_ping(0, toNative(url))));
   }
@@ -339,9 +330,9 @@ class Warp {
     return warpLib.c_schema_version();
   }
 
-  Future<void> createDb(int coin, String path, String password) {
+  Future<void> createDb(int coin, String path, String password, String version) {
     return Isolate.run(() => unwrapResultU8(
-        warpLib.c_create_db(coin, toNative(path), toNative(password))));
+        warpLib.c_create_db(coin, toNative(path), toNative(password), toNative(version))));
   }
 
   bool checkDbPassword(String path, String password) {

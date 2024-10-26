@@ -62,21 +62,22 @@ class NativeLibrary {
   late final _c_get_txs =
       _c_get_txsPtr.asFunction<CResult______u8 Function(int, int, int)>();
 
-  CResult_bool c_reset_tables(
+  CResult_u8 c_create_schema(
     int coin,
-    int upgrade,
+    ffi.Pointer<ffi.Char> _version,
   ) {
-    return _c_reset_tables(
+    return _c_create_schema(
       coin,
-      upgrade,
+      _version,
     );
   }
 
-  late final _c_reset_tablesPtr =
-      _lookup<ffi.NativeFunction<CResult_bool Function(ffi.Uint8, bool)>>(
-          'c_reset_tables');
-  late final _c_reset_tables =
-      _c_reset_tablesPtr.asFunction<CResult_bool Function(int, int)>();
+  late final _c_create_schemaPtr = _lookup<
+      ffi.NativeFunction<
+          CResult_u8 Function(
+              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_create_schema');
+  late final _c_create_schema = _c_create_schemaPtr
+      .asFunction<CResult_u8 Function(int, ffi.Pointer<ffi.Char>)>();
 
   CResult______u8 c_list_accounts(
     int coin,
@@ -1071,44 +1072,23 @@ class NativeLibrary {
     int coin,
     ffi.Pointer<ffi.Char> path,
     ffi.Pointer<ffi.Char> password,
+    ffi.Pointer<ffi.Char> version,
   ) {
     return _c_create_db(
       coin,
       path,
       password,
+      version,
     );
   }
 
   late final _c_create_dbPtr = _lookup<
       ffi.NativeFunction<
           CResult_u8 Function(ffi.Uint8, ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>>('c_create_db');
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>>('c_create_db');
   late final _c_create_db = _c_create_dbPtr.asFunction<
-      CResult_u8 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
-
-  CResult_u8 c_migrate_db(
-    int coin,
-    int major,
-    ffi.Pointer<ffi.Char> src,
-    ffi.Pointer<ffi.Char> dest,
-    ffi.Pointer<ffi.Char> password,
-  ) {
-    return _c_migrate_db(
-      coin,
-      major,
-      src,
-      dest,
-      password,
-    );
-  }
-
-  late final _c_migrate_dbPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Uint8, ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>>('c_migrate_db');
-  late final _c_migrate_db = _c_migrate_dbPtr.asFunction<
-      CResult_u8 Function(int, int, ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+      CResult_u8 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>)>();
 
   CResult______u8 c_derive_zip32_keys(
     int coin,
@@ -1596,6 +1576,13 @@ final class CResult______u8 extends ffi.Struct {
   external int len;
 }
 
+final class CParam extends ffi.Struct {
+  external ffi.Pointer<ffi.Uint8> value;
+
+  @ffi.Uint32()
+  external int len;
+}
+
 final class CResult_bool extends ffi.Struct {
   @bool()
   external int value;
@@ -1607,13 +1594,6 @@ final class CResult_bool extends ffi.Struct {
 }
 
 typedef bool = ffi.Char;
-
-final class CParam extends ffi.Struct {
-  external ffi.Pointer<ffi.Uint8> value;
-
-  @ffi.Uint32()
-  external int len;
-}
 
 final class CResult_u32 extends ffi.Struct {
   @ffi.Uint32()

@@ -49,7 +49,7 @@ class Warp {
   Future<void> initProver(Uint8List spend, Uint8List output) async {
     return Isolate.run(() {
       unwrapResultU8(warpLib.c_init_sapling_prover(
-          0, toParamBytes(spend).ref, toParamBytes(output).ref));
+          toParamBytes(spend).ref, toParamBytes(output).ref));
     });
   }
 
@@ -332,7 +332,7 @@ class Warp {
 
   Future<void> createDb(int coin, String path, String password, String version) {
     return Isolate.run(() => unwrapResultU8(
-        warpLib.c_create_db(coin, toNative(path), toNative(password), toNative(version))));
+        warpLib.c_create_db(toNative(path), toNative(password), toNative(version))));
   }
 
   bool checkDbPassword(String path, String password) {
@@ -353,7 +353,7 @@ class Warp {
 
   Future<fb.AgekeysT> generateZIPDbKeys() async {
     return Isolate.run(() {
-      final bc = toBC(warpLib.c_generate_zip_database_keys(0));
+      final bc = toBC(warpLib.c_generate_zip_database_keys());
       return fb.Agekeys.reader.read(bc, 0).unpack();
     });
   }
@@ -366,7 +366,7 @@ class Warp {
           fileList: fileList,
           targetPath: targetPath,
           publicKey: publicKey);
-      warpLib.c_encrypt_zip_database_files(0, toParam(config).ref);
+      warpLib.c_encrypt_zip_database_files(toParam(config).ref);
     });
   }
 
@@ -374,26 +374,26 @@ class Warp {
       String filePath, String targetPath, String secretKey) async {
     return Isolate.run(() => unwrapResultU8(
         warpLib.c_decrypt_zip_database_files(
-            0, toNative(filePath), toNative(targetPath), toNative(secretKey))));
+            toNative(filePath), toNative(targetPath), toNative(secretKey))));
   }
 
-  List<fb.PacketT> splitData(int coin, Uint8List data, int threshold) {
-    final bc = toBC(warpLib.c_split(coin, toParamBytes(data).ref, threshold));
+  List<fb.PacketT> splitData(Uint8List data, int threshold) {
+    final bc = toBC(warpLib.c_split(toParamBytes(data).ref, threshold));
     final list = ListReader<fb.Packet>(fb.Packet.reader).read(bc, 0);
     return list.map((e) => e.unpack()).toList();
   }
 
-  Future<Uint8List> mergeData(int coin, List<fb.PacketT> packets) async {
+  Future<Uint8List> mergeData(List<fb.PacketT> packets) async {
     return Isolate.run(() {
       final p = fb.PacketsT(packets: packets);
       final packetsParam = toParam(p);
-      return unwrapResultBytes(warpLib.c_merge(coin, packetsParam.ref));
+      return unwrapResultBytes(warpLib.c_merge(packetsParam.ref));
     });
   }
 
   Future<String> generateSeed() async {
     return Isolate.run(() => unwrapResultString(
-        warpLib.c_generate_random_mnemonic_phrase_os_rng(0)));
+        warpLib.c_generate_random_mnemonic_phrase_os_rng()));
   }
 
   fb.BackupT getBackup(int coin, int account) {
@@ -520,6 +520,19 @@ class Warp {
           coin, account, aindex, addrIndex, defaultAddress ? 1 : 0));
       return fb.Zip32Keys.reader.read(bc, 0).unpack();
     });
+  }
+
+  void storeSwap(int coin, int account, fb.SwapT swap) {
+    warpLib.c_store_swap(coin, account, toParam(swap).ref);
+  }
+
+  List<fb.SwapT> listSwaps(int coin, int account) {
+    final bc = toBC(warpLib.c_list_swaps(coin, account));
+    return fb.SwapList.reader.read(bc, 0).unpack().items!;
+  }
+
+  void clearSwapHistory(int coin, int account) {
+    warpLib.c_clear_swap_history(coin, account);
   }
 }
 

@@ -5101,18 +5101,20 @@ class TransactionBytes {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  List<IdNote>? get notes => const fb.ListReader<IdNote>(IdNote.reader).vTableGetNullable(_bc, _bcOffset, 4);
-  List<int>? get data => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get redirect => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  UnconfirmedTx? get tx => UnconfirmedTx.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  List<IdNote>? get notes => const fb.ListReader<IdNote>(IdNote.reader).vTableGetNullable(_bc, _bcOffset, 6);
+  List<int>? get data => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get redirect => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
 
   @override
   String toString() {
-    return 'TransactionBytes{notes: ${notes}, data: ${data}, redirect: ${redirect}}';
+    return 'TransactionBytes{tx: ${tx}, notes: ${notes}, data: ${data}, redirect: ${redirect}}';
   }
 
   TransactionBytesT unpack() => TransactionBytesT(
+      tx: tx?.unpack(),
       notes: notes?.map((e) => e.unpack()).toList(),
-      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
+      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 8),
       redirect: redirect);
 
   static int pack(fb.Builder fbBuilder, TransactionBytesT? object) {
@@ -5122,17 +5124,20 @@ class TransactionBytes {
 }
 
 class TransactionBytesT implements fb.Packable {
+  UnconfirmedTxT? tx;
   List<IdNoteT>? notes;
   List<int>? data;
   String? redirect;
 
   TransactionBytesT({
+      this.tx,
       this.notes,
       this.data,
       this.redirect});
 
   @override
   int pack(fb.Builder fbBuilder) {
+    final int? txOffset = tx?.pack(fbBuilder);
     int? notesOffset;
     if (notes != null) {
       for (var e in notes!) { e.pack(fbBuilder); }
@@ -5142,16 +5147,17 @@ class TransactionBytesT implements fb.Packable {
         : fbBuilder.writeListUint8(data!);
     final int? redirectOffset = redirect == null ? null
         : fbBuilder.writeString(redirect!);
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, notesOffset);
-    fbBuilder.addOffset(1, dataOffset);
-    fbBuilder.addOffset(2, redirectOffset);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, txOffset);
+    fbBuilder.addOffset(1, notesOffset);
+    fbBuilder.addOffset(2, dataOffset);
+    fbBuilder.addOffset(3, redirectOffset);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'TransactionBytesT{notes: ${notes}, data: ${data}, redirect: ${redirect}}';
+    return 'TransactionBytesT{tx: ${tx}, notes: ${notes}, data: ${data}, redirect: ${redirect}}';
   }
 }
 
@@ -5169,19 +5175,23 @@ class TransactionBytesBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(4);
   }
 
-  int addNotesOffset(int? offset) {
+  int addTxOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addDataOffset(int? offset) {
+  int addNotesOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addRedirectOffset(int? offset) {
+  int addDataOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addRedirectOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
 
@@ -5191,32 +5201,37 @@ class TransactionBytesBuilder {
 }
 
 class TransactionBytesObjectBuilder extends fb.ObjectBuilder {
+  final UnconfirmedTxObjectBuilder? _tx;
   final List<IdNoteObjectBuilder>? _notes;
   final List<int>? _data;
   final String? _redirect;
 
   TransactionBytesObjectBuilder({
+    UnconfirmedTxObjectBuilder? tx,
     List<IdNoteObjectBuilder>? notes,
     List<int>? data,
     String? redirect,
   })
-      : _notes = notes,
+      : _tx = tx,
+        _notes = notes,
         _data = data,
         _redirect = redirect;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
+    final int? txOffset = _tx?.getOrCreateOffset(fbBuilder);
     final int? notesOffset = _notes == null ? null
         : fbBuilder.writeListOfStructs(_notes!);
     final int? dataOffset = _data == null ? null
         : fbBuilder.writeListUint8(_data!);
     final int? redirectOffset = _redirect == null ? null
         : fbBuilder.writeString(_redirect!);
-    fbBuilder.startTable(3);
-    fbBuilder.addOffset(0, notesOffset);
-    fbBuilder.addOffset(1, dataOffset);
-    fbBuilder.addOffset(2, redirectOffset);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, txOffset);
+    fbBuilder.addOffset(1, notesOffset);
+    fbBuilder.addOffset(2, dataOffset);
+    fbBuilder.addOffset(3, redirectOffset);
     return fbBuilder.endTable();
   }
 
@@ -5243,16 +5258,18 @@ class UnconfirmedTx {
   int get account => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
   List<int>? get txid => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
   int get amount => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get expiration => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
 
   @override
   String toString() {
-    return 'UnconfirmedTx{account: ${account}, txid: ${txid}, amount: ${amount}}';
+    return 'UnconfirmedTx{account: ${account}, txid: ${txid}, amount: ${amount}, expiration: ${expiration}}';
   }
 
   UnconfirmedTxT unpack() => UnconfirmedTxT(
       account: account,
       txid: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
-      amount: amount);
+      amount: amount,
+      expiration: expiration);
 
   static int pack(fb.Builder fbBuilder, UnconfirmedTxT? object) {
     if (object == null) return 0;
@@ -5264,26 +5281,29 @@ class UnconfirmedTxT implements fb.Packable {
   int account;
   List<int>? txid;
   int amount;
+  int expiration;
 
   UnconfirmedTxT({
       this.account = 0,
       this.txid,
-      this.amount = 0});
+      this.amount = 0,
+      this.expiration = 0});
 
   @override
   int pack(fb.Builder fbBuilder) {
     final int? txidOffset = txid == null ? null
         : fbBuilder.writeListUint8(txid!);
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(4);
     fbBuilder.addUint32(0, account);
     fbBuilder.addOffset(1, txidOffset);
     fbBuilder.addInt64(2, amount);
+    fbBuilder.addUint32(3, expiration);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'UnconfirmedTxT{account: ${account}, txid: ${txid}, amount: ${amount}}';
+    return 'UnconfirmedTxT{account: ${account}, txid: ${txid}, amount: ${amount}, expiration: ${expiration}}';
   }
 }
 
@@ -5301,7 +5321,7 @@ class UnconfirmedTxBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(4);
   }
 
   int addAccount(int? account) {
@@ -5316,6 +5336,10 @@ class UnconfirmedTxBuilder {
     fbBuilder.addInt64(2, amount);
     return fbBuilder.offset;
   }
+  int addExpiration(int? expiration) {
+    fbBuilder.addUint32(3, expiration);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -5326,25 +5350,399 @@ class UnconfirmedTxObjectBuilder extends fb.ObjectBuilder {
   final int? _account;
   final List<int>? _txid;
   final int? _amount;
+  final int? _expiration;
 
   UnconfirmedTxObjectBuilder({
     int? account,
     List<int>? txid,
     int? amount,
+    int? expiration,
   })
       : _account = account,
         _txid = txid,
-        _amount = amount;
+        _amount = amount,
+        _expiration = expiration;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? txidOffset = _txid == null ? null
         : fbBuilder.writeListUint8(_txid!);
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(4);
     fbBuilder.addUint32(0, _account);
     fbBuilder.addOffset(1, txidOffset);
     fbBuilder.addInt64(2, _amount);
+    fbBuilder.addUint32(3, _expiration);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class Swap {
+  Swap._(this._bc, this._bcOffset);
+  factory Swap(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Swap> reader = _SwapReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get provider => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get providerId => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  int get timestamp => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  String? get fromCurrency => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get fromAmount => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get fromAddress => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get fromImage => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get toCurrency => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get toAmount => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get toAddress => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get toImage => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+
+  @override
+  String toString() {
+    return 'Swap{provider: ${provider}, providerId: ${providerId}, timestamp: ${timestamp}, fromCurrency: ${fromCurrency}, fromAmount: ${fromAmount}, fromAddress: ${fromAddress}, fromImage: ${fromImage}, toCurrency: ${toCurrency}, toAmount: ${toAmount}, toAddress: ${toAddress}, toImage: ${toImage}}';
+  }
+
+  SwapT unpack() => SwapT(
+      provider: provider,
+      providerId: providerId,
+      timestamp: timestamp,
+      fromCurrency: fromCurrency,
+      fromAmount: fromAmount,
+      fromAddress: fromAddress,
+      fromImage: fromImage,
+      toCurrency: toCurrency,
+      toAmount: toAmount,
+      toAddress: toAddress,
+      toImage: toImage);
+
+  static int pack(fb.Builder fbBuilder, SwapT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class SwapT implements fb.Packable {
+  String? provider;
+  String? providerId;
+  int timestamp;
+  String? fromCurrency;
+  String? fromAmount;
+  String? fromAddress;
+  String? fromImage;
+  String? toCurrency;
+  String? toAmount;
+  String? toAddress;
+  String? toImage;
+
+  SwapT({
+      this.provider,
+      this.providerId,
+      this.timestamp = 0,
+      this.fromCurrency,
+      this.fromAmount,
+      this.fromAddress,
+      this.fromImage,
+      this.toCurrency,
+      this.toAmount,
+      this.toAddress,
+      this.toImage});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    final int? providerOffset = provider == null ? null
+        : fbBuilder.writeString(provider!);
+    final int? providerIdOffset = providerId == null ? null
+        : fbBuilder.writeString(providerId!);
+    final int? fromCurrencyOffset = fromCurrency == null ? null
+        : fbBuilder.writeString(fromCurrency!);
+    final int? fromAmountOffset = fromAmount == null ? null
+        : fbBuilder.writeString(fromAmount!);
+    final int? fromAddressOffset = fromAddress == null ? null
+        : fbBuilder.writeString(fromAddress!);
+    final int? fromImageOffset = fromImage == null ? null
+        : fbBuilder.writeString(fromImage!);
+    final int? toCurrencyOffset = toCurrency == null ? null
+        : fbBuilder.writeString(toCurrency!);
+    final int? toAmountOffset = toAmount == null ? null
+        : fbBuilder.writeString(toAmount!);
+    final int? toAddressOffset = toAddress == null ? null
+        : fbBuilder.writeString(toAddress!);
+    final int? toImageOffset = toImage == null ? null
+        : fbBuilder.writeString(toImage!);
+    fbBuilder.startTable(11);
+    fbBuilder.addOffset(0, providerOffset);
+    fbBuilder.addOffset(1, providerIdOffset);
+    fbBuilder.addUint32(2, timestamp);
+    fbBuilder.addOffset(3, fromCurrencyOffset);
+    fbBuilder.addOffset(4, fromAmountOffset);
+    fbBuilder.addOffset(5, fromAddressOffset);
+    fbBuilder.addOffset(6, fromImageOffset);
+    fbBuilder.addOffset(7, toCurrencyOffset);
+    fbBuilder.addOffset(8, toAmountOffset);
+    fbBuilder.addOffset(9, toAddressOffset);
+    fbBuilder.addOffset(10, toImageOffset);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'SwapT{provider: ${provider}, providerId: ${providerId}, timestamp: ${timestamp}, fromCurrency: ${fromCurrency}, fromAmount: ${fromAmount}, fromAddress: ${fromAddress}, fromImage: ${fromImage}, toCurrency: ${toCurrency}, toAmount: ${toAmount}, toAddress: ${toAddress}, toImage: ${toImage}}';
+  }
+}
+
+class _SwapReader extends fb.TableReader<Swap> {
+  const _SwapReader();
+
+  @override
+  Swap createObject(fb.BufferContext bc, int offset) => 
+    Swap._(bc, offset);
+}
+
+class SwapBuilder {
+  SwapBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addProviderOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addTimestamp(int? timestamp) {
+    fbBuilder.addUint32(2, timestamp);
+    return fbBuilder.offset;
+  }
+  int addFromCurrencyOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addFromAmountOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addFromAddressOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addFromImageOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addToCurrencyOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addToAmountOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addToAddressOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addToImageOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SwapObjectBuilder extends fb.ObjectBuilder {
+  final String? _provider;
+  final String? _providerId;
+  final int? _timestamp;
+  final String? _fromCurrency;
+  final String? _fromAmount;
+  final String? _fromAddress;
+  final String? _fromImage;
+  final String? _toCurrency;
+  final String? _toAmount;
+  final String? _toAddress;
+  final String? _toImage;
+
+  SwapObjectBuilder({
+    String? provider,
+    String? providerId,
+    int? timestamp,
+    String? fromCurrency,
+    String? fromAmount,
+    String? fromAddress,
+    String? fromImage,
+    String? toCurrency,
+    String? toAmount,
+    String? toAddress,
+    String? toImage,
+  })
+      : _provider = provider,
+        _providerId = providerId,
+        _timestamp = timestamp,
+        _fromCurrency = fromCurrency,
+        _fromAmount = fromAmount,
+        _fromAddress = fromAddress,
+        _fromImage = fromImage,
+        _toCurrency = toCurrency,
+        _toAmount = toAmount,
+        _toAddress = toAddress,
+        _toImage = toImage;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? providerOffset = _provider == null ? null
+        : fbBuilder.writeString(_provider!);
+    final int? providerIdOffset = _providerId == null ? null
+        : fbBuilder.writeString(_providerId!);
+    final int? fromCurrencyOffset = _fromCurrency == null ? null
+        : fbBuilder.writeString(_fromCurrency!);
+    final int? fromAmountOffset = _fromAmount == null ? null
+        : fbBuilder.writeString(_fromAmount!);
+    final int? fromAddressOffset = _fromAddress == null ? null
+        : fbBuilder.writeString(_fromAddress!);
+    final int? fromImageOffset = _fromImage == null ? null
+        : fbBuilder.writeString(_fromImage!);
+    final int? toCurrencyOffset = _toCurrency == null ? null
+        : fbBuilder.writeString(_toCurrency!);
+    final int? toAmountOffset = _toAmount == null ? null
+        : fbBuilder.writeString(_toAmount!);
+    final int? toAddressOffset = _toAddress == null ? null
+        : fbBuilder.writeString(_toAddress!);
+    final int? toImageOffset = _toImage == null ? null
+        : fbBuilder.writeString(_toImage!);
+    fbBuilder.startTable(11);
+    fbBuilder.addOffset(0, providerOffset);
+    fbBuilder.addOffset(1, providerIdOffset);
+    fbBuilder.addUint32(2, _timestamp);
+    fbBuilder.addOffset(3, fromCurrencyOffset);
+    fbBuilder.addOffset(4, fromAmountOffset);
+    fbBuilder.addOffset(5, fromAddressOffset);
+    fbBuilder.addOffset(6, fromImageOffset);
+    fbBuilder.addOffset(7, toCurrencyOffset);
+    fbBuilder.addOffset(8, toAmountOffset);
+    fbBuilder.addOffset(9, toAddressOffset);
+    fbBuilder.addOffset(10, toImageOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SwapList {
+  SwapList._(this._bc, this._bcOffset);
+  factory SwapList(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SwapList> reader = _SwapListReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<Swap>? get items => const fb.ListReader<Swap>(Swap.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'SwapList{items: ${items}}';
+  }
+
+  SwapListT unpack() => SwapListT(
+      items: items?.map((e) => e.unpack()).toList());
+
+  static int pack(fb.Builder fbBuilder, SwapListT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class SwapListT implements fb.Packable {
+  List<SwapT>? items;
+
+  SwapListT({
+      this.items});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    final int? itemsOffset = items == null ? null
+        : fbBuilder.writeList(items!.map((b) => b.pack(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, itemsOffset);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'SwapListT{items: ${items}}';
+  }
+}
+
+class _SwapListReader extends fb.TableReader<SwapList> {
+  const _SwapListReader();
+
+  @override
+  SwapList createObject(fb.BufferContext bc, int offset) => 
+    SwapList._(bc, offset);
+}
+
+class SwapListBuilder {
+  SwapListBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addItemsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SwapListObjectBuilder extends fb.ObjectBuilder {
+  final List<SwapObjectBuilder>? _items;
+
+  SwapListObjectBuilder({
+    List<SwapObjectBuilder>? items,
+  })
+      : _items = items;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? itemsOffset = _items == null ? null
+        : fbBuilder.writeList(_items!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, itemsOffset);
     return fbBuilder.endTable();
   }
 

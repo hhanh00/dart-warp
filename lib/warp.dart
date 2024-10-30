@@ -449,6 +449,13 @@ class Warp {
     unwrapResultU8(warpLib.c_mempool_set_account(coin, account));
   }
 
+  List<fb.UnconfirmedTxT> listUnconfirmedTxs(int coin, int account) {
+    final bc = toBC(warpLib.c_list_unconfirmed_txs(coin, account));
+    final reader = ListReader<fb.UnconfirmedTx>(fb.UnconfirmedTx.reader);
+    final list = reader.read(bc, 0);
+    return list.map((e) => e.unpack()).toList();
+  }
+
   int getUnconfirmedBalance(int coin, int account) {
     return unwrapResultI64(warpLib.c_get_unconfirmed_balance(coin, account));
   }

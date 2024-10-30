@@ -5101,20 +5101,18 @@ class TransactionBytes {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  UnconfirmedTx? get tx => UnconfirmedTx.reader.vTableGetNullable(_bc, _bcOffset, 4);
-  List<IdNote>? get notes => const fb.ListReader<IdNote>(IdNote.reader).vTableGetNullable(_bc, _bcOffset, 6);
-  List<int>? get data => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get redirect => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  List<IdNote>? get notes => const fb.ListReader<IdNote>(IdNote.reader).vTableGetNullable(_bc, _bcOffset, 4);
+  List<int>? get data => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get redirect => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
 
   @override
   String toString() {
-    return 'TransactionBytes{tx: ${tx}, notes: ${notes}, data: ${data}, redirect: ${redirect}}';
+    return 'TransactionBytes{notes: ${notes}, data: ${data}, redirect: ${redirect}}';
   }
 
   TransactionBytesT unpack() => TransactionBytesT(
-      tx: tx?.unpack(),
       notes: notes?.map((e) => e.unpack()).toList(),
-      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 8),
+      data: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
       redirect: redirect);
 
   static int pack(fb.Builder fbBuilder, TransactionBytesT? object) {
@@ -5124,20 +5122,17 @@ class TransactionBytes {
 }
 
 class TransactionBytesT implements fb.Packable {
-  UnconfirmedTxT? tx;
   List<IdNoteT>? notes;
   List<int>? data;
   String? redirect;
 
   TransactionBytesT({
-      this.tx,
       this.notes,
       this.data,
       this.redirect});
 
   @override
   int pack(fb.Builder fbBuilder) {
-    final int? txOffset = tx?.pack(fbBuilder);
     int? notesOffset;
     if (notes != null) {
       for (var e in notes!) { e.pack(fbBuilder); }
@@ -5147,17 +5142,16 @@ class TransactionBytesT implements fb.Packable {
         : fbBuilder.writeListUint8(data!);
     final int? redirectOffset = redirect == null ? null
         : fbBuilder.writeString(redirect!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, txOffset);
-    fbBuilder.addOffset(1, notesOffset);
-    fbBuilder.addOffset(2, dataOffset);
-    fbBuilder.addOffset(3, redirectOffset);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, notesOffset);
+    fbBuilder.addOffset(1, dataOffset);
+    fbBuilder.addOffset(2, redirectOffset);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'TransactionBytesT{tx: ${tx}, notes: ${notes}, data: ${data}, redirect: ${redirect}}';
+    return 'TransactionBytesT{notes: ${notes}, data: ${data}, redirect: ${redirect}}';
   }
 }
 
@@ -5175,23 +5169,19 @@ class TransactionBytesBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(3);
   }
 
-  int addTxOffset(int? offset) {
+  int addNotesOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addNotesOffset(int? offset) {
+  int addDataOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addDataOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
   int addRedirectOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
 
@@ -5201,37 +5191,32 @@ class TransactionBytesBuilder {
 }
 
 class TransactionBytesObjectBuilder extends fb.ObjectBuilder {
-  final UnconfirmedTxObjectBuilder? _tx;
   final List<IdNoteObjectBuilder>? _notes;
   final List<int>? _data;
   final String? _redirect;
 
   TransactionBytesObjectBuilder({
-    UnconfirmedTxObjectBuilder? tx,
     List<IdNoteObjectBuilder>? notes,
     List<int>? data,
     String? redirect,
   })
-      : _tx = tx,
-        _notes = notes,
+      : _notes = notes,
         _data = data,
         _redirect = redirect;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? txOffset = _tx?.getOrCreateOffset(fbBuilder);
     final int? notesOffset = _notes == null ? null
         : fbBuilder.writeListOfStructs(_notes!);
     final int? dataOffset = _data == null ? null
         : fbBuilder.writeListUint8(_data!);
     final int? redirectOffset = _redirect == null ? null
         : fbBuilder.writeString(_redirect!);
-    fbBuilder.startTable(4);
-    fbBuilder.addOffset(0, txOffset);
-    fbBuilder.addOffset(1, notesOffset);
-    fbBuilder.addOffset(2, dataOffset);
-    fbBuilder.addOffset(3, redirectOffset);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, notesOffset);
+    fbBuilder.addOffset(1, dataOffset);
+    fbBuilder.addOffset(2, redirectOffset);
     return fbBuilder.endTable();
   }
 
@@ -5257,19 +5242,17 @@ class UnconfirmedTx {
 
   int get account => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
   List<int>? get txid => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 6);
-  int get amount => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get expiration => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get value => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 8, 0);
 
   @override
   String toString() {
-    return 'UnconfirmedTx{account: ${account}, txid: ${txid}, amount: ${amount}, expiration: ${expiration}}';
+    return 'UnconfirmedTx{account: ${account}, txid: ${txid}, value: ${value}}';
   }
 
   UnconfirmedTxT unpack() => UnconfirmedTxT(
       account: account,
       txid: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 6),
-      amount: amount,
-      expiration: expiration);
+      value: value);
 
   static int pack(fb.Builder fbBuilder, UnconfirmedTxT? object) {
     if (object == null) return 0;
@@ -5280,30 +5263,27 @@ class UnconfirmedTx {
 class UnconfirmedTxT implements fb.Packable {
   int account;
   List<int>? txid;
-  int amount;
-  int expiration;
+  int value;
 
   UnconfirmedTxT({
       this.account = 0,
       this.txid,
-      this.amount = 0,
-      this.expiration = 0});
+      this.value = 0});
 
   @override
   int pack(fb.Builder fbBuilder) {
     final int? txidOffset = txid == null ? null
         : fbBuilder.writeListUint8(txid!);
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(3);
     fbBuilder.addUint32(0, account);
     fbBuilder.addOffset(1, txidOffset);
-    fbBuilder.addInt64(2, amount);
-    fbBuilder.addUint32(3, expiration);
+    fbBuilder.addInt64(2, value);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'UnconfirmedTxT{account: ${account}, txid: ${txid}, amount: ${amount}, expiration: ${expiration}}';
+    return 'UnconfirmedTxT{account: ${account}, txid: ${txid}, value: ${value}}';
   }
 }
 
@@ -5321,7 +5301,7 @@ class UnconfirmedTxBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(3);
   }
 
   int addAccount(int? account) {
@@ -5332,12 +5312,8 @@ class UnconfirmedTxBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addAmount(int? amount) {
-    fbBuilder.addInt64(2, amount);
-    return fbBuilder.offset;
-  }
-  int addExpiration(int? expiration) {
-    fbBuilder.addUint32(3, expiration);
+  int addValue(int? value) {
+    fbBuilder.addInt64(2, value);
     return fbBuilder.offset;
   }
 
@@ -5349,30 +5325,26 @@ class UnconfirmedTxBuilder {
 class UnconfirmedTxObjectBuilder extends fb.ObjectBuilder {
   final int? _account;
   final List<int>? _txid;
-  final int? _amount;
-  final int? _expiration;
+  final int? _value;
 
   UnconfirmedTxObjectBuilder({
     int? account,
     List<int>? txid,
-    int? amount,
-    int? expiration,
+    int? value,
   })
       : _account = account,
         _txid = txid,
-        _amount = amount,
-        _expiration = expiration;
+        _value = value;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? txidOffset = _txid == null ? null
         : fbBuilder.writeListUint8(_txid!);
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(3);
     fbBuilder.addUint32(0, _account);
     fbBuilder.addOffset(1, txidOffset);
-    fbBuilder.addInt64(2, _amount);
-    fbBuilder.addUint32(3, _expiration);
+    fbBuilder.addInt64(2, _value);
     return fbBuilder.endTable();
   }
 

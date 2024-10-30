@@ -579,6 +579,22 @@ class NativeLibrary {
   late final _c_on_contacts_saved =
       _c_on_contacts_savedPtr.asFunction<CResult_u8 Function(int, int)>();
 
+  CResult______u8 c_list_unconfirmed_txs(
+    int coin,
+    int account,
+  ) {
+    return _c_list_unconfirmed_txs(
+      coin,
+      account,
+    );
+  }
+
+  late final _c_list_unconfirmed_txsPtr = _lookup<
+          ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      'c_list_unconfirmed_txs');
+  late final _c_list_unconfirmed_txs = _c_list_unconfirmed_txsPtr
+      .asFunction<CResult______u8 Function(int, int)>();
+
   CResult_i64 c_get_unconfirmed_balance(
     int coin,
     int account,
@@ -719,22 +735,6 @@ class NativeLibrary {
   late final _c_reverse_note_exclusion =
       _c_reverse_note_exclusionPtr.asFunction<CResult_u8 Function(int, int)>();
 
-  CResult______u8 c_get_tx_details(
-    int coin,
-    CParam txid,
-  ) {
-    return _c_get_tx_details(
-      coin,
-      txid,
-    );
-  }
-
-  late final _c_get_tx_detailsPtr =
-      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, CParam)>>(
-          'c_get_tx_details');
-  late final _c_get_tx_details =
-      _c_get_tx_detailsPtr.asFunction<CResult______u8 Function(int, CParam)>();
-
   CResult_u8 c_store_swap(
     int coin,
     int account,
@@ -784,6 +784,22 @@ class NativeLibrary {
           'c_clear_swap_history');
   late final _c_clear_swap_history =
       _c_clear_swap_historyPtr.asFunction<CResult_u8 Function(int, int)>();
+
+  CResult______u8 c_get_tx_details(
+    int coin,
+    CParam txid,
+  ) {
+    return _c_get_tx_details(
+      coin,
+      txid,
+    );
+  }
+
+  late final _c_get_tx_detailsPtr =
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, CParam)>>(
+          'c_get_tx_details');
+  late final _c_get_tx_details =
+      _c_get_tx_detailsPtr.asFunction<CResult______u8 Function(int, CParam)>();
 
   CResult_____c_char c_generate_random_mnemonic_phrase_os_rng() {
     return _c_generate_random_mnemonic_phrase_os_rng();

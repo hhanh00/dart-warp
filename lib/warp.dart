@@ -473,14 +473,12 @@ class Warp {
     return fb.Uareceivers.reader.read(bc, 0).unpack();
   }
 
-  Future<List<fb.TransactionInfoT>> listTransactions(
-      int coin, int account, int height) async {
-    return Isolate.run(() {
-      final bc = toBC(warpLib.c_get_txs(coin, account, height));
-      final reader = ListReader<fb.TransactionInfo>(fb.TransactionInfo.reader);
-      final list = reader.read(bc, 0);
-      return list.map((e) => e.unpack()).toList();
-    });
+  List<fb.TransactionInfoT> listTransactions(
+      int coin, int account, int height) {
+    final bc = toBC(warpLib.c_get_txs(coin, account, height));
+    final reader = ListReader<fb.TransactionInfo>(fb.TransactionInfo.reader);
+    final list = reader.read(bc, 0);
+    return list.map((e) => e.unpack()).toList();
   }
 
   fb.TransactionInfoExtendedT getTransactionDetails(int coin, Uint8List txid) {
@@ -510,14 +508,12 @@ class Warp {
     return Isolate.run(() => warpLib.c_retrieve_tx_details(coin));
   }
 
-  Future<List<fb.SpendingT>> getSpendings(
-      int coin, int account, int timestamp) async {
-    return Isolate.run(() {
-      final bc = toBC(warpLib.c_get_spendings(coin, account, timestamp));
-      final reader = ListReader<fb.Spending>(fb.Spending.reader);
-      final list = reader.read(bc, 0);
-      return list.map((e) => e.unpack()).toList();
-    });
+  List<fb.SpendingT> getSpendings(
+      int coin, int account, int timestamp) {
+    final bc = toBC(warpLib.c_get_spendings(coin, account, timestamp));
+    final reader = ListReader<fb.Spending>(fb.Spending.reader);
+    final list = reader.read(bc, 0);
+    return list.map((e) => e.unpack()).toList();
   }
 
   Future<fb.Zip32KeysT> deriveZip32Keys(int coin, int account, int aindex,

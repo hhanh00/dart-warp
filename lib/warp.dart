@@ -254,6 +254,10 @@ class Warp {
     });
   }
 
+  void purgeCheckpoints(int coin, int minHeight) {
+    unwrapResultU8(warpLib.c_purge_checkpoints(coin, minHeight));
+  }
+
   Future<void> rewindTo(int coin, int height) async {
     return Isolate.run(() => unwrapResultU8(warpLib.c_rewind(coin, height)));
   }

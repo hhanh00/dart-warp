@@ -482,6 +482,22 @@ class NativeLibrary {
   late final _c_list_checkpoints =
       _c_list_checkpointsPtr.asFunction<CResult______u8 Function(int)>();
 
+  CResult_u8 c_purge_checkpoints(
+    int coin,
+    int min_height,
+  ) {
+    return _c_purge_checkpoints(
+      coin,
+      min_height,
+    );
+  }
+
+  late final _c_purge_checkpointsPtr =
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+          'c_purge_checkpoints');
+  late final _c_purge_checkpoints =
+      _c_purge_checkpointsPtr.asFunction<CResult_u8 Function(int, int)>();
+
   CResult_u32 c_store_contact(
     int coin,
     CParam contact,

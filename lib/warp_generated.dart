@@ -224,6 +224,25 @@ class NativeLibrary {
   late final _c_get_spendings =
       _c_get_spendingsPtr.asFunction<CResult______u8 Function(int, int, int)>();
 
+  CResult______u8 c_get_spendable(
+    int coin,
+    int account,
+    int height,
+  ) {
+    return _c_get_spendable(
+      coin,
+      account,
+      height,
+    );
+  }
+
+  late final _c_get_spendablePtr = _lookup<
+      ffi.NativeFunction<
+          CResult______u8 Function(
+              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_get_spendable');
+  late final _c_get_spendable =
+      _c_get_spendablePtr.asFunction<CResult______u8 Function(int, int, int)>();
+
   CResult_bool c_is_valid_key(
     int coin,
     ffi.Pointer<ffi.Char> key,

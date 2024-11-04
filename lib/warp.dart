@@ -460,6 +460,11 @@ class Warp {
     return unwrapResultI64(warpLib.c_get_unconfirmed_balance(coin, account));
   }
 
+  fb.SpendableT getSpendableBalance(int coin, int account, int height) {
+    final bc = toBC(warpLib.c_get_spendable(coin, account, height));
+    return fb.Spendable.reader.read(bc, 0).unpack();
+  }
+
   Future<fb.TransactionInfoExtendedT> fetchTxDetails(
       int coin, int account, int id) async {
     return Isolate.run(() {

@@ -5726,3 +5726,127 @@ class SwapListObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class Spendable {
+  Spendable._(this._bc, this._bcOffset);
+  factory Spendable(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Spendable> reader = _SpendableReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get total => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get unconfirmed => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get immature => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 8, 0);
+
+  @override
+  String toString() {
+    return 'Spendable{total: ${total}, unconfirmed: ${unconfirmed}, immature: ${immature}}';
+  }
+
+  SpendableT unpack() => SpendableT(
+      total: total,
+      unconfirmed: unconfirmed,
+      immature: immature);
+
+  static int pack(fb.Builder fbBuilder, SpendableT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class SpendableT implements fb.Packable {
+  int total;
+  int unconfirmed;
+  int immature;
+
+  SpendableT({
+      this.total = 0,
+      this.unconfirmed = 0,
+      this.immature = 0});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addUint64(0, total);
+    fbBuilder.addUint64(1, unconfirmed);
+    fbBuilder.addUint64(2, immature);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'SpendableT{total: ${total}, unconfirmed: ${unconfirmed}, immature: ${immature}}';
+  }
+}
+
+class _SpendableReader extends fb.TableReader<Spendable> {
+  const _SpendableReader();
+
+  @override
+  Spendable createObject(fb.BufferContext bc, int offset) => 
+    Spendable._(bc, offset);
+}
+
+class SpendableBuilder {
+  SpendableBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addTotal(int? total) {
+    fbBuilder.addUint64(0, total);
+    return fbBuilder.offset;
+  }
+  int addUnconfirmed(int? unconfirmed) {
+    fbBuilder.addUint64(1, unconfirmed);
+    return fbBuilder.offset;
+  }
+  int addImmature(int? immature) {
+    fbBuilder.addUint64(2, immature);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SpendableObjectBuilder extends fb.ObjectBuilder {
+  final int? _total;
+  final int? _unconfirmed;
+  final int? _immature;
+
+  SpendableObjectBuilder({
+    int? total,
+    int? unconfirmed,
+    int? immature,
+  })
+      : _total = total,
+        _unconfirmed = unconfirmed,
+        _immature = immature;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addUint64(0, _total);
+    fbBuilder.addUint64(1, _unconfirmed);
+    fbBuilder.addUint64(2, _immature);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}

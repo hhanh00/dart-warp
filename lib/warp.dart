@@ -490,8 +490,8 @@ class Warp {
     return list.map((e) => e.unpack()).toList();
   }
 
-  fb.TransactionInfoExtendedT getTransactionDetails(int coin, Uint8List txid) {
-    final bc = toBC(warpLib.c_get_tx_details(coin, toParamBytes(txid).ref));
+  fb.TransactionInfoExtendedT getTransactionDetails(int coin, int account, Uint8List txid) {
+    final bc = toBC(warpLib.c_get_tx_details(coin, account, toParamBytes(txid).ref));
     return fb.TransactionInfoExtended.reader.read(bc, 0).unpack();
   }
 

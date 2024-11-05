@@ -822,19 +822,22 @@ class NativeLibrary {
 
   CResult______u8 c_get_tx_details(
     int coin,
+    int account,
     CParam txid,
   ) {
     return _c_get_tx_details(
       coin,
+      account,
       txid,
     );
   }
 
-  late final _c_get_tx_detailsPtr =
-      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, CParam)>>(
-          'c_get_tx_details');
-  late final _c_get_tx_details =
-      _c_get_tx_detailsPtr.asFunction<CResult______u8 Function(int, CParam)>();
+  late final _c_get_tx_detailsPtr = _lookup<
+      ffi.NativeFunction<
+          CResult______u8 Function(
+              ffi.Uint8, ffi.Uint32, CParam)>>('c_get_tx_details');
+  late final _c_get_tx_details = _c_get_tx_detailsPtr
+      .asFunction<CResult______u8 Function(int, int, CParam)>();
 
   CResult_____c_char c_generate_random_mnemonic_phrase_os_rng() {
     return _c_generate_random_mnemonic_phrase_os_rng();

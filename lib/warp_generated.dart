@@ -438,7 +438,7 @@ class NativeLibrary {
   late final _c_downgrade_account = _c_downgrade_accountPtr
       .asFunction<CResult_u8 Function(int, int, CParam)>();
 
-  CResult_u32 c_get_sync_height(
+  CResult______u8 c_get_sync_height(
     int coin,
   ) {
     return _c_get_sync_height(
@@ -447,10 +447,10 @@ class NativeLibrary {
   }
 
   late final _c_get_sync_heightPtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8)>>(
           'c_get_sync_height');
   late final _c_get_sync_height =
-      _c_get_sync_heightPtr.asFunction<CResult_u32 Function(int)>();
+      _c_get_sync_heightPtr.asFunction<CResult______u8 Function(int)>();
 
   CResult_u8 c_rewind(
     int coin,

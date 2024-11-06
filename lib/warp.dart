@@ -86,8 +86,9 @@ class Warp {
         () => unwrapResultU8(warpLib.c_reset_chain(coin, height)));
   }
 
-  int getSyncHeight(int coin) {
-    return unwrapResultU32(warpLib.c_get_sync_height(coin));
+  fb.CheckpointT getSyncHeight(int coin) {
+    final bc = toBC(warpLib.c_get_sync_height(coin));
+    return fb.Checkpoint.reader.read(bc, 0).unpack();
   }
 
   Future<int> getBCHeight(int coin) async {

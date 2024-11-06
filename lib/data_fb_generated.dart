@@ -3533,6 +3533,117 @@ class PacketsObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class Height {
+  Height._(this._bc, this._bcOffset);
+  factory Height(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Height> reader = _HeightReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get height => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get timestamp => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+
+  @override
+  String toString() {
+    return 'Height{height: ${height}, timestamp: ${timestamp}}';
+  }
+
+  HeightT unpack() => HeightT(
+      height: height,
+      timestamp: timestamp);
+
+  static int pack(fb.Builder fbBuilder, HeightT? object) {
+    if (object == null) return 0;
+    return object.pack(fbBuilder);
+  }
+}
+
+class HeightT implements fb.Packable {
+  int height;
+  int timestamp;
+
+  HeightT({
+      this.height = 0,
+      this.timestamp = 0});
+
+  @override
+  int pack(fb.Builder fbBuilder) {
+    fbBuilder.startTable(2);
+    fbBuilder.addUint32(0, height);
+    fbBuilder.addUint32(1, timestamp);
+    return fbBuilder.endTable();
+  }
+
+  @override
+  String toString() {
+    return 'HeightT{height: ${height}, timestamp: ${timestamp}}';
+  }
+}
+
+class _HeightReader extends fb.TableReader<Height> {
+  const _HeightReader();
+
+  @override
+  Height createObject(fb.BufferContext bc, int offset) => 
+    Height._(bc, offset);
+}
+
+class HeightBuilder {
+  HeightBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addHeight(int? height) {
+    fbBuilder.addUint32(0, height);
+    return fbBuilder.offset;
+  }
+  int addTimestamp(int? timestamp) {
+    fbBuilder.addUint32(1, timestamp);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class HeightObjectBuilder extends fb.ObjectBuilder {
+  final int? _height;
+  final int? _timestamp;
+
+  HeightObjectBuilder({
+    int? height,
+    int? timestamp,
+  })
+      : _height = height,
+        _timestamp = timestamp;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(2);
+    fbBuilder.addUint32(0, _height);
+    fbBuilder.addUint32(1, _timestamp);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 class Checkpoint {
   Checkpoint._(this._bc, this._bcOffset);
   factory Checkpoint(List<int> bytes) {

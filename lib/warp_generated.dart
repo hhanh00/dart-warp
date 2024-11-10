@@ -331,6 +331,25 @@ class NativeLibrary {
   late final _c_reorder_account =
       _c_reorder_accountPtr.asFunction<CResult_u8 Function(int, int, int)>();
 
+  CResult_u8 c_edit_account_icon(
+    int coin,
+    int account,
+    CParam image,
+  ) {
+    return _c_edit_account_icon(
+      coin,
+      account,
+      image,
+    );
+  }
+
+  late final _c_edit_account_iconPtr = _lookup<
+          ffi
+          .NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, CParam)>>(
+      'c_edit_account_icon');
+  late final _c_edit_account_icon = _c_edit_account_iconPtr
+      .asFunction<CResult_u8 Function(int, int, CParam)>();
+
   CResult_u32 c_new_transparent_address(
     int coin,
     int account,

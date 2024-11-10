@@ -2286,12 +2286,13 @@ class AccountName {
   int get id => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
   String? get name => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   int get birth => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get balance => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  bool get hidden => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  List<int>? get icon => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
+  int get balance => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  bool get hidden => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
 
   @override
   String toString() {
-    return 'AccountName{coin: ${coin}, id: ${id}, name: ${name}, birth: ${birth}, balance: ${balance}, hidden: ${hidden}}';
+    return 'AccountName{coin: ${coin}, id: ${id}, name: ${name}, birth: ${birth}, icon: ${icon}, balance: ${balance}, hidden: ${hidden}}';
   }
 
   AccountNameT unpack() => AccountNameT(
@@ -2299,6 +2300,7 @@ class AccountName {
       id: id,
       name: name,
       birth: birth,
+      icon: const fb.Uint8ListReader(lazy: false).vTableGetNullable(_bc, _bcOffset, 12),
       balance: balance,
       hidden: hidden);
 
@@ -2313,6 +2315,7 @@ class AccountNameT implements fb.Packable {
   int id;
   String? name;
   int birth;
+  List<int>? icon;
   int balance;
   bool hidden;
 
@@ -2321,6 +2324,7 @@ class AccountNameT implements fb.Packable {
       this.id = 0,
       this.name,
       this.birth = 0,
+      this.icon,
       this.balance = 0,
       this.hidden = false});
 
@@ -2328,19 +2332,22 @@ class AccountNameT implements fb.Packable {
   int pack(fb.Builder fbBuilder) {
     final int? nameOffset = name == null ? null
         : fbBuilder.writeString(name!);
-    fbBuilder.startTable(6);
+    final int? iconOffset = icon == null ? null
+        : fbBuilder.writeListUint8(icon!);
+    fbBuilder.startTable(7);
     fbBuilder.addUint8(0, coin);
     fbBuilder.addUint32(1, id);
     fbBuilder.addOffset(2, nameOffset);
     fbBuilder.addUint32(3, birth);
-    fbBuilder.addUint64(4, balance);
-    fbBuilder.addBool(5, hidden);
+    fbBuilder.addOffset(4, iconOffset);
+    fbBuilder.addUint64(5, balance);
+    fbBuilder.addBool(6, hidden);
     return fbBuilder.endTable();
   }
 
   @override
   String toString() {
-    return 'AccountNameT{coin: ${coin}, id: ${id}, name: ${name}, birth: ${birth}, balance: ${balance}, hidden: ${hidden}}';
+    return 'AccountNameT{coin: ${coin}, id: ${id}, name: ${name}, birth: ${birth}, icon: ${icon}, balance: ${balance}, hidden: ${hidden}}';
   }
 }
 
@@ -2358,7 +2365,7 @@ class AccountNameBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(7);
   }
 
   int addCoin(int? coin) {
@@ -2377,12 +2384,16 @@ class AccountNameBuilder {
     fbBuilder.addUint32(3, birth);
     return fbBuilder.offset;
   }
+  int addIconOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
   int addBalance(int? balance) {
-    fbBuilder.addUint64(4, balance);
+    fbBuilder.addUint64(5, balance);
     return fbBuilder.offset;
   }
   int addHidden(bool? hidden) {
-    fbBuilder.addBool(5, hidden);
+    fbBuilder.addBool(6, hidden);
     return fbBuilder.offset;
   }
 
@@ -2396,6 +2407,7 @@ class AccountNameObjectBuilder extends fb.ObjectBuilder {
   final int? _id;
   final String? _name;
   final int? _birth;
+  final List<int>? _icon;
   final int? _balance;
   final bool? _hidden;
 
@@ -2404,6 +2416,7 @@ class AccountNameObjectBuilder extends fb.ObjectBuilder {
     int? id,
     String? name,
     int? birth,
+    List<int>? icon,
     int? balance,
     bool? hidden,
   })
@@ -2411,6 +2424,7 @@ class AccountNameObjectBuilder extends fb.ObjectBuilder {
         _id = id,
         _name = name,
         _birth = birth,
+        _icon = icon,
         _balance = balance,
         _hidden = hidden;
 
@@ -2419,13 +2433,16 @@ class AccountNameObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? nameOffset = _name == null ? null
         : fbBuilder.writeString(_name!);
-    fbBuilder.startTable(6);
+    final int? iconOffset = _icon == null ? null
+        : fbBuilder.writeListUint8(_icon!);
+    fbBuilder.startTable(7);
     fbBuilder.addUint8(0, _coin);
     fbBuilder.addUint32(1, _id);
     fbBuilder.addOffset(2, nameOffset);
     fbBuilder.addUint32(3, _birth);
-    fbBuilder.addUint64(4, _balance);
-    fbBuilder.addBool(5, _hidden);
+    fbBuilder.addOffset(4, iconOffset);
+    fbBuilder.addUint64(5, _balance);
+    fbBuilder.addBool(6, _hidden);
     return fbBuilder.endTable();
   }
 
@@ -3522,117 +3539,6 @@ class PacketsObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_packets!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     fbBuilder.startTable(1);
     fbBuilder.addOffset(0, packetsOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class Height {
-  Height._(this._bc, this._bcOffset);
-  factory Height(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<Height> reader = _HeightReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  int get height => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  int get timestamp => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-
-  @override
-  String toString() {
-    return 'Height{height: ${height}, timestamp: ${timestamp}}';
-  }
-
-  HeightT unpack() => HeightT(
-      height: height,
-      timestamp: timestamp);
-
-  static int pack(fb.Builder fbBuilder, HeightT? object) {
-    if (object == null) return 0;
-    return object.pack(fbBuilder);
-  }
-}
-
-class HeightT implements fb.Packable {
-  int height;
-  int timestamp;
-
-  HeightT({
-      this.height = 0,
-      this.timestamp = 0});
-
-  @override
-  int pack(fb.Builder fbBuilder) {
-    fbBuilder.startTable(2);
-    fbBuilder.addUint32(0, height);
-    fbBuilder.addUint32(1, timestamp);
-    return fbBuilder.endTable();
-  }
-
-  @override
-  String toString() {
-    return 'HeightT{height: ${height}, timestamp: ${timestamp}}';
-  }
-}
-
-class _HeightReader extends fb.TableReader<Height> {
-  const _HeightReader();
-
-  @override
-  Height createObject(fb.BufferContext bc, int offset) => 
-    Height._(bc, offset);
-}
-
-class HeightBuilder {
-  HeightBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(2);
-  }
-
-  int addHeight(int? height) {
-    fbBuilder.addUint32(0, height);
-    return fbBuilder.offset;
-  }
-  int addTimestamp(int? timestamp) {
-    fbBuilder.addUint32(1, timestamp);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class HeightObjectBuilder extends fb.ObjectBuilder {
-  final int? _height;
-  final int? _timestamp;
-
-  HeightObjectBuilder({
-    int? height,
-    int? timestamp,
-  })
-      : _height = height,
-        _timestamp = timestamp;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(2);
-    fbBuilder.addUint32(0, _height);
-    fbBuilder.addUint32(1, _timestamp);
     return fbBuilder.endTable();
   }
 

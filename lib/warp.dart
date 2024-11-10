@@ -61,14 +61,17 @@ class Warp {
     return unwrapResultBool(warpLib.c_is_valid_key(coin, toNative(key)));
   }
 
-  int createAccount(
-      int coin, String name, String key, int accIndex, int birth, bool transparentOnly,
-      isNew) {
+  int createAccount(int coin, String name, String key, int accIndex, int birth,
+      bool transparentOnly, isNew) {
     return unwrapResultU32(
-      warpLib.c_create_new_account(
-          coin, toNative(name), toNative(key), accIndex, birth,
-          transparentOnly ? 1 : 0, isNew ? 1 : 0),
+      warpLib.c_create_new_account(coin, toNative(name), toNative(key),
+          accIndex, birth, transparentOnly ? 1 : 0, isNew ? 1 : 0),
     );
+  }
+
+  void editAccountIcon(int coin, int account, Uint8List bytes) {
+    unwrapResultU8(
+        warpLib.c_edit_account_icon(coin, account, toParamBytes(bytes).ref));
   }
 
   List<fb.AccountNameT> listAccounts(int coin) {
@@ -135,8 +138,7 @@ class Warp {
         warpLib.c_get_account_property(coin, account, toNative(name)));
   }
 
-  void setAccountProperty(
-      int coin, int account, String name, Uint8List value) {
+  void setAccountProperty(int coin, int account, String name, Uint8List value) {
     unwrapResultU8(warpLib.c_set_account_property(
         coin, account, toNative(name), toParamBytes(value).ref));
   }
@@ -175,8 +177,7 @@ class Warp {
   }
 
   void changeAccountAddrIndex(int coin, int account, int addrIndex) {
-    unwrapResultU8(warpLib.c_change_account_dindex(
-        coin, account, addrIndex));
+    unwrapResultU8(warpLib.c_change_account_dindex(coin, account, addrIndex));
   }
 
   Future<List<fb.ContactCardT>> listContacts(int coin) async {
@@ -335,9 +336,10 @@ class Warp {
     return warpLib.c_schema_version();
   }
 
-  Future<void> createDb(int coin, String path, String password, String version) {
-    return Isolate.run(() => unwrapResultU8(
-        warpLib.c_create_db(toNative(path), toNative(password), toNative(version))));
+  Future<void> createDb(
+      int coin, String path, String password, String version) {
+    return Isolate.run(() => unwrapResultU8(warpLib.c_create_db(
+        toNative(path), toNative(password), toNative(version))));
   }
 
   bool checkDbPassword(String path, String password) {
@@ -397,8 +399,8 @@ class Warp {
   }
 
   Future<String> generateSeed() async {
-    return Isolate.run(() => unwrapResultString(
-        warpLib.c_generate_random_mnemonic_phrase_os_rng()));
+    return Isolate.run(() =>
+        unwrapResultString(warpLib.c_generate_random_mnemonic_phrase_os_rng()));
   }
 
   fb.BackupT getBackup(int coin, int account) {
@@ -435,8 +437,8 @@ class Warp {
   Future<void> scanTransparentAddresses(
       int coin, int account, int external, int gapLimit) async {
     return Isolate.run(() {
-      unwrapResultU8(
-          warpLib.c_scan_transparent_addresses(coin, account, external, gapLimit));
+      unwrapResultU8(warpLib.c_scan_transparent_addresses(
+          coin, account, external, gapLimit));
     });
   }
 
@@ -491,8 +493,10 @@ class Warp {
     return list.map((e) => e.unpack()).toList();
   }
 
-  fb.TransactionInfoExtendedT getTransactionDetails(int coin, int account, Uint8List txid) {
-    final bc = toBC(warpLib.c_get_tx_details(coin, account, toParamBytes(txid).ref));
+  fb.TransactionInfoExtendedT getTransactionDetails(
+      int coin, int account, Uint8List txid) {
+    final bc =
+        toBC(warpLib.c_get_tx_details(coin, account, toParamBytes(txid).ref));
     return fb.TransactionInfoExtended.reader.read(bc, 0).unpack();
   }
 
@@ -518,8 +522,7 @@ class Warp {
     return Isolate.run(() => warpLib.c_retrieve_tx_details(coin));
   }
 
-  List<fb.SpendingT> getSpendings(
-      int coin, int account, int timestamp) {
+  List<fb.SpendingT> getSpendings(int coin, int account, int timestamp) {
     final bc = toBC(warpLib.c_get_spendings(coin, account, timestamp));
     final reader = ListReader<fb.Spending>(fb.Spending.reader);
     final list = reader.read(bc, 0);

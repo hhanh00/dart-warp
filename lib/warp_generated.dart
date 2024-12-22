@@ -37,8 +37,8 @@ class NativeLibrary {
 
   late final _c_add_contactPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Uint32, ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>, bool)>>('c_add_contact');
+          CResult_u8 Function(ffi.Int, ffi.Int, ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>, ffi.Int)>>('c_add_contact');
   late final _c_add_contact = _c_add_contactPtr.asFunction<
       CResult_u8 Function(
           int, int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int)>();
@@ -57,8 +57,7 @@ class NativeLibrary {
 
   late final _c_get_txsPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_get_txs');
+          CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int)>>('c_get_txs');
   late final _c_get_txs =
       _c_get_txsPtr.asFunction<CResult______u8 Function(int, int, int)>();
 
@@ -73,9 +72,9 @@ class NativeLibrary {
   }
 
   late final _c_create_schemaPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_create_schema');
+          ffi
+          .NativeFunction<CResult_u8 Function(ffi.Int, ffi.Pointer<ffi.Char>)>>(
+      'c_create_schema');
   late final _c_create_schema = _c_create_schemaPtr
       .asFunction<CResult_u8 Function(int, ffi.Pointer<ffi.Char>)>();
 
@@ -88,7 +87,7 @@ class NativeLibrary {
   }
 
   late final _c_list_accountsPtr =
-      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8)>>(
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Int)>>(
           'c_list_accounts');
   late final _c_list_accounts =
       _c_list_accountsPtr.asFunction<CResult______u8 Function(int)>();
@@ -103,9 +102,9 @@ class NativeLibrary {
     );
   }
 
-  late final _c_list_account_transparent_addressesPtr = _lookup<
-          ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
-      'c_list_account_transparent_addresses');
+  late final _c_list_account_transparent_addressesPtr =
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int)>>(
+          'c_list_account_transparent_addresses');
   late final _c_list_account_transparent_addresses =
       _c_list_account_transparent_addressesPtr
           .asFunction<CResult______u8 Function(int, int)>();
@@ -123,9 +122,8 @@ class NativeLibrary {
   }
 
   late final _c_change_account_dindexPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_change_account_dindex');
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_change_account_dindex');
   late final _c_change_account_dindex = _c_change_account_dindexPtr
       .asFunction<CResult_u8 Function(int, int, int)>();
 
@@ -142,9 +140,9 @@ class NativeLibrary {
   }
 
   late final _c_get_balancePtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_get_balance');
+          ffi
+          .NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_get_balance');
   late final _c_get_balance =
       _c_get_balancePtr.asFunction<CResult______u8 Function(int, int, int)>();
 
@@ -158,9 +156,9 @@ class NativeLibrary {
     );
   }
 
-  late final _c_get_account_signing_capabilitiesPtr = _lookup<
-          ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
-      'c_get_account_signing_capabilities');
+  late final _c_get_account_signing_capabilitiesPtr =
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int)>>(
+          'c_get_account_signing_capabilities');
   late final _c_get_account_signing_capabilities =
       _c_get_account_signing_capabilitiesPtr
           .asFunction<CResult______u8 Function(int, int)>();
@@ -179,7 +177,7 @@ class NativeLibrary {
 
   late final _c_get_account_propertyPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Uint32,
+          CResult______u8 Function(ffi.Int, ffi.Int,
               ffi.Pointer<ffi.Char>)>>('c_get_account_property');
   late final _c_get_account_property = _c_get_account_propertyPtr
       .asFunction<CResult______u8 Function(int, int, ffi.Pointer<ffi.Char>)>();
@@ -200,7 +198,7 @@ class NativeLibrary {
 
   late final _c_set_account_propertyPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Uint32, ffi.Pointer<ffi.Char>,
+          CResult_u8 Function(ffi.Int, ffi.Int, ffi.Pointer<ffi.Char>,
               CParam)>>('c_set_account_property');
   late final _c_set_account_property = _c_set_account_propertyPtr.asFunction<
       CResult_u8 Function(int, int, ffi.Pointer<ffi.Char>, CParam)>();
@@ -218,9 +216,9 @@ class NativeLibrary {
   }
 
   late final _c_get_spendingsPtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_get_spendings');
+          ffi
+          .NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_get_spendings');
   late final _c_get_spendings =
       _c_get_spendingsPtr.asFunction<CResult______u8 Function(int, int, int)>();
 
@@ -237,9 +235,9 @@ class NativeLibrary {
   }
 
   late final _c_get_spendablePtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_get_spendable');
+          ffi
+          .NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_get_spendable');
   late final _c_get_spendable =
       _c_get_spendablePtr.asFunction<CResult______u8 Function(int, int, int)>();
 
@@ -256,7 +254,7 @@ class NativeLibrary {
   late final _c_is_valid_keyPtr = _lookup<
       ffi.NativeFunction<
           CResult_bool Function(
-              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_is_valid_key');
+              ffi.Int, ffi.Pointer<ffi.Char>)>>('c_is_valid_key');
   late final _c_is_valid_key = _c_is_valid_keyPtr
       .asFunction<CResult_bool Function(int, ffi.Pointer<ffi.Char>)>();
 
@@ -266,7 +264,7 @@ class NativeLibrary {
     ffi.Pointer<ffi.Char> key,
     int acc_index,
     int birth,
-    int transparent_only,
+    int pools,
     int is_new,
   ) {
     return _c_create_new_account(
@@ -275,7 +273,7 @@ class NativeLibrary {
       key,
       acc_index,
       birth,
-      transparent_only,
+      pools,
       is_new,
     );
   }
@@ -283,13 +281,13 @@ class NativeLibrary {
   late final _c_create_new_accountPtr = _lookup<
       ffi.NativeFunction<
           CResult_u32 Function(
-              ffi.Uint8,
+              ffi.Int,
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>,
-              ffi.Uint32,
-              ffi.Uint32,
-              bool,
-              bool)>>('c_create_new_account');
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int)>>('c_create_new_account');
   late final _c_create_new_account = _c_create_new_accountPtr.asFunction<
       CResult_u32 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
           int, int, int, int)>();
@@ -307,7 +305,7 @@ class NativeLibrary {
   }
 
   late final _c_hide_accountPtr = _lookup<
-          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, bool)>>(
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
       'c_hide_account');
   late final _c_hide_account =
       _c_hide_accountPtr.asFunction<CResult_u8 Function(int, int, int)>();
@@ -325,9 +323,8 @@ class NativeLibrary {
   }
 
   late final _c_reorder_accountPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_reorder_account');
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_reorder_account');
   late final _c_reorder_account =
       _c_reorder_accountPtr.asFunction<CResult_u8 Function(int, int, int)>();
 
@@ -344,8 +341,7 @@ class NativeLibrary {
   }
 
   late final _c_edit_account_iconPtr = _lookup<
-          ffi
-          .NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, CParam)>>(
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, CParam)>>(
       'c_edit_account_icon');
   late final _c_edit_account_icon = _c_edit_account_iconPtr
       .asFunction<CResult_u8 Function(int, int, CParam)>();
@@ -361,7 +357,7 @@ class NativeLibrary {
   }
 
   late final _c_new_transparent_addressPtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Int, ffi.Int)>>(
           'c_new_transparent_address');
   late final _c_new_transparent_address = _c_new_transparent_addressPtr
       .asFunction<CResult_u32 Function(int, int)>();
@@ -380,8 +376,8 @@ class NativeLibrary {
 
   late final _c_edit_account_namePtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Uint32,
-              ffi.Pointer<ffi.Char>)>>('c_edit_account_name');
+          CResult_u8 Function(
+              ffi.Int, ffi.Int, ffi.Pointer<ffi.Char>)>>('c_edit_account_name');
   late final _c_edit_account_name = _c_edit_account_namePtr
       .asFunction<CResult_u8 Function(int, int, ffi.Pointer<ffi.Char>)>();
 
@@ -398,9 +394,8 @@ class NativeLibrary {
   }
 
   late final _c_edit_account_birthPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_edit_account_birth');
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_edit_account_birth');
   late final _c_edit_account_birth =
       _c_edit_account_birthPtr.asFunction<CResult_u8 Function(int, int, int)>();
 
@@ -415,7 +410,7 @@ class NativeLibrary {
   }
 
   late final _c_delete_accountPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int)>>(
           'c_delete_account');
   late final _c_delete_account =
       _c_delete_accountPtr.asFunction<CResult_u8 Function(int, int)>();
@@ -433,7 +428,7 @@ class NativeLibrary {
   }
 
   late final _c_set_backup_reminderPtr = _lookup<
-          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, bool)>>(
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
       'c_set_backup_reminder');
   late final _c_set_backup_reminder = _c_set_backup_reminderPtr
       .asFunction<CResult_u8 Function(int, int, int)>();
@@ -451,8 +446,7 @@ class NativeLibrary {
   }
 
   late final _c_downgrade_accountPtr = _lookup<
-          ffi
-          .NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, CParam)>>(
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, CParam)>>(
       'c_downgrade_account');
   late final _c_downgrade_account = _c_downgrade_accountPtr
       .asFunction<CResult_u8 Function(int, int, CParam)>();
@@ -466,7 +460,7 @@ class NativeLibrary {
   }
 
   late final _c_get_sync_heightPtr =
-      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8)>>(
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Int)>>(
           'c_get_sync_height');
   late final _c_get_sync_height =
       _c_get_sync_heightPtr.asFunction<CResult______u8 Function(int)>();
@@ -482,7 +476,7 @@ class NativeLibrary {
   }
 
   late final _c_rewindPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int)>>(
           'c_rewind');
   late final _c_rewind =
       _c_rewindPtr.asFunction<CResult_u8 Function(int, int)>();
@@ -496,7 +490,7 @@ class NativeLibrary {
   }
 
   late final _c_list_checkpointsPtr =
-      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8)>>(
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Int)>>(
           'c_list_checkpoints');
   late final _c_list_checkpoints =
       _c_list_checkpointsPtr.asFunction<CResult______u8 Function(int)>();
@@ -512,7 +506,7 @@ class NativeLibrary {
   }
 
   late final _c_purge_checkpointsPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int)>>(
           'c_purge_checkpoints');
   late final _c_purge_checkpoints =
       _c_purge_checkpointsPtr.asFunction<CResult_u8 Function(int, int)>();
@@ -528,7 +522,7 @@ class NativeLibrary {
   }
 
   late final _c_store_contactPtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8, CParam)>>(
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Int, CParam)>>(
           'c_store_contact');
   late final _c_store_contact =
       _c_store_contactPtr.asFunction<CResult_u32 Function(int, CParam)>();
@@ -542,7 +536,7 @@ class NativeLibrary {
   }
 
   late final _c_list_contact_cardsPtr =
-      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Uint8)>>(
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Int)>>(
           'c_list_contact_cards');
   late final _c_list_contact_cards =
       _c_list_contact_cardsPtr.asFunction<CResult______u8 Function(int)>();
@@ -557,9 +551,9 @@ class NativeLibrary {
     );
   }
 
-  late final _c_get_contact_cardPtr = _lookup<
-          ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
-      'c_get_contact_card');
+  late final _c_get_contact_cardPtr =
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int)>>(
+          'c_get_contact_card');
   late final _c_get_contact_card =
       _c_get_contact_cardPtr.asFunction<CResult______u8 Function(int, int)>();
 
@@ -577,8 +571,8 @@ class NativeLibrary {
 
   late final _c_edit_contact_namePtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Uint32,
-              ffi.Pointer<ffi.Char>)>>('c_edit_contact_name');
+          CResult_u8 Function(
+              ffi.Int, ffi.Int, ffi.Pointer<ffi.Char>)>>('c_edit_contact_name');
   late final _c_edit_contact_name = _c_edit_contact_namePtr
       .asFunction<CResult_u8 Function(int, int, ffi.Pointer<ffi.Char>)>();
 
@@ -596,7 +590,7 @@ class NativeLibrary {
 
   late final _c_edit_contact_addressPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Uint32,
+          CResult_u8 Function(ffi.Int, ffi.Int,
               ffi.Pointer<ffi.Char>)>>('c_edit_contact_address');
   late final _c_edit_contact_address = _c_edit_contact_addressPtr
       .asFunction<CResult_u8 Function(int, int, ffi.Pointer<ffi.Char>)>();
@@ -612,7 +606,7 @@ class NativeLibrary {
   }
 
   late final _c_delete_contactPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int)>>(
           'c_delete_contact');
   late final _c_delete_contact =
       _c_delete_contactPtr.asFunction<CResult_u8 Function(int, int)>();
@@ -628,7 +622,7 @@ class NativeLibrary {
   }
 
   late final _c_on_contacts_savedPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int)>>(
           'c_on_contacts_saved');
   late final _c_on_contacts_saved =
       _c_on_contacts_savedPtr.asFunction<CResult_u8 Function(int, int)>();
@@ -643,9 +637,9 @@ class NativeLibrary {
     );
   }
 
-  late final _c_list_unconfirmed_txsPtr = _lookup<
-          ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
-      'c_list_unconfirmed_txs');
+  late final _c_list_unconfirmed_txsPtr =
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int)>>(
+          'c_list_unconfirmed_txs');
   late final _c_list_unconfirmed_txs = _c_list_unconfirmed_txsPtr
       .asFunction<CResult______u8 Function(int, int)>();
 
@@ -660,7 +654,7 @@ class NativeLibrary {
   }
 
   late final _c_get_unconfirmed_balancePtr =
-      _lookup<ffi.NativeFunction<CResult_i64 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_i64 Function(ffi.Int, ffi.Int)>>(
           'c_get_unconfirmed_balance');
   late final _c_get_unconfirmed_balance = _c_get_unconfirmed_balancePtr
       .asFunction<CResult_i64 Function(int, int)>();
@@ -675,9 +669,9 @@ class NativeLibrary {
     );
   }
 
-  late final _c_list_messagesPtr = _lookup<
-          ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
-      'c_list_messages');
+  late final _c_list_messagesPtr =
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int)>>(
+          'c_list_messages');
   late final _c_list_messages =
       _c_list_messagesPtr.asFunction<CResult______u8 Function(int, int)>();
 
@@ -694,7 +688,7 @@ class NativeLibrary {
   }
 
   late final _c_mark_all_readPtr = _lookup<
-          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, bool)>>(
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
       'c_mark_all_read');
   late final _c_mark_all_read =
       _c_mark_all_readPtr.asFunction<CResult_u8 Function(int, int, int)>();
@@ -712,7 +706,7 @@ class NativeLibrary {
   }
 
   late final _c_mark_readPtr = _lookup<
-          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, bool)>>(
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
       'c_mark_read');
   late final _c_mark_read =
       _c_mark_readPtr.asFunction<CResult_u8 Function(int, int, int)>();
@@ -730,9 +724,9 @@ class NativeLibrary {
   }
 
   late final _c_get_unspent_notesPtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_get_unspent_notes');
+          ffi
+          .NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_get_unspent_notes');
   late final _c_get_unspent_notes = _c_get_unspent_notesPtr
       .asFunction<CResult______u8 Function(int, int, int)>();
 
@@ -749,9 +743,9 @@ class NativeLibrary {
   }
 
   late final _c_get_unspent_utxosPtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_get_unspent_utxos');
+          ffi
+          .NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_get_unspent_utxos');
   late final _c_get_unspent_utxos = _c_get_unspent_utxosPtr
       .asFunction<CResult______u8 Function(int, int, int)>();
 
@@ -768,7 +762,7 @@ class NativeLibrary {
   }
 
   late final _c_exclude_notePtr = _lookup<
-          ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32, bool)>>(
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
       'c_exclude_note');
   late final _c_exclude_note =
       _c_exclude_notePtr.asFunction<CResult_u8 Function(int, int, int)>();
@@ -784,7 +778,7 @@ class NativeLibrary {
   }
 
   late final _c_reverse_note_exclusionPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int)>>(
           'c_reverse_note_exclusion');
   late final _c_reverse_note_exclusion =
       _c_reverse_note_exclusionPtr.asFunction<CResult_u8 Function(int, int)>();
@@ -802,8 +796,8 @@ class NativeLibrary {
   }
 
   late final _c_store_swapPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Uint32, CParam)>>('c_store_swap');
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, CParam)>>(
+      'c_store_swap');
   late final _c_store_swap =
       _c_store_swapPtr.asFunction<CResult_u8 Function(int, int, CParam)>();
 
@@ -817,9 +811,9 @@ class NativeLibrary {
     );
   }
 
-  late final _c_list_swapsPtr = _lookup<
-          ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
-      'c_list_swaps');
+  late final _c_list_swapsPtr =
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int)>>(
+          'c_list_swaps');
   late final _c_list_swaps =
       _c_list_swapsPtr.asFunction<CResult______u8 Function(int, int)>();
 
@@ -834,7 +828,7 @@ class NativeLibrary {
   }
 
   late final _c_clear_swap_historyPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int)>>(
           'c_clear_swap_history');
   late final _c_clear_swap_history =
       _c_clear_swap_historyPtr.asFunction<CResult_u8 Function(int, int)>();
@@ -852,9 +846,9 @@ class NativeLibrary {
   }
 
   late final _c_get_tx_detailsPtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, CParam)>>('c_get_tx_details');
+          ffi
+          .NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int, CParam)>>(
+      'c_get_tx_details');
   late final _c_get_tx_details = _c_get_tx_detailsPtr
       .asFunction<CResult______u8 Function(int, int, CParam)>();
 
@@ -878,7 +872,7 @@ class NativeLibrary {
   }
 
   late final _c_get_last_heightPtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Int)>>(
           'c_get_last_height');
   late final _c_get_last_height =
       _c_get_last_heightPtr.asFunction<CResult_u32 Function(int)>();
@@ -895,7 +889,7 @@ class NativeLibrary {
 
   late final _c_pingPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u64 Function(ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_ping');
+          CResult_u64 Function(ffi.Int, ffi.Pointer<ffi.Char>)>>('c_ping');
   late final _c_ping =
       _c_pingPtr.asFunction<CResult_u64 Function(int, ffi.Pointer<ffi.Char>)>();
 
@@ -931,8 +925,8 @@ class NativeLibrary {
 
   late final _c_scan_transparent_addressesPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
-              ffi.Uint32)>>('c_scan_transparent_addresses');
+          CResult_u8 Function(ffi.Int, ffi.Int, ffi.Int,
+              ffi.Int)>>('c_scan_transparent_addresses');
   late final _c_scan_transparent_addresses = _c_scan_transparent_addressesPtr
       .asFunction<CResult_u8 Function(int, int, int, int)>();
 
@@ -945,7 +939,7 @@ class NativeLibrary {
   }
 
   late final _c_retrieve_tx_detailsPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int)>>(
           'c_retrieve_tx_details');
   late final _c_retrieve_tx_details =
       _c_retrieve_tx_detailsPtr.asFunction<CResult_u8 Function(int)>();
@@ -969,7 +963,7 @@ class NativeLibrary {
   }
 
   late final _c_configurePtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, CParam)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int, CParam)>>(
           'c_configure');
   late final _c_configure =
       _c_configurePtr.asFunction<CResult_u8 Function(int, CParam)>();
@@ -983,7 +977,7 @@ class NativeLibrary {
   }
 
   late final _c_get_activation_datePtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Int)>>(
           'c_get_activation_date');
   late final _c_get_activation_date =
       _c_get_activation_datePtr.asFunction<CResult_u32 Function(int)>();
@@ -999,7 +993,7 @@ class NativeLibrary {
   }
 
   late final _c_get_height_by_timePtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Int, ffi.Int)>>(
           'c_get_height_by_time');
   late final _c_get_height_by_time =
       _c_get_height_by_timePtr.asFunction<CResult_u32 Function(int, int)>();
@@ -1013,7 +1007,7 @@ class NativeLibrary {
   }
 
   late final _c_get_activation_heightPtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8)>>(
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Int)>>(
           'c_get_activation_height');
   late final _c_get_activation_height =
       _c_get_activation_heightPtr.asFunction<CResult_u32 Function(int)>();
@@ -1029,7 +1023,7 @@ class NativeLibrary {
   }
 
   late final _c_get_time_by_heightPtr =
-      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u32 Function(ffi.Int, ffi.Int)>>(
           'c_get_time_by_height');
   late final _c_get_time_by_height =
       _c_get_time_by_heightPtr.asFunction<CResult_u32 Function(int, int)>();
@@ -1045,7 +1039,7 @@ class NativeLibrary {
   }
 
   late final _c_reset_chainPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int)>>(
           'c_reset_chain');
   late final _c_reset_chain =
       _c_reset_chainPtr.asFunction<CResult_u8 Function(int, int)>();
@@ -1061,7 +1055,7 @@ class NativeLibrary {
   }
 
   late final _c_splitPtr =
-      _lookup<ffi.NativeFunction<CResult______u8 Function(CParam, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult______u8 Function(CParam, ffi.Int)>>(
           'c_split');
   late final _c_split =
       _c_splitPtr.asFunction<CResult______u8 Function(CParam, int)>();
@@ -1110,7 +1104,7 @@ class NativeLibrary {
 
   late final _c_encrypt_dbPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Pointer<ffi.Char>,
+          CResult_u8 Function(ffi.Int, ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>)>>('c_encrypt_db');
   late final _c_encrypt_db = _c_encrypt_dbPtr.asFunction<
       CResult_u8 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
@@ -1125,9 +1119,9 @@ class NativeLibrary {
     );
   }
 
-  late final _c_create_backupPtr = _lookup<
-          ffi.NativeFunction<CResult______u8 Function(ffi.Uint8, ffi.Uint32)>>(
-      'c_create_backup');
+  late final _c_create_backupPtr =
+      _lookup<ffi.NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int)>>(
+          'c_create_backup');
   late final _c_create_backup =
       _c_create_backupPtr.asFunction<CResult______u8 Function(int, int)>();
 
@@ -1148,7 +1142,7 @@ class NativeLibrary {
   late final _c_get_addressPtr = _lookup<
       ffi.NativeFunction<
           CResult_____c_char Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32, ffi.Uint8)>>('c_get_address');
+              ffi.Int, ffi.Int, ffi.Int, ffi.Int)>>('c_get_address');
   late final _c_get_address = _c_get_addressPtr
       .asFunction<CResult_____c_char Function(int, int, int, int)>();
 
@@ -1166,7 +1160,7 @@ class NativeLibrary {
 
   late final _c_set_db_path_passwordPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Pointer<ffi.Char>,
+          CResult_u8 Function(ffi.Int, ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>)>>('c_set_db_path_password');
   late final _c_set_db_path_password = _c_set_db_path_passwordPtr.asFunction<
       CResult_u8 Function(int, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
@@ -1176,7 +1170,7 @@ class NativeLibrary {
   }
 
   late final _c_schema_versionPtr =
-      _lookup<ffi.NativeFunction<ffi.Uint32 Function()>>('c_schema_version');
+      _lookup<ffi.NativeFunction<ffi.Int Function()>>('c_schema_version');
   late final _c_schema_version =
       _c_schema_versionPtr.asFunction<int Function()>();
 
@@ -1218,8 +1212,8 @@ class NativeLibrary {
 
   late final _c_derive_zip32_keysPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
-              ffi.Uint32, bool)>>('c_derive_zip32_keys');
+          CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int, ffi.Int,
+              ffi.Int)>>('c_derive_zip32_keys');
   late final _c_derive_zip32_keys = _c_derive_zip32_keysPtr
       .asFunction<CResult______u8 Function(int, int, int, int, int)>();
 
@@ -1236,9 +1230,9 @@ class NativeLibrary {
   }
 
   late final _c_prev_messagePtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_prev_message');
+          ffi
+          .NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_prev_message');
   late final _c_prev_message =
       _c_prev_messagePtr.asFunction<CResult______u8 Function(int, int, int)>();
 
@@ -1255,9 +1249,9 @@ class NativeLibrary {
   }
 
   late final _c_next_messagePtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_next_message');
+          ffi
+          .NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_next_message');
   late final _c_next_message =
       _c_next_messagePtr.asFunction<CResult______u8 Function(int, int, int)>();
 
@@ -1277,7 +1271,7 @@ class NativeLibrary {
 
   late final _c_prev_message_threadPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
+          CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int,
               ffi.Pointer<ffi.Char>)>>('c_prev_message_thread');
   late final _c_prev_message_thread = _c_prev_message_threadPtr.asFunction<
       CResult______u8 Function(int, int, int, ffi.Pointer<ffi.Char>)>();
@@ -1298,7 +1292,7 @@ class NativeLibrary {
 
   late final _c_next_message_threadPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
+          CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int,
               ffi.Pointer<ffi.Char>)>>('c_next_message_thread');
   late final _c_next_message_thread = _c_next_message_threadPtr.asFunction<
       CResult______u8 Function(int, int, int, ffi.Pointer<ffi.Char>)>();
@@ -1319,7 +1313,7 @@ class NativeLibrary {
 
   late final _c_prepare_paymentPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Uint32, CParam,
+          CResult______u8 Function(ffi.Int, ffi.Int, CParam,
               ffi.Pointer<ffi.Char>)>>('c_prepare_payment');
   late final _c_prepare_payment = _c_prepare_paymentPtr.asFunction<
       CResult______u8 Function(int, int, CParam, ffi.Pointer<ffi.Char>)>();
@@ -1337,8 +1331,8 @@ class NativeLibrary {
   }
 
   late final _c_can_signPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_bool Function(ffi.Uint8, ffi.Uint32, CParam)>>('c_can_sign');
+          ffi.NativeFunction<CResult_bool Function(ffi.Int, ffi.Int, CParam)>>(
+      'c_can_sign');
   late final _c_can_sign =
       _c_can_signPtr.asFunction<CResult_bool Function(int, int, CParam)>();
 
@@ -1356,7 +1350,7 @@ class NativeLibrary {
 
   late final _c_signPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, CParam, ffi.Uint32)>>('c_sign');
+          CResult______u8 Function(ffi.Int, CParam, ffi.Int)>>('c_sign');
   late final _c_sign =
       _c_signPtr.asFunction<CResult______u8 Function(int, CParam, int)>();
 
@@ -1370,9 +1364,9 @@ class NativeLibrary {
     );
   }
 
-  late final _c_tx_broadcastPtr = _lookup<
-          ffi.NativeFunction<CResult_____c_char Function(ffi.Uint8, CParam)>>(
-      'c_tx_broadcast');
+  late final _c_tx_broadcastPtr =
+      _lookup<ffi.NativeFunction<CResult_____c_char Function(ffi.Int, CParam)>>(
+          'c_tx_broadcast');
   late final _c_tx_broadcast =
       _c_tx_broadcastPtr.asFunction<CResult_____c_char Function(int, CParam)>();
 
@@ -1392,7 +1386,7 @@ class NativeLibrary {
 
   late final _c_save_contactsPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Uint32, ffi.Uint32,
+          CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int,
               ffi.Pointer<ffi.Char>)>>('c_save_contacts');
   late final _c_save_contacts = _c_save_contactsPtr.asFunction<
       CResult______u8 Function(int, int, int, ffi.Pointer<ffi.Char>)>();
@@ -1410,9 +1404,9 @@ class NativeLibrary {
   }
 
   late final _c_fetch_tx_detailsPtr = _lookup<
-      ffi.NativeFunction<
-          CResult______u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_fetch_tx_details');
+          ffi
+          .NativeFunction<CResult______u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_fetch_tx_details');
   late final _c_fetch_tx_details = _c_fetch_tx_detailsPtr
       .asFunction<CResult______u8 Function(int, int, int)>();
 
@@ -1429,7 +1423,7 @@ class NativeLibrary {
   late final _c_decode_addressPtr = _lookup<
       ffi.NativeFunction<
           CResult______u8 Function(
-              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_decode_address');
+              ffi.Int, ffi.Pointer<ffi.Char>)>>('c_decode_address');
   late final _c_decode_address = _c_decode_addressPtr
       .asFunction<CResult______u8 Function(int, ffi.Pointer<ffi.Char>)>();
 
@@ -1447,8 +1441,8 @@ class NativeLibrary {
 
   late final _c_filter_addressPtr = _lookup<
       ffi.NativeFunction<
-          CResult_____c_char Function(ffi.Uint8, ffi.Pointer<ffi.Char>,
-              ffi.Uint8)>>('c_filter_address');
+          CResult_____c_char Function(
+              ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int)>>('c_filter_address');
   late final _c_filter_address = _c_filter_addressPtr.asFunction<
       CResult_____c_char Function(int, ffi.Pointer<ffi.Char>, int)>();
 
@@ -1462,9 +1456,9 @@ class NativeLibrary {
     );
   }
 
-  late final _c_make_payment_uriPtr = _lookup<
-          ffi.NativeFunction<CResult_____c_char Function(ffi.Uint8, CParam)>>(
-      'c_make_payment_uri');
+  late final _c_make_payment_uriPtr =
+      _lookup<ffi.NativeFunction<CResult_____c_char Function(ffi.Int, CParam)>>(
+          'c_make_payment_uri');
   late final _c_make_payment_uri = _c_make_payment_uriPtr
       .asFunction<CResult_____c_char Function(int, CParam)>();
 
@@ -1484,8 +1478,8 @@ class NativeLibrary {
 
   late final _c_parse_payment_uriPtr = _lookup<
       ffi.NativeFunction<
-          CResult______u8 Function(ffi.Uint8, ffi.Pointer<ffi.Char>, ffi.Uint32,
-              ffi.Uint32)>>('c_parse_payment_uri');
+          CResult______u8 Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int,
+              ffi.Int)>>('c_parse_payment_uri');
   late final _c_parse_payment_uri = _c_parse_payment_uriPtr.asFunction<
       CResult______u8 Function(int, ffi.Pointer<ffi.Char>, int, int)>();
 
@@ -1500,9 +1494,9 @@ class NativeLibrary {
   }
 
   late final _c_is_valid_address_or_uriPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8, ffi.Pointer<ffi.Char>)>>('c_is_valid_address_or_uri');
+          ffi
+          .NativeFunction<CResult_u8 Function(ffi.Int, ffi.Pointer<ffi.Char>)>>(
+      'c_is_valid_address_or_uri');
   late final _c_is_valid_address_or_uri = _c_is_valid_address_or_uriPtr
       .asFunction<CResult_u8 Function(int, ffi.Pointer<ffi.Char>)>();
 
@@ -1560,7 +1554,7 @@ class NativeLibrary {
   }
 
   late final _c_mempool_runPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int)>>(
           'c_mempool_run');
   late final _c_mempool_run =
       _c_mempool_runPtr.asFunction<CResult_u8 Function(int)>();
@@ -1576,7 +1570,7 @@ class NativeLibrary {
   }
 
   late final _c_mempool_set_accountPtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int)>>(
           'c_mempool_set_account');
   late final _c_mempool_set_account =
       _c_mempool_set_accountPtr.asFunction<CResult_u8 Function(int, int)>();
@@ -1597,7 +1591,7 @@ class NativeLibrary {
 
   late final _c_download_warp_blocksPtr = _lookup<
       ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8, ffi.Pointer<ffi.Char>, ffi.Uint32,
+          CResult_u8 Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int,
               ffi.Pointer<ffi.Char>)>>('c_download_warp_blocks');
   late final _c_download_warp_blocks = _c_download_warp_blocksPtr.asFunction<
       CResult_u8 Function(
@@ -1614,7 +1608,7 @@ class NativeLibrary {
   }
 
   late final _c_warp_synchronizePtr =
-      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Uint8, ffi.Uint32)>>(
+      _lookup<ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int)>>(
           'c_warp_synchronize');
   late final _c_warp_synchronize =
       _c_warp_synchronizePtr.asFunction<CResult_u8 Function(int, int)>();
@@ -1630,9 +1624,9 @@ class NativeLibrary {
   }
 
   late final _c_warp_synchronize_from_filePtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(ffi.Uint8,
-              ffi.Pointer<ffi.Char>)>>('c_warp_synchronize_from_file');
+          ffi
+          .NativeFunction<CResult_u8 Function(ffi.Int, ffi.Pointer<ffi.Char>)>>(
+      'c_warp_synchronize_from_file');
   late final _c_warp_synchronize_from_file = _c_warp_synchronize_from_filePtr
       .asFunction<CResult_u8 Function(int, ffi.Pointer<ffi.Char>)>();
 
@@ -1649,68 +1643,65 @@ class NativeLibrary {
   }
 
   late final _c_transparent_scanPtr = _lookup<
-      ffi.NativeFunction<
-          CResult_u8 Function(
-              ffi.Uint8, ffi.Uint32, ffi.Uint32)>>('c_transparent_scan');
+          ffi.NativeFunction<CResult_u8 Function(ffi.Int, ffi.Int, ffi.Int)>>(
+      'c_transparent_scan');
   late final _c_transparent_scan =
       _c_transparent_scanPtr.asFunction<CResult_u8 Function(int, int, int)>();
 }
 
 final class CResult_u8 extends ffi.Struct {
-  @ffi.Uint8()
+  @ffi.Int()
   external int value;
 
   external ffi.Pointer<ffi.Char> error;
 
-  @ffi.Uint32()
+  @ffi.Int()
   external int len;
 }
 
 final class CResult______u8 extends ffi.Struct {
-  external ffi.Pointer<ffi.Uint8> value;
+  external ffi.Pointer<ffi.Int> value;
 
   external ffi.Pointer<ffi.Char> error;
 
-  @ffi.Uint32()
+  @ffi.Int()
   external int len;
 }
 
 final class CParam extends ffi.Struct {
-  external ffi.Pointer<ffi.Uint8> value;
+  external ffi.Pointer<ffi.Int> value;
 
-  @ffi.Uint32()
+  @ffi.Int()
   external int len;
 }
 
 final class CResult_bool extends ffi.Struct {
-  @bool()
+  @ffi.Int()
   external int value;
 
   external ffi.Pointer<ffi.Char> error;
 
-  @ffi.Uint32()
+  @ffi.Int()
   external int len;
 }
 
-typedef bool = ffi.Char;
-
 final class CResult_u32 extends ffi.Struct {
-  @ffi.Uint32()
+  @ffi.Int()
   external int value;
 
   external ffi.Pointer<ffi.Char> error;
 
-  @ffi.Uint32()
+  @ffi.Int()
   external int len;
 }
 
 final class CResult_i64 extends ffi.Struct {
-  @ffi.Int64()
+  @ffi.Int()
   external int value;
 
   external ffi.Pointer<ffi.Char> error;
 
-  @ffi.Uint32()
+  @ffi.Int()
   external int len;
 }
 
@@ -1719,16 +1710,16 @@ final class CResult_____c_char extends ffi.Struct {
 
   external ffi.Pointer<ffi.Char> error;
 
-  @ffi.Uint32()
+  @ffi.Int()
   external int len;
 }
 
 final class CResult_u64 extends ffi.Struct {
-  @ffi.Uint64()
+  @ffi.Int()
   external int value;
 
   external ffi.Pointer<ffi.Char> error;
 
-  @ffi.Uint32()
+  @ffi.Int()
   external int len;
 }
